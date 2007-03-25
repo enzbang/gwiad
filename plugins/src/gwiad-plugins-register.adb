@@ -19,27 +19,23 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Containers.Indefinite_Hashed_Maps;
-with Ada.Strings.Hash;
-with Ada.Strings.Unbounded;
-
 package body Gwiad.Plugins.Register is
-
-   use Plugins;
-   use Ada.Strings.Unbounded;
-
-   type Registered_Plugin is record
-      Builder     : Plugin_Builder;
-      Path        : Unbounded_String;
-      Description : Unbounded_String;
-   end record;
 
    Last_Library_Path : Unbounded_String;
 
-   package Register_Maps is new Ada.Containers.Indefinite_Hashed_Maps
-     (String, Registered_Plugin, Ada.Strings.Hash, "=", "=");
-
    Plugin_Map : Register_Maps.Map;
+
+   -----------------
+   -- Description --
+   -----------------
+
+   function Description (C : Cursor) return String is
+      P : Registered_Plugin;
+   begin
+      P := Register_Maps.Element (Position => Register_Maps.Cursor (C));
+
+      return To_String (P.Description);
+   end Description;
 
    ------------
    -- Exists --
@@ -50,18 +46,35 @@ package body Gwiad.Plugins.Register is
       return Register_Maps.Contains (Plugin_Map, Name);
    end Exists;
 
+   -----------
+   -- First --
+   -----------
+
+   function First return Cursor is
+   begin
+      return Cursor (Plugin_Map.First);
+   end First;
+
    ---------
    -- Get --
    ---------
 
    function Get (Name : in String) return Plugin_Access is
-      Get_Registered_Plugin : Registered_Plugin :=
-                                Register_Maps.Element
-                                  (Container => Plugin_Map,
-                                   Key       => Name);
+      Get_Registered_Plugin : Registered_Plugin
+        := Register_Maps.Element (Container => Plugin_Map,
+                                  Key       => Name);
    begin
       return Plugin_Access (Get_Registered_Plugin.Builder.all);
    end Get;
+
+   -----------------
+   -- Has_Element --
+   -----------------
+
+   function Has_Element (Position : Cursor) return Boolean is
+   begin
+      return Register_Maps.Has_Element (Register_Maps.Cursor (Position));
+   end Has_Element;
 
    -----------
    -- Image --
@@ -75,6 +88,24 @@ package body Gwiad.Plugins.Register is
 
       return To_String (Name & P.Description & ", path : " & P.Path);
    end Image;
+
+   ----------
+   -- Name --
+   ----------
+
+   function Name (C : Cursor) return String is
+   begin
+      return  Register_Maps.Key (Position => Register_Maps.Cursor (C));
+   end Name;
+
+   ----------
+   -- Next --
+   ----------
+
+   procedure Next (C : in out Cursor) is
+   begin
+      Register_Maps.Next (Register_Maps.Cursor (C));
+   end Next;
 
    --------------
    -- Register --
@@ -101,8 +132,9 @@ package body Gwiad.Plugins.Register is
       Register_Maps.Insert
         (Plugin_Map,
          Name,
-         (Builder, Last_Library_Path,
-          To_Unbounded_String (Description)));
+         (Builder     => Builder,
+          Path        => Last_Library_Path,
+          Description => To_Unbounded_String (Description)));
 
       Last_Library_Path := Null_Unbounded_String;
    end Register;

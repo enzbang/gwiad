@@ -20,31 +20,67 @@
 ------------------------------------------------------------------------------
 
 with Gwiad.Plugins;
+with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Strings.Hash;
+with Ada.Strings.Unbounded;
 
 package Gwiad.Plugins.Register is
 
+   use Plugins;
+   use Ada.Strings.Unbounded;
+
    procedure Register (Library_Path : in String);
-   --  Register a new dynamic library
+   --  Registers a new dynamic library
    --  This must be called before registering the plugin to set the plugin name
 
    procedure Register
      (Name           : in String;
       Description    : in String;
       Builder        : in Plugin_Builder);
-   --  Register a new service
-   --  Raise plugin error if plugin with the same name is registered
+   --  Registers a new service
+   --  Raise plugin error if plugin with the same name is registered or
+   --  if no dynamic library is registered
 
    procedure Unregister (Name : in String);
-   --  Register a new service
-   --  Raise plugin error if plugin with the same name is registered
+   --  Unregisters a service
 
    function Exists (Name : in String) return Boolean;
-   --  Returns true if a service named "name" is registered
+   --  Returns true if a service with the given name is registered
 
    function Image (Name : in String) return String;
    --  Returns description and library path of the plugin
 
    function Get (Name : in String) return Plugin_Access;
    --  Returns the plugin
+
+   type Cursor is private;
+
+   function First return Cursor;
+   --  Returns a cursor to the first registered plugin
+
+   procedure Next (C : in out Cursor);
+   --  Select the next element
+
+   function Has_Element (Position : Cursor) return Boolean;
+   --  Returns true if cursor is not No_Element
+
+   function Name (C : Cursor) return String;
+   --  Returns the name of the plugin
+
+   function Description (C : Cursor) return String;
+   --  Returns the description of the plugin
+
+private
+
+   type Registered_Plugin is record
+      Builder     : Plugin_Builder;
+      Path        : Unbounded_String;
+      Description : Unbounded_String;
+   end record;
+
+   package Register_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+     (String, Registered_Plugin, Ada.Strings.Hash, "=", "=");
+
+   type Cursor is new Register_Maps.Cursor;
 
 end Gwiad.Plugins.Register;

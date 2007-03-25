@@ -1,5 +1,5 @@
 ##############################################################################
-##                                Diouzhtu                                  ##
+##                                  Gwiad                                   ##
 ##                                                                          ##
 ##                           Copyright (C) 2007                             ##
 ##                            Olivier Ramonat                               ##
@@ -19,37 +19,11 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-# Options
-MODE=Debug
-CP=cp -p
-MKDIR=mkdir -p
-RM=rm -f
+all:
+	gnat make -XPRJ_BUILD=$(MODE) -Pservices_admin
+	gnat make -XPRJ_BUILD=$(MODE) -Pservices_admin
 
-OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
+clean:
+	-gnat clean -r -Pservices_admin
 
-# Modules support
-
-MODULES = dynamic_libraries gwiad example plugins services
-
-MODULES_BUILD = ${MODULES:%=%_build}
-
-MODULES_CLEAN = ${MODULES:%=%_clean}
-
-MODULES_CHECK = ${MODULES:%=%_check}
-
-# Targets
-
-all: $(MODULES_BUILD)
-
-clean: $(MODULES_CLEAN)
-
-check :$(MODULES_CHECK)
-
-${MODULES_BUILD}:
-	${MAKE} -C ${@:%_build=%} $(OPTIONS)
-
-${MODULES_CLEAN}:
-	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
-
-${MODULES_CHECK}:
-	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
+check:
