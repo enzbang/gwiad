@@ -29,7 +29,7 @@ OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
 # Modules support
 
-MODULES = hello_world plugins_tests
+MODULES = hello_world hello_world_plugin
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

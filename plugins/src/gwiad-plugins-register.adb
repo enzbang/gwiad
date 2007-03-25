@@ -92,17 +92,17 @@ package body Gwiad.Plugins.Register is
    procedure Register
      (Name           : in String;
       Description    : in String;
-      Builder        : in Plugin_Builder)
-   is
-      New_Registered_Plugin : Registered_Plugin :=
-                                (Builder,
-                                 To_Unbounded_String (Name),
-                                 To_Unbounded_String (Description));
-
+      Builder        : in Plugin_Builder) is
    begin
-      Register_Maps.Insert (Plugin_Map,
-                            To_String (Last_Library_Path),
-                            New_Registered_Plugin);
+      if Last_Library_Path = Null_Unbounded_String then
+         raise Plugin_Error;
+      end if;
+
+      Register_Maps.Insert
+        (Plugin_Map,
+         Name,
+         (Builder, Last_Library_Path,
+          To_Unbounded_String (Description)));
 
       Last_Library_Path := Null_Unbounded_String;
    end Register;

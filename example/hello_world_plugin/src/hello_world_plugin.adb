@@ -44,7 +44,7 @@ package body Hello_World_Plugin is
 begin
 
    Gwiad.Plugins.Register.Register
-     (Name        => "Gwiad plugin test",
+     (Name        => "hello_world_plugin",
       Description => "This is just a test for gwiad application",
       Builder     => Builder'Access);
 

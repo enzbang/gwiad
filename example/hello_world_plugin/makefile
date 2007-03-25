@@ -20,10 +20,10 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pplugins_tests
-	gnat make -XPRJ_BUILD=$(MODE) -Pplugins_tests
+	gnat make -XPRJ_BUILD=$(MODE) -Phello_world_plugin
+	gnat make -XPRJ_BUILD=$(MODE) -Phello_world_plugin
 
 clean:
-	-gnat clean -r -Pplugins_tests
+	-gnat clean -r -Phello_world_plugin
 
 check:

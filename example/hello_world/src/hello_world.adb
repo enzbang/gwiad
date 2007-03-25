@@ -48,8 +48,8 @@ package body Hello_World is
       pragma Unreferenced (Request);
       Hello_World_Plugin : constant Test_Plugin_Access
         := Test_Plugin_Access
-          (Plugins.Register.Get
-             ("/home/ramonat/projects/personal/gwiad/lib/libtest_lib.so"));
+          (Plugins.Register.Get ("hello_world_plugin"));
+
    begin
       return Response.Build (MIME.Text_HTML,
                              Hello_World_Plugin.all.Hello_World);
