@@ -1,0 +1,95 @@
+V "GNAT Lib v2006"
+A -Wall
+A -fPIC
+A -gnat05
+A -gnatwc
+A -gnatwf
+A -gnatwi
+A -gnatwj
+A -gnatwk
+A -gnatwm
+A -gnatwr
+A -gnatwu
+A -gnatwv
+A -gnaty3
+A -gnatya
+A -gnatyb
+A -gnatyc
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyk
+A -gnatyl
+A -gnatym
+A -gnatyn
+A -gnatyo
+A -gnatyp
+A -gnatyr
+A -gnatys
+A -gnatyt
+A -gnatyx
+A -g
+A -gnata
+A -gnatVa
+A -gnatQ
+A -gnato
+A -gnatwe
+A -gnatA
+P CE NO SS ZX
+R nnnnnnnnvnnnnnnvnvnnnnvnnvnnnnnnnnnnnnvnnnnnnnnnnnnnnvnvnnnnnnnnnnnnnnnn
+
+U hello_world_plugin%s	plugins_tests.ads	7beecb8c EE PK
+W ada.streams%s		a-stream.ads		a-stream.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W gwiad%s		gwiad.ads		gwiad.ali
+W gwiad.plugins%s	gwiad-plugins.ads	gwiad-plugins.ali
+W system%s		system.ads		system.ali
+W system.assertions%s	s-assert.adb		s-assert.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+
+D ada.ads		20060522060605 9c7dd3ea
+D a-except.ads		20060522060558 7e22d533
+D a-finali.ads		20060522060558 d37ac0e9
+D a-filico.ads		20060522060558 9299732a
+D a-stream.ads		20060522060600 34aca5be
+D a-tags.ads		20060522060602 86bbd538
+D a-tags.adb		20060522060602 aa0d61da
+D gwiad.ads		20070324200128 1db58dbb
+D gwiad-plugins.ads	20070324200243 97f9f4dd
+D plugins_tests.ads	20070325174655 ec173f51
+D interfac.ads		20060522060612 a69cad5c
+D system.ads		20060522060626 441e56ab
+D s-assert.ads		20060522060615 85573af2
+D s-exctab.ads		20060522060616 e14b1567
+D s-finimp.ads		20060522060616 33c39bf7
+D s-finroo.ads		20060522060616 6f410d48
+D s-htable.ads		20060522060617 9598cfa4
+D s-parame.ads		20060522060620 6bd7b874
+D s-secsta.ads		20060522060620 db466d0c
+D s-soflin.ads		20060522060621 677820d8
+D s-stache.ads		20060522060621 07e06d0a
+D s-stalib.ads		20060522060621 99eda53f
+D s-stoele.ads		20060522060621 f7e9ab3e
+D s-stoele.adb		20060522060621 a397f9ca
+D s-stratt.ads		20060522060621 63715cfd
+D s-traent.ads		20060522060622 9950c76b
+D s-unstyp.ads		20060522060622 b399198a
+D s-wchcon.ads		20060522060623 a5170e96
+D s-wchstw.ads		20060522060623 6b782940
+D unchconv.ads		20060522060627 34860a55
+X 8 gwiad.ads
+2K9*Gwiad 4e10 10|1r6 5r8
+X 9 gwiad-plugins.ads
+2K15*Plugins 14e18 10|1w12 5r14
+4H9*Plugin 4e46 10|7r28 16r35
+X 10 plugins_tests.ads
+3K9*Hello_World_Plugin 19l5 19e23
+7R9*Test_Plugin<9|4R9> 7e51 9r42 11p13 11r33
+9P9*Test_Plugin_Access(7R9)
+11V13*Hello_World{string} 11>26
+11r26 Plug{7R9}
+16V13 Builder(9|4R9)
+
