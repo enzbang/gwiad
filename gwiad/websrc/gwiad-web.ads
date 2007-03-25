@@ -29,11 +29,11 @@ package Gwiad.Web is
 
    procedure Register
      (Host : in String; Redirected_Hostname : in String);
-   --  Register a new virtual host redirection
+   --  Registers a new virtual host redirection
 
    procedure Register
      (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class);
-   --  Register a new virtual host handler
+   --  Registers a new virtual host handler
 
 
 end Gwiad.Web;

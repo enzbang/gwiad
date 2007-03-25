@@ -29,7 +29,7 @@ package Hello_World_Plugin is
 
    type Test_Plugin_Access is access all Test_Plugin;
 
-   function Hello_World (Plug : Test_Plugin) return String;
+   function Hello_World (P : Test_Plugin) return String;
    --  Hello world
 
 private

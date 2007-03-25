@@ -51,6 +51,7 @@ package body Gwiad.Web is
      (Request : in Status.Data) return Response.Data
    is
       use type Messages.Status_Code;
+
       URI          : constant String := Status.URI (Request);
       Translations : Templates.Translate_Set;
       Web_Page     : Response.Data;

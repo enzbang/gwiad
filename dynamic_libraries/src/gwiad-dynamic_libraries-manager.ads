@@ -32,8 +32,14 @@ package Gwiad.Dynamic_Libraries.Manager is
 
    protected type Manager is
       procedure Discover_Libraries;
+      --  Discovers new libraries to load
+
       procedure Load (Path : in String);
+      --  Load a library
+
       entry Unload (Path : in String);
+      --  Unload a library
+
    private
       Loaded_Libraries : Hashed_Strings.Map := Hashed_Strings.Empty_Map;
    end Manager;

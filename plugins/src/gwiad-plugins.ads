@@ -27,8 +27,6 @@ package Gwiad.Plugins is
 
    type Plugin_Builder is access function return access Plugin'Class;
 
-   function Hello_World (P : Plugin_Access) return String is abstract;
-
    Plugin_Error : exception;
 
 end Gwiad.Plugins;

@@ -33,7 +33,7 @@ package body Gwiad.Dynamic_Libraries is
 
    type Implementation is new System.Address;
 
-   function dlerror return Interfaces.C.Strings.chars_ptr;
+   function dlerror return chars_ptr;
    pragma Import (C, dlerror, "dlerror");
 
    procedure Free is
@@ -61,16 +61,15 @@ package body Gwiad.Dynamic_Libraries is
 
       Addr : System.Address;
 
-      c_str : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (Function_Name);
+      C_Function_Name : chars_ptr := New_String (Function_Name);
 
    begin
 
       --  Get a pointer to the function within the dynamic library
 
-      Addr := dlsym (System.Address (Library.Ref.all), c_str);
+      Addr := dlsym (System.Address (Library.Ref.all), C_Function_Name);
 
-      Interfaces.C.Strings.Free (c_str);
+      Free (C_Function_Name);
 
       if Addr = System.Null_Address then
          raise Dynamic_Library_Error with Value (dlerror);
@@ -117,17 +116,20 @@ package body Gwiad.Dynamic_Libraries is
    function Load (Path : String) return Dynamic_Library is
 
       function Dlopen
-        (Lib_Name : String; Mode : Interfaces.C.int)
+        (Lib_Name : chars_ptr; Mode : int)
         return System.Address;
       pragma Import (C, Dlopen, "dlopen");
 
       RTLD_LAZY : constant := 1;
-      C_Path    : constant String := Path & ASCII.Nul;
+      C_Path    : chars_ptr := New_String (Path);
       Result    : Dynamic_Library;
 
    begin
       Result.Ref := new Implementation;
       Result.Ref.all := Implementation (Dlopen (C_Path, RTLD_LAZY));
+
+      Free (C_Path);
+
       if Result.Ref.all = Implementation (System.Null_Address) then
          Free (Result.Ref);
          raise Dynamic_Library_Error with Value (dlerror);
@@ -143,7 +145,7 @@ package body Gwiad.Dynamic_Libraries is
       function dlclose (Handle : System.Address) return Interfaces.C.int;
       pragma Import (C, dlclose, "dlclose");
 
-      Result : Interfaces.C.int := 1;
+      Result : int := 1;
    begin
       Result := dlclose (System.Address (Library.Ref.all));
 

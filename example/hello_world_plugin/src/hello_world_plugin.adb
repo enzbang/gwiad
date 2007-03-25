@@ -19,15 +19,17 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;
 with Gwiad.Plugins.Register;
 
 package body Hello_World_Plugin is
 
+   -------------
+   -- Builder --
+   -------------
+
    function Builder return access Plugin'Class is
       Test : constant Test_Plugin_Access := new Test_Plugin;
    begin
-      Ada.Text_IO.Put_Line ("return test_plugin");
       return Test;
    end Builder;
 
@@ -35,17 +37,17 @@ package body Hello_World_Plugin is
    -- Hello_World --
    -----------------
 
-   function Hello_World (Plug : Test_Plugin) return String is
-      pragma Unreferenced (Plug);
+   function Hello_World (P : Test_Plugin) return String is
+      pragma Unreferenced (P);
    begin
-      return "Hello World";
+      return "hello_world_plugin says Hello World";
    end Hello_World;
 
 begin
 
    Gwiad.Plugins.Register.Register
      (Name        => "hello_world_plugin",
-      Description => "This is just a test for gwiad application",
+      Description => "A simple hello world for gwiad",
       Builder     => Builder'Access);
 
 end Hello_World_Plugin;

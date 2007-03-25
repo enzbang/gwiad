@@ -22,6 +22,7 @@
 with Ada.Directories;
 with Ada.Text_IO;
 with Ada.Exceptions;
+
 with Gwiad.Plugins.Register;
 
 package body Gwiad.Dynamic_Libraries.Manager is
@@ -40,12 +41,12 @@ package body Gwiad.Dynamic_Libraries.Manager is
       end loop;
    end Discover;
 
-
    -------------
    -- Manager --
    -------------
 
    protected body Manager is
+
       ------------------------
       -- Discover_Libraries --
       ------------------------
@@ -56,6 +57,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
       begin
          Start_Search (S, "lib", "*." & Get_Library_Extension,
                        (Ordinary_File => True, others => False));
+
          while More_Entries (S) loop
             Get_Next_Entry (S, D);
             declare
@@ -74,10 +76,15 @@ package body Gwiad.Dynamic_Libraries.Manager is
                end if;
             end;
          end loop;
+
       exception
          when E : others =>
             Ada.Text_IO.Put_Line (Exception_Information (E));
       end Discover_Libraries;
+
+      ----------
+      -- Load --
+      ----------
 
       procedure Load (Path : in String) is
          Library : Dynamic_Library;
@@ -85,6 +92,10 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Library := Load (Path);
          Loaded_Libraries.Insert (Path, Library);
       end Load;
+
+      ------------
+      -- Unload --
+      ------------
 
       entry Unload (Path : in String) when Loaded_Libraries.Length > 0 is
          Library : Dynamic_Library;
