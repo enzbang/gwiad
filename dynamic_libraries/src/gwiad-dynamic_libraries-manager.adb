@@ -31,13 +31,11 @@ package body Gwiad.Dynamic_Libraries.Manager is
    use Ada.Containers;
    use Ada.Exceptions;
 
-   Test_Manager : Manager;
-
    task body Discover is
    begin
       loop
-         Test_Manager.Discover_Libraries;
          delay 1.0;
+         Manager.Discover_Libraries;
       end loop;
    end Discover;
 
@@ -106,9 +104,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
             end if;
             Ada.Text_IO.Put_Line ("Unload library at " & Path);
             Library := Loaded_Libraries.Element (Path);
-            --  Loaded_Libraries.Delete (Name);
-            Plugins.Register.Unregister ("name");
+            Loaded_Libraries.Delete (Path);
             Dynamic_Libraries.Unload (Library);
+            Rename (Path, Path & ".disabled");
             Ada.Text_IO.Put_Line ("Done");
          end if;
       end Unload;

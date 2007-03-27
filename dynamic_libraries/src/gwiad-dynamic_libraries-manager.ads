@@ -30,7 +30,7 @@ package Gwiad.Dynamic_Libraries.Manager is
      (String, Dynamic_Library, Ada.Strings.Hash, "=", "=");
    use Hashed_Strings;
 
-   protected type Manager is
+   protected Manager is
       procedure Discover_Libraries;
       --  Discovers new libraries to load
 
