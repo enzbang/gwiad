@@ -29,10 +29,10 @@ package body Gwiad.Plugins.Register is
    -- Description --
    -----------------
 
-   function Description (C : Cursor) return String is
+   function Description (Position : Cursor) return String is
       P : Registered_Plugin;
    begin
-      P := Register_Maps.Element (Position => Register_Maps.Cursor (C));
+      P := Register_Maps.Element (Position => Register_Maps.Cursor (Position));
 
       return To_String (P.Description);
    end Description;
@@ -45,6 +45,15 @@ package body Gwiad.Plugins.Register is
    begin
       return Register_Maps.Contains (Plugin_Map, Name);
    end Exists;
+
+   ----------
+   -- Find --
+   ----------
+
+   function Find (Key : in String) return Cursor is
+   begin
+      return Cursor (Register_Maps.Find (Plugin_Map, Key));
+   end Find;
 
    -----------
    -- First --
@@ -65,6 +74,9 @@ package body Gwiad.Plugins.Register is
                                   Key       => Name);
    begin
       return Plugin_Access (Get_Registered_Plugin.Builder.all);
+   exception
+      when others =>
+         raise Plugin_Error;
    end Get;
 
    -----------------
@@ -93,19 +105,30 @@ package body Gwiad.Plugins.Register is
    -- Name --
    ----------
 
-   function Name (C : Cursor) return String is
+   function Name (Position : Cursor) return String is
    begin
-      return  Register_Maps.Key (Position => Register_Maps.Cursor (C));
+      return  Register_Maps.Key (Position => Register_Maps.Cursor (Position));
    end Name;
 
    ----------
    -- Next --
    ----------
 
-   procedure Next (C : in out Cursor) is
+   procedure Next (Position : in out Cursor) is
    begin
-      Register_Maps.Next (Register_Maps.Cursor (C));
+      Register_Maps.Next (Register_Maps.Cursor (Position));
    end Next;
+
+   ----------
+   -- Path --
+   ----------
+
+   function Path (Position : Cursor) return String is
+      P : Registered_Plugin := Register_Maps.Element
+        (Register_Maps.Cursor (Position));
+   begin
+      return To_String (P.Path);
+   end Path;
 
    --------------
    -- Register --
@@ -137,6 +160,7 @@ package body Gwiad.Plugins.Register is
           Description => To_Unbounded_String (Description)));
 
       Last_Library_Path := Null_Unbounded_String;
+
    end Register;
 
    ----------------
@@ -144,9 +168,15 @@ package body Gwiad.Plugins.Register is
    ----------------
 
    procedure Unregister (Name : in String) is
+      use Register_Maps;
+
+      Position : Register_Maps.Cursor := Plugin_Map.Find (Name);
    begin
-      Register_Maps.Delete (Container => Plugin_Map,
-                            Key       => Name);
+      if Position = No_Element then
+         raise Plugin_Error;
+      end if;
+
+      Plugin_Map.Delete (Position);
    end Unregister;
 
 end Gwiad.Plugins.Register;

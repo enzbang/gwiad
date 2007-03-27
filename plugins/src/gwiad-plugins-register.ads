@@ -58,17 +58,23 @@ package Gwiad.Plugins.Register is
    function First return Cursor;
    --  Returns a cursor to the first registered plugin
 
-   procedure Next (C : in out Cursor);
+   function Find (Key : in String) return Cursor;
+   --  Returns the cursor pointing to element with the given key
+
+   procedure Next (Position : in out Cursor);
    --  Select the next element
 
    function Has_Element (Position : Cursor) return Boolean;
    --  Returns true if cursor is not No_Element
 
-   function Name (C : Cursor) return String;
+   function Name (Position : Cursor) return String;
    --  Returns the name of the plugin
 
-   function Description (C : Cursor) return String;
+   function Description (Position : Cursor) return String;
    --  Returns the description of the plugin
+
+   function Path (Position : Cursor) return String;
+   --  Returns the path of the shared library providing the plugin
 
 private
 

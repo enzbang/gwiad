@@ -10,13 +10,7 @@
     <td>@_NAME_@</td>
     <td>@_DESCRIPTION_@</td>
     <td>
-      @@IF@@ @_IS_RUNNING_@
-      <a href="/stop?name=@_NAME_@" title="Stop the service
-                                           @_NAME_@">Stop</a>
-      @@ELSE@@
-      <a href="/start?name=@_NAME_@" title="Start the service
-                                           @_NAME_@">Start</a>
-      @@END_IF@@
+      <a href="/stop?service=@_NAME_@" title="Stop the service @_NAME_@">Stop</a>
     </td>
   </tr>
 @@END_TABLE@@

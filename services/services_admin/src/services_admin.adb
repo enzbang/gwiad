@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------------
 
 with Gwiad.Plugins.Register;
+with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web;
 
 with AWS.Dispatchers.Callback;
@@ -28,7 +29,8 @@ with AWS.MIME;
 with AWS.Services.ECWF.Registry;
 with AWS.Services.ECWF.Context;
 with AWS.Templates;
-
+with AWS.Parameters;
+with Ada.Strings.Unbounded;
 
 package body Services_Admin is
 
@@ -37,13 +39,17 @@ package body Services_Admin is
 
    use AWS.Templates;
 
-
    procedure List_Services
      (Request      : in     Status.Data;
       Context      : access Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Lists all services
 
+   procedure Stop_Service
+     (Request      : in Status.Data;
+      Context      : access Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Stop a gwiad service
 
    ----------------------
    -- Default_Callback --
@@ -69,6 +75,10 @@ package body Services_Admin is
       end if;
    end Default_Callback;
 
+   -------------------
+   -- List_Services --
+   -------------------
+
    procedure List_Services
      (Request      : in     Status.Data;
       Context      : access Services.ECWF.Context.Object;
@@ -76,6 +86,7 @@ package body Services_Admin is
    is
       pragma Unreferenced (Request, Context);
       use Gwiad.Plugins.Register;
+
       Position : Cursor := First;
 
       Tag_Name : Templates.Tag;
@@ -93,6 +104,40 @@ package body Services_Admin is
                         Templates.Assoc ("DESCRIPTION", Tag_Description));
    end List_Services;
 
+   ------------------
+   -- Stop_Service --
+   ------------------
+
+   procedure Stop_Service
+     (Request      : in Status.Data;
+      Context      : access Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set)
+   is
+   pragma Unreferenced (Context, Translations);
+      use Gwiad.Plugins.Register;
+      use Dynamic_Libraries.Manager;
+      use Ada.Strings.Unbounded;
+
+      P            : Parameters.List  := Status.Parameters (Request);
+      Service_Name : constant String  := Parameters.Get (P, "service");
+      Library_Path : Unbounded_String := Null_Unbounded_String;
+
+   begin
+
+      declare
+         Position     : constant Cursor := Find (Service_Name);
+      begin
+         if Has_Element (Position) then
+            Library_Path := To_Unbounded_String (Path (Position));
+         end if;
+      end;
+
+      if Library_Path /= "" then
+         Unregister (Service_Name);
+         Manager.Unload (To_String (Library_Path));
+      end if;
+   end Stop_Service;
+
 begin
 
    Services.Dispatchers.URI.Register_Default_Callback
@@ -106,6 +151,12 @@ begin
      ("/list",
       "templates/services_admin/list.thtml",
       List_Services'Access,
+      MIME.Text_HTML);
+
+   Services.ECWF.Registry.Register
+     ("/stop",
+      "templates/services_admin/stop.thtml",
+      Stop_Service'Access,
       MIME.Text_HTML);
 
    Gwiad.Web.Register (Hostname => "localhost",

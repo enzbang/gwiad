@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------------
 
 with "../shared";
-limited with "../gwiad/gwiad";
+with "../gwiad/gwiad";
 
 Project Plugins is
 
