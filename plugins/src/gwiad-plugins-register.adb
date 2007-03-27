@@ -69,10 +69,11 @@ package body Gwiad.Plugins.Register is
    ---------
 
    function Get (Name : in String) return Plugin_Access is
-      Get_Registered_Plugin : Registered_Plugin
-        := Register_Maps.Element (Container => Plugin_Map,
-                                  Key       => Name);
+      Get_Registered_Plugin : Registered_Plugin;
    begin
+      Get_Registered_Plugin := Register_Maps.Element (Container => Plugin_Map,
+                                                      Key       => Name);
+
       return Plugin_Access (Get_Registered_Plugin.Builder.all);
    exception
       when others =>
