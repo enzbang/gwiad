@@ -20,16 +20,18 @@
 ------------------------------------------------------------------------------
 
 with Gwiad.Plugins;
+with Hello_World_Interface;
 
 package Hello_World_Plugin is
 
    use Gwiad.Plugins;
+   use Hello_World_Interface;
 
-   type Test_Plugin is new Plugin with null record;
+   type Hello_World_Plugin is new HW_Plugin with null record;
 
-   type Test_Plugin_Access is access all Test_Plugin;
+   type Hello_World_Plugin_Access is access all Hello_World_Plugin;
 
-   function Hello_World (P : Test_Plugin) return String;
+   function Hello (P : Hello_World_Plugin) return String;
    --  Hello world
 
 private

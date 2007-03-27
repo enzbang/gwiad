@@ -19,59 +19,20 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins.Register;
-with Gwiad.Web;
+with "../../shared";
+with "../../plugins/plugins";
 
-with Hello_World_Interface;
+Project Hello_World_Interface is
 
-with AWS.Dispatchers.Callback;
-with AWS.MIME;
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Ali_Dir use "lib";
+   for Library_Dir use "../../lib_interfaces";
+   for Library_Name use "hw_interface";
+   for Library_Interface use ("hello_world_interface");
+   for Library_Kind use "dynamic";
+   for Library_Auto_Init use "false";
 
-package body Hello_World is
+   package Compiler renames Shared.Compiler;
 
-   use Gwiad;
-   use Gwiad.Plugins;
-
-   use Hello_World_Interface;
-
-   ----------------------
-   -- Default_Callback --
-   ----------------------
-
-   function Default_Callback (Request : in Status.Data) return Response.Data is
-      pragma Unreferenced (Request);
-   begin
-      return Response.Build (MIME.Text_HTML, "Hello World 404 Error");
-   end Default_Callback;
-
-   -----------------
-   -- Hello_World --
-   -----------------
-
-   function Hello_World (Request : in Status.Data) return Response.Data is
-      pragma Unreferenced (Request);
-
-      Hello_World_Plugin_Access : constant HW_Plugin_Access
-        := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
-      Hello_World_Plugin : HW_Plugin'Class := Hello_World_Plugin_Access.all;
-   begin
-      return Response.Build (MIME.Text_HTML,
-                             Hello_World_Plugin.Hello);
-   end Hello_World;
-
-begin
-
-   Services.Dispatchers.URI.Register
-     (Dispatcher => Main_Dispatcher,
-      URI        => "/hello",
-      Action     => Dispatchers.Callback.Create (Hello_World'Access));
-
-   Services.Dispatchers.URI.Register_Default_Callback
-     (Main_Dispatcher,
-      Dispatchers.Callback.Create (Default_Callback'Access));
-   --  This Default Callback Will Handle all ECWF Callbacks
-
-   Gwiad.Web.Register (Hostname => "127.0.0.1",
-                       Action   => Main_Dispatcher);
-
-end Hello_World;
+end Hello_World_Interface;

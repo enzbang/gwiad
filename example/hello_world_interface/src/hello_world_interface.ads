@@ -19,59 +19,18 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins.Register;
-with Gwiad.Web;
+with Gwiad.Plugins;
 
-with Hello_World_Interface;
+package Hello_World_Interface is
 
-with AWS.Dispatchers.Callback;
-with AWS.MIME;
-
-package body Hello_World is
-
-   use Gwiad;
    use Gwiad.Plugins;
 
-   use Hello_World_Interface;
+   type HW is interface;
 
-   ----------------------
-   -- Default_Callback --
-   ----------------------
+   function Hello (P : HW) return String is abstract;
 
-   function Default_Callback (Request : in Status.Data) return Response.Data is
-      pragma Unreferenced (Request);
-   begin
-      return Response.Build (MIME.Text_HTML, "Hello World 404 Error");
-   end Default_Callback;
+   type HW_Plugin is abstract new Plugin and HW with null record;
 
-   -----------------
-   -- Hello_World --
-   -----------------
+   type HW_Plugin_Access is access all HW_Plugin;
 
-   function Hello_World (Request : in Status.Data) return Response.Data is
-      pragma Unreferenced (Request);
-
-      Hello_World_Plugin_Access : constant HW_Plugin_Access
-        := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
-      Hello_World_Plugin : HW_Plugin'Class := Hello_World_Plugin_Access.all;
-   begin
-      return Response.Build (MIME.Text_HTML,
-                             Hello_World_Plugin.Hello);
-   end Hello_World;
-
-begin
-
-   Services.Dispatchers.URI.Register
-     (Dispatcher => Main_Dispatcher,
-      URI        => "/hello",
-      Action     => Dispatchers.Callback.Create (Hello_World'Access));
-
-   Services.Dispatchers.URI.Register_Default_Callback
-     (Main_Dispatcher,
-      Dispatchers.Callback.Create (Default_Callback'Access));
-   --  This Default Callback Will Handle all ECWF Callbacks
-
-   Gwiad.Web.Register (Hostname => "127.0.0.1",
-                       Action   => Main_Dispatcher);
-
-end Hello_World;
+end Hello_World_Interface;

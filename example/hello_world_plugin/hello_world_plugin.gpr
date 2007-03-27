@@ -21,6 +21,7 @@
 
 with "../../shared";
 with "../../plugins/plugins";
+with "../hello_world_interface/hello_world_interface";
 
 Project Hello_World_Plugin is
 

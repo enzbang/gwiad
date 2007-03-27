@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------------
 
 with Gwiad.Plugins.Register;
+with Ada.Text_IO;
 
 package body Hello_World_Plugin is
 
@@ -28,7 +29,7 @@ package body Hello_World_Plugin is
    -------------
 
    function Builder return access Plugin'Class is
-      Test : constant Test_Plugin_Access := new Test_Plugin;
+      Test : constant Hello_World_Plugin_Access := new Hello_World_Plugin;
    begin
       return Test;
    end Builder;
@@ -37,17 +38,19 @@ package body Hello_World_Plugin is
    -- Hello_World --
    -----------------
 
-   function Hello_World (P : Test_Plugin) return String is
+   function Hello (P : Hello_World_Plugin) return String is
       pragma Unreferenced (P);
    begin
       return "hello_world_plugin says Hello World";
-   end Hello_World;
+   end Hello;
 
 begin
-
    Gwiad.Plugins.Register.Register
      (Name        => "hello_world_plugin",
       Description => "A simple hello world for gwiad",
       Builder     => Builder'Access);
 
+exception
+   when others =>
+      Ada.Text_IO.Put_Line ("hello_world_plugin registration failed");
 end Hello_World_Plugin;
