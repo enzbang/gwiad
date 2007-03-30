@@ -63,5 +63,11 @@ project Gwiad.Web is
       end case;
    end Linker;
 
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide renames Shared.Ide;
+
 end Gwiad.Web;
 

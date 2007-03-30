@@ -32,5 +32,6 @@ project Dynamic_Libraries is
    for Library_Kind use "static";
 
    package Compiler renames Shared.Compiler;
+   package Ide renames Shared.Ide;
 
 end Dynamic_Libraries;

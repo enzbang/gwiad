@@ -35,5 +35,6 @@ Project Hello_World_Plugin is
    for Library_Auto_Init use "false";
 
    package Compiler renames Shared.Compiler;
+   package Ide renames Shared.Ide;
 
 end Hello_World_Plugin;

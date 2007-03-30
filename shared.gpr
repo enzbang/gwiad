@@ -89,5 +89,13 @@ project Shared is
             for Default_Switches ("Ada") use ();
       end case;
    end Linker;
+ 
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide is
+      for Vcs_Kind use "Subversion";
+   end Ide;
 
 end Shared;
