@@ -27,7 +27,7 @@ package Gwiad.Dynamic_Libraries.Manager is
    task type Discover;
 
    package Hashed_Strings is new Ada.Containers.Indefinite_Hashed_Maps
-     (String, Dynamic_Library, Ada.Strings.Hash, "=", "=");
+     (String, Dynamic_Library_Access, Ada.Strings.Hash, "=", "=");
    use Hashed_Strings;
 
    protected Manager is

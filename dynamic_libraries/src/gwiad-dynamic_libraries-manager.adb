@@ -59,15 +59,14 @@ package body Gwiad.Dynamic_Libraries.Manager is
          while More_Entries (S) loop
             Get_Next_Entry (S, D);
             declare
-               Library         : Dynamic_Library;
-
-               Path            : constant String := Full_Name (D);
+               Library : Dynamic_Library_Access := new Dynamic_Library;
+               Path    : constant String        := Full_Name (D);
             begin
                if not Loaded_Libraries.Contains (Path) then
                   Ada.Text_IO.Put_Line (Path);
                   Library := Dynamic_Libraries.Load (Path);
                   Plugins.Register.Register (Library_Path => Path);
-                  Init (Library, Path);
+                  Init (Library.all, Path);
                   Loaded_Libraries.Insert (Path, Library);
                end if;
             end;
@@ -83,7 +82,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
       ----------
 
       procedure Load (Path : in String) is
-         Library : Dynamic_Library;
+         Library : Dynamic_Library_Access;
       begin
          Library := Load (Path);
          Loaded_Libraries.Insert (Path, Library);
@@ -94,7 +93,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
       ------------
 
       entry Unload (Path : in String) when Loaded_Libraries.Length > 0 is
-         Library : Dynamic_Library;
+         Library : Dynamic_Library_Access;
       begin
          if Path /= "" then
             if not Loaded_Libraries.Contains (Path) then
@@ -103,7 +102,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
             Ada.Text_IO.Put_Line ("Unload library at " & Path);
             Library := Loaded_Libraries.Element (Path);
             Loaded_Libraries.Delete (Path);
-            Dynamic_Libraries.Unload (Library);
+            Dynamic_Libraries.Unload (Library.all);
             Rename (Path, Path & ".disabled");
             Ada.Text_IO.Put_Line ("Done");
          end if;

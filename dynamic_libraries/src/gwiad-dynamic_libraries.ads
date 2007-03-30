@@ -23,9 +23,11 @@ package Gwiad.Dynamic_Libraries is
 
    Dynamic_Library_Error : exception;
 
-   type Dynamic_Library is tagged private;
+   type Dynamic_Library is tagged limited private;
 
-   function Load (Path : in String) return Dynamic_Library;
+   type Dynamic_Library_Access is access all Dynamic_Library;
+
+   function Load (Path : in String) return Dynamic_Library_Access;
    --  Load the dynamic library located at path.
    --  Raise Dynamic_Library_Error if fails
 
@@ -56,7 +58,7 @@ private
 
    type Reference is access Implementation;
 
-   type Dynamic_Library is tagged record
+   type Dynamic_Library is tagged limited record
       Ref : Reference;
    end record;
 

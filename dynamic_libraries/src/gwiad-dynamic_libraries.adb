@@ -113,7 +113,7 @@ package body Gwiad.Dynamic_Libraries is
    -- Load --
    ----------
 
-   function Load (Path : String) return Dynamic_Library is
+   function Load (Path : String) return Dynamic_Library_Access is
 
       function Dlopen
         (Lib_Name : chars_ptr; Mode : int)
@@ -122,7 +122,7 @@ package body Gwiad.Dynamic_Libraries is
 
       RTLD_LAZY : constant := 1;
       C_Path    : chars_ptr := New_String (Path);
-      Result    : Dynamic_Library;
+      Result    : constant Dynamic_Library_Access := new Dynamic_Library;
 
    begin
       Result.Ref := new Implementation;
