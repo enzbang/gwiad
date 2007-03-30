@@ -31,13 +31,16 @@ package Gwiad.Plugins.Register is
 
    procedure Register (Library_Path : in String);
    --  Registers a new dynamic library
-   --  This must be called before registering the plugin to set the plugin name
+   --  This must be called before registering the plugin to set the plugin path
+   --  before the plugin registration
 
    procedure Register
      (Name           : in String;
       Description    : in String;
       Builder        : in Plugin_Builder);
    --  Registers a new service
+   --  This is called by a plugin after that the plugin path has been set by
+   --  the dynamic library manager (as the plugin has no knowlegde of its path)
    --  Raise plugin error if plugin with the same name is registered or
    --  if no dynamic library is registered
 
@@ -46,9 +49,6 @@ package Gwiad.Plugins.Register is
 
    function Exists (Name : in String) return Boolean;
    --  Returns true if a service with the given name is registered
-
-   function Image (Name : in String) return String;
-   --  Returns description and library path of the plugin
 
    function Get (Name : in String) return Plugin_Access;
    --  Returns the plugin

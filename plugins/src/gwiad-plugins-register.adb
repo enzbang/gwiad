@@ -89,19 +89,6 @@ package body Gwiad.Plugins.Register is
       return Register_Maps.Has_Element (Register_Maps.Cursor (Position));
    end Has_Element;
 
-   -----------
-   -- Image --
-   -----------
-
-   function Image (Name : in String) return String is
-      P : Registered_Plugin;
-   begin
-      P := Register_Maps.Element (Container => Plugin_Map,
-                                  Key       => Name);
-
-      return To_String (Name & P.Description & ", path : " & P.Path);
-   end Image;
-
    ----------
    -- Name --
    ----------

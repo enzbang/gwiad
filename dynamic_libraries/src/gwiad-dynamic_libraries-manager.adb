@@ -63,11 +63,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
                Path            : constant String := Full_Name (D);
             begin
-               if not Contains
-                 (Container => Loaded_Libraries, Key => Path)
-               then
+               if not Loaded_Libraries.Contains (Path) then
                   Ada.Text_IO.Put_Line (Path);
-                  Library := Load (Path);
+                  Library := Dynamic_Libraries.Load (Path);
                   Plugins.Register.Register (Library_Path => Path);
                   Init (Library, Path);
                   Loaded_Libraries.Insert (Path, Library);

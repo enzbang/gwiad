@@ -54,6 +54,7 @@ package body Hello_World is
       Hello_World_Plugin_Access : constant HW_Plugin_Access
         := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
       Hello_World_Plugin : HW_Plugin'Class := Hello_World_Plugin_Access.all;
+
    begin
       return Response.Build (MIME.Text_HTML,
                              Hello_World_Plugin.Hello);
