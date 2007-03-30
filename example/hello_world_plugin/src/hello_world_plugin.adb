@@ -38,7 +38,7 @@ package body Hello_World_Plugin is
    -- Hello_World --
    -----------------
 
-   function Hello (P : Hello_World_Plugin) return String is
+   overriding function Hello (P : Hello_World_Plugin) return String is
       pragma Unreferenced (P);
    begin
       return "hello_world_plugin says Hello World";

@@ -25,11 +25,11 @@ package Hello_World_Interface is
 
    use Gwiad.Plugins;
 
-   type HW is interface;
+   type Hello_Interface is interface;
 
-   function Hello (P : HW) return String is abstract;
+   function Hello (P : Hello_Interface) return String is abstract;
 
-   type HW_Plugin is abstract new Plugin and HW with null record;
+   type HW_Plugin is abstract new Plugin and Hello_Interface with null record;
 
    type HW_Plugin_Access is access all HW_Plugin;
 

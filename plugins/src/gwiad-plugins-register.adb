@@ -19,7 +19,12 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Text_IO;
+with Ada.Exceptions;
+
 package body Gwiad.Plugins.Register is
+
+   use Ada.Exceptions;
 
    Last_Library_Path : Unbounded_String;
 
@@ -76,7 +81,8 @@ package body Gwiad.Plugins.Register is
 
       return Plugin_Access (Get_Registered_Plugin.Builder.all);
    exception
-      when others =>
+      when E : others =>
+         Ada.Text_IO.Put_Line (Exception_Information (E));
          raise Plugin_Error;
    end Get;
 

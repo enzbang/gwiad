@@ -31,7 +31,7 @@ package Hello_World_Plugin is
 
    type Hello_World_Plugin_Access is access all Hello_World_Plugin;
 
-   function Hello (P : Hello_World_Plugin) return String;
+   overriding function Hello (P : Hello_World_Plugin) return String;
    --  Hello world
 
 private
