@@ -51,13 +51,23 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
 
-      Hello_World_Plugin_Access : constant HW_Plugin_Access
-        := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
-      Hello_World_Plugin : HW_Plugin'Class := Hello_World_Plugin_Access.all;
+      Plugin_Name : constant String := "hello_world_plugin";
 
    begin
-      return Response.Build (MIME.Text_HTML,
-                             Hello_World_Plugin.Hello);
+
+      if not Plugins.Register.Exists (Name => Plugin_Name) then
+         return Response.Build (MIME.Text_HTML,
+                                "<p>Service down</p>");
+      end if;
+
+      declare
+         Hello_World_Plugin_Access : constant HW_Plugin_Access
+           := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
+         Hello_World_Plugin        : HW_Plugin'Class :=
+                                       Hello_World_Plugin_Access.all;
+      begin
+         return Response.Build (MIME.Text_HTML, Hello_World_Plugin.Hello);
+      end;
    end Hello_World;
 
 begin
