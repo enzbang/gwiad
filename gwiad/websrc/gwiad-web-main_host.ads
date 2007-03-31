@@ -19,31 +19,12 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with AWS.Dispatchers;
-
-private with AWS.Services.Dispatchers.Virtual_Host;
-
-package Gwiad.Web is
+private package Gwiad.Web.Main_Host is
 
    procedure Start;
 
-   procedure Wait;
-
    procedure Register
-     (Host : in String; Redirected_Hostname : in String);
-   --  Registers a new virtual host redirection
-
-   procedure Register
-     (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class);
-   --  Registers a new virtual host handler
-
-   procedure Register_Web_Directory
      (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class);
    --  Registers a new virtual host handler
 
-
-private
-
-   Virtual_Hosts_Dispatcher : AWS.Services.Dispatchers.Virtual_Host.Handler;
-
-end Gwiad.Web;
+end Gwiad.Web.Main_Host;

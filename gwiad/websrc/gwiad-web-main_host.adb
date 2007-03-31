@@ -19,22 +19,20 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins.Register;
-with Gwiad.Web;
-
-with Hello_World_Interface;
-
-with AWS.Dispatchers.Callback;
+with AWS.Status;
+with AWS.Response;
 with AWS.MIME;
+with AWS.Dispatchers.Callback;
+with AWS.Services.Dispatchers.URI;
 
-package body Hello_World is
+package body Gwiad.Web.Main_Host is
 
-   use Gwiad;
-   use Gwiad.Plugins;
+   use AWS;
 
-   use Hello_World_Interface;
+   Main_Host_Dispatcher : Services.Dispatchers.URI.Handler;
 
-   Hello_Web_Dir : constant String := "/hello/";
+   function Default_Callback (Request : in Status.Data) return Response.Data;
+   --  Default callback
 
    ----------------------
    -- Default_Callback --
@@ -43,48 +41,44 @@ package body Hello_World is
    function Default_Callback (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
    begin
-      return Response.Build (MIME.Text_HTML, "Hello World 404 Error");
+      return Response.Build (MIME.Text_HTML, "<h1>Error</h1>");
    end Default_Callback;
 
-   -----------------
-   -- Hello_World --
-   -----------------
+   --------------
+   -- Register --
+   --------------
 
-   function Hello_World (Request : in Status.Data) return Response.Data is
-      pragma Unreferenced (Request);
-
-      Plugin_Name : constant String := "hello_world_plugin";
-
+   procedure Register
+     (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class) is
    begin
+      Services.Dispatchers.URI.Register (Dispatcher => Main_Host_Dispatcher,
+                                         URI        => Web_Dir,
+                                         Action     => Action,
+                                         Prefix     => True);
 
-      if not Plugins.Register.Exists (Name => Plugin_Name) then
-         return Response.Build (MIME.Text_HTML,
-                                "<p>Service down</p>");
-      end if;
+      --  Call register default callback to update Main_Host_Dispatcher
 
-      declare
-         Hello_World_Plugin_Access : constant HW_Plugin_Access
-           := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
-         Hello_World_Plugin        : HW_Plugin'Class :=
-                                       Hello_World_Plugin_Access.all;
-      begin
-         return Response.Build (MIME.Text_HTML, Hello_World_Plugin.Hello);
-      end;
-   end Hello_World;
+      Services.Dispatchers.Virtual_Host.Register_Default_Callback
+        (Virtual_Hosts_Dispatcher,
+         Main_Host_Dispatcher);
 
-begin
+   end Register;
 
-   Services.Dispatchers.URI.Register
-     (Dispatcher => Main_Dispatcher,
-      URI        => Hello_Web_Dir & "world",
-      Action     => Dispatchers.Callback.Create (Hello_World'Access));
+   -----------
+   -- Start --
+   -----------
 
-   Services.Dispatchers.URI.Register_Default_Callback
-     (Main_Dispatcher,
-      Dispatchers.Callback.Create (Default_Callback'Access));
+   procedure Start is
+   begin
+      --  Adds default callback to main host dispatcher
 
+      Services.Dispatchers.URI.Register_Default_Callback
+        (Main_Host_Dispatcher,
+         Dispatchers.Callback.Create (Default_Callback'Access));
 
-   Gwiad.Web.Register_Web_Directory (Web_Dir => Hello_Web_Dir,
-                                     Action  => Main_Dispatcher);
+      Services.Dispatchers.Virtual_Host.Register_Default_Callback
+        (Virtual_Hosts_Dispatcher,
+         Main_Host_Dispatcher);
+   end Start;
 
-end Hello_World;
+end Gwiad.Web.Main_Host;

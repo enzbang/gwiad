@@ -24,9 +24,12 @@ all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-web
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-web
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-ecwf
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-ecwf
 
 clean:
 	-gnat clean -r -Pgwiad
 	-gnat clean -r -Pgwiad-web
+	-gnat clean -r -Pgwiad-ecwf
 
 check:
