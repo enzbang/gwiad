@@ -20,6 +20,8 @@
 ##############################################################################
 
 all:
+	-gnat clean -r -Pservices_admin
+	 # Workaround for GNAT bug with Ali_Directory
 	gnat make -XPRJ_BUILD=$(MODE) -Pservices_admin
 	gnat make -XPRJ_BUILD=$(MODE) -Pservices_admin
 

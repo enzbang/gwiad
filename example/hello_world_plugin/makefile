@@ -20,6 +20,8 @@
 ##############################################################################
 
 all:
+	-gnat clean -r -Phello_world_plugin
+	# Workaround for GNAT bug with ali directory
 	gnat make -XPRJ_BUILD=$(MODE) -Phello_world_plugin
 	gnat make -XPRJ_BUILD=$(MODE) -Phello_world_plugin
 
