@@ -19,15 +19,21 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+
+with AWS.Services.Dispatchers.URI;
+with AWS.Status;
+with AWS.Response;
+with AWS.Dispatchers.Callback;
+with AWS.MIME;
+
 with Gwiad.Plugins.Register;
 with Gwiad.Web;
 
 with Hello_World_Interface;
 
-with AWS.Dispatchers.Callback;
-with AWS.MIME;
-
 package body Hello_World is
+
+   use AWS;
 
    use Gwiad;
    use Gwiad.Plugins;
@@ -36,6 +42,14 @@ package body Hello_World is
 
    Hello_Web_Dir : constant String := "/hello/";
 
+   Main_Dispatcher : Services.Dispatchers.URI.Handler;
+
+   function Default_Callback
+     (Request : in Status.Data) return Response.Data;
+   --  Default callback
+
+   function Hello_World (Request : in Status.Data) return Response.Data;
+   --  Hello world
    ----------------------
    -- Default_Callback --
    ----------------------
@@ -63,8 +77,9 @@ package body Hello_World is
       end if;
 
       declare
-         Hello_World_Plugin_Access : constant HW_Plugin_Access
-           := HW_Plugin_Access (Plugins.Register.Get ("hello_world_plugin"));
+         Hello_World_Plugin_Access : constant HW_Plugin_Access :=
+                                       HW_Plugin_Access
+                                         (Plugins.Register.Get (Plugin_Name));
          Hello_World_Plugin        : HW_Plugin'Class :=
                                        Hello_World_Plugin_Access.all;
       begin

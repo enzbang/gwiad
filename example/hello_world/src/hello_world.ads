@@ -19,21 +19,9 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-private with AWS.Services.Dispatchers.URI;
-private with AWS.Status;
-private with AWS.Response;
 
 package Hello_World is
 
-private
-   use AWS;
-   Main_Dispatcher : Services.Dispatchers.URI.Handler;
-
-   function Default_Callback
-     (Request : in Status.Data) return Response.Data;
-   --  Default callback
-
-   function Hello_World (Request : in Status.Data) return Response.Data;
-   --  Hello world
+   pragma Elaborate_Body;
 
 end Hello_World;
