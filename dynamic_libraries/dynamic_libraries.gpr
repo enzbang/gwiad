@@ -22,6 +22,7 @@
 with "../shared";
 with "../gwiad/gwiad";
 with "../services/services";
+with "../websites/websites";
 
 project Dynamic_Libraries is
 

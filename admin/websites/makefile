@@ -21,7 +21,7 @@
 
 # Modules support
 
-MODULES = services websites
+MODULES = websites_admin
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

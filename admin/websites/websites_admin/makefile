@@ -1,5 +1,5 @@
 ##############################################################################
-##                                Diouzhtu                                  ##
+##                                  Gwiad                                   ##
 ##                                                                          ##
 ##                           Copyright (C) 2007                             ##
 ##                            Olivier Ramonat                               ##
@@ -19,29 +19,14 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-# Modules support
+all:
+##  Workaround for GNAT bug with Ali_Directory
+	-gnat clean -r -Pwebsites_admin
+##  When building without cleaning first. Build failed to delete old ALI files
+	gnat make -XPRJ_BUILD=$(MODE) -Pwebsites_admin
+	gnat make -XPRJ_BUILD=$(MODE) -Pwebsites_admin
 
-MODULES = services websites
+clean:
+	-gnat clean -r -Pwebsites_admin
 
-MODULES_BUILD = ${MODULES:%=%_build}
-
-MODULES_CLEAN = ${MODULES:%=%_clean}
-
-MODULES_CHECK = ${MODULES:%=%_check}
-
-# Targets
-
-all: $(MODULES_BUILD)
-
-clean: $(MODULES_CLEAN)
-
-check :$(MODULES_CHECK)
-
-${MODULES_BUILD}:
-	${MAKE} -C ${@:%_build=%} $(OPTIONS)
-
-${MODULES_CLEAN}:
-	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
-
-${MODULES_CHECK}:
-	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
+check:

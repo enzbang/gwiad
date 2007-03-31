@@ -97,6 +97,16 @@ package body Gwiad.Web is
       Server.Start (HTTP, Virtual_Hosts_Dispatcher, Configuration);
    end Start;
 
+   ------------------------------
+   -- Unregister_Web_Directory --
+   ------------------------------
+
+   procedure Unregister_Web_Directory (Web_Dir : in String) is
+   begin
+      Main_Host.Unregister (Web_Dir);
+      Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+   end Unregister_Web_Directory;
+
    ----------
    -- Wait --
    ----------

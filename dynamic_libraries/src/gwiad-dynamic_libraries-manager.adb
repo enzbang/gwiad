@@ -24,6 +24,7 @@ with Ada.Text_IO;
 with Ada.Exceptions;
 
 with Gwiad.Services.Register;
+with Gwiad.Websites.Register;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
@@ -65,7 +66,15 @@ package body Gwiad.Dynamic_Libraries.Manager is
                if not Loaded_Libraries.Contains (Path) then
                   Ada.Text_IO.Put_Line (Path);
                   Library := Dynamic_Libraries.Load (Path);
+
+                  --  ??? As the type of library is not known (service or
+                  --  website). Register both
+                  --  Library having a different type must be stored in
+                  --  separate directory
+
                   Services.Register.Register (Library_Path => Path);
+                  Websites.Register.Register (Library_Path => Path);
+
                   Init (Library.all, Path);
                   Loaded_Libraries.Insert (Path, Library);
                end if;

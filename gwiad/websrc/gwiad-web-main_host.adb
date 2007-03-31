@@ -81,4 +81,20 @@ package body Gwiad.Web.Main_Host is
          Main_Host_Dispatcher);
    end Start;
 
+   ----------------
+   -- Unregister --
+   ----------------
+
+   procedure Unregister (Web_Dir : in String) is
+   begin
+      Services.Dispatchers.URI.Unregister (Main_Host_Dispatcher, Web_Dir);
+
+      --  Call register default callback to update Main_Host_Dispatcher
+
+      Services.Dispatchers.Virtual_Host.Register_Default_Callback
+        (Virtual_Hosts_Dispatcher,
+         Main_Host_Dispatcher);
+
+   end Unregister;
+
 end Gwiad.Web.Main_Host;

@@ -19,14 +19,10 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-private package Gwiad.Web.Main_Host is
+package Gwiad.Websites is
 
-   procedure Start;
+   Website_Error : exception;
 
-   procedure Register
-     (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class);
-   --  Registers a new virtual host handler
+   type Unregister_CB is access procedure;
 
-   procedure Unregister (Web_Dir : in String);
-
-end Gwiad.Web.Main_Host;
+end Gwiad.Websites;

@@ -19,14 +19,24 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-private package Gwiad.Web.Main_Host is
+with "aws";
+with "../../../shared";
+with "../../../websites/websites";
+with "../../../dynamic_libraries/dynamic_libraries";
+with "../../../gwiad/gwiad-web";
 
-   procedure Start;
+Project Websites_Admin is
 
-   procedure Register
-     (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class);
-   --  Registers a new virtual host handler
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Ali_Dir use "lib";
+   for Library_Dir use "../../../lib";
+   for Library_Name use "gwiad_website_admin";
+   for Library_Interface use ("websites_admin");
+   for Library_Kind use "dynamic";
+   for Library_Auto_Init use "false";
 
-   procedure Unregister (Web_Dir : in String);
+   package Compiler renames Shared.Compiler;
+   package Ide renames Shared.Ide;
 
-end Gwiad.Web.Main_Host;
+end Websites_Admin;

@@ -39,8 +39,10 @@ package Gwiad.Web is
 
    procedure Register_Web_Directory
      (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class);
-   --  Registers a new virtual host handler
+   --  Registers a new web directory
 
+   procedure Unregister_Web_Directory (Web_Dir : in String);
+   --  Unregister a web directory
 
 private
 

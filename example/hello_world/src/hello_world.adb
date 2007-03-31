@@ -27,6 +27,7 @@ with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
 with Gwiad.Services.Register;
+with Gwiad.Websites.Register;
 with Gwiad.Web;
 
 with Hello_World_Interface;
@@ -50,6 +51,10 @@ package body Hello_World is
 
    function Hello_World (Request : in Status.Data) return Response.Data;
    --  Hello world
+
+   procedure Unregister;
+   --  Unregister website
+
    ----------------------
    -- Default_Callback --
    ----------------------
@@ -87,6 +92,15 @@ package body Hello_World is
       end;
    end Hello_World;
 
+   ----------------
+   -- Unregister --
+   ----------------
+
+   procedure Unregister is
+   begin
+      Gwiad.Web.Unregister_Web_Directory (Web_Dir => Hello_Web_Dir);
+   end Unregister;
+
 begin
 
    AWS.Services.Dispatchers.URI.Register
@@ -101,5 +115,10 @@ begin
 
    Gwiad.Web.Register_Web_Directory (Web_Dir => Hello_Web_Dir,
                                      Action  => Main_Dispatcher);
+
+   Gwiad.Websites.Register.Register
+     (Name        => "Hello web site",
+      Description => "A test for gwiad using hello world service",
+      Unregister  => Unregister'Access);
 
 end Hello_World;
