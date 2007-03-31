@@ -23,7 +23,7 @@ with Ada.Directories;
 with Ada.Text_IO;
 with Ada.Exceptions;
 
-with Gwiad.Plugins.Register;
+with Gwiad.Services.Register;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
@@ -65,7 +65,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                if not Loaded_Libraries.Contains (Path) then
                   Ada.Text_IO.Put_Line (Path);
                   Library := Dynamic_Libraries.Load (Path);
-                  Plugins.Register.Register (Library_Path => Path);
+                  Services.Register.Register (Library_Path => Path);
                   Init (Library.all, Path);
                   Loaded_Libraries.Insert (Path, Library);
                end if;

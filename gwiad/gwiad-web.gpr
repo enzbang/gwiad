@@ -24,7 +24,6 @@ with "gwiad";
 with "gwiad-ecwf";
 with "../shared";
 with "../dynamic_libraries/dynamic_libraries";
-with "../plugins/plugins";
 
 project Gwiad.Web is
 
