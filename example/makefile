@@ -19,17 +19,9 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-# Options
-MODE=Debug
-CP=cp -p
-MKDIR=mkdir -p
-RM=rm -f
-
-OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
-
 # Modules support
 
-MODULES = hello_world hello_world_plugin
+MODULES = hello_world hello_world_service hello_world_interface
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

@@ -19,24 +19,17 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Services;
 with Hello_World_Interface;
 
-package Hello_World_Plugin is
+package Hello_World_Service is
 
-   use Gwiad.Services;
    use Hello_World_Interface;
 
    type Hello_World_Service is new HW_Service with null record;
 
    type Hello_World_Service_Access is access all Hello_World_Service;
 
-   overriding function Hello (P : Hello_World_Service) return String;
+   overriding function Hello (S : Hello_World_Service) return String;
    --  Hello world
 
-private
-
-   function Builder return access Service'Class;
-   --  Build a new test plugin
-
-end Hello_World_Plugin;
+end Hello_World_Service;

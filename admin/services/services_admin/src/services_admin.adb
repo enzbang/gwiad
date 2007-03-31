@@ -19,13 +19,16 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins.Register;
+with Gwiad.Services.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web;
 
+with AWS.Status;
 with AWS.Dispatchers.Callback;
 with AWS.Messages;
+with AWS.Response;
 with AWS.MIME;
+with AWS.Services.Dispatchers.URI;
 with AWS.Services.ECWF.Registry;
 with AWS.Services.ECWF.Context;
 with AWS.Templates;
@@ -35,19 +38,25 @@ with Ada.Strings.Unbounded;
 package body Services_Admin is
 
    use Gwiad;
-   use Gwiad.Plugins;
+   use Gwiad.Services;
 
+   use AWS;
    use AWS.Templates;
+
+   Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
+
+   function Default_Callback (Request : in Status.Data) return Response.Data;
+   --  Registers default callback
 
    procedure List_Services
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Lists all services
 
    procedure Stop_Service
      (Request      : in Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Stop a gwiad service
 
@@ -62,12 +71,12 @@ package body Services_Admin is
       Web_Page     : Response.Data;
    begin
 
-      Web_Page := Services.ECWF.Registry.Build
+      Web_Page := AWS.Services.ECWF.Registry.Build
         (URI, Request, Translations, Cache_Control => Messages.Prevent_Cache);
 
       if Response.Status_Code (Web_Page) = Messages.S404 then
          --  Page not found
-         return Services.ECWF.Registry.Build
+         return AWS.Services.ECWF.Registry.Build
            ("/404", Request, Translations);
 
       else
@@ -81,11 +90,11 @@ package body Services_Admin is
 
    procedure List_Services
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Plugins.Register;
+      use Gwiad.Services.Register;
 
       Position : Cursor := First;
 
@@ -110,11 +119,11 @@ package body Services_Admin is
 
    procedure Stop_Service
      (Request      : in Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
    pragma Unreferenced (Context, Translations);
-      use Gwiad.Plugins.Register;
+      use Gwiad.Services.Register;
       use Dynamic_Libraries.Manager;
       use Ada.Strings.Unbounded;
 
@@ -140,20 +149,20 @@ package body Services_Admin is
 
 begin
 
-   Services.Dispatchers.URI.Register_Default_Callback
+   AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
       Dispatchers.Callback.Create (Default_Callback'Access));
    --  This default callback will handle all ECWF callbacks
 
    --  Register ECWF pages
 
-   Services.ECWF.Registry.Register
+   AWS.Services.ECWF.Registry.Register
      ("/list",
       "templates/services_admin/list.thtml",
       List_Services'Access,
       MIME.Text_HTML);
 
-   Services.ECWF.Registry.Register
+   AWS.Services.ECWF.Registry.Register
      ("/stop",
       "templates/services_admin/stop.thtml",
       Stop_Service'Access,

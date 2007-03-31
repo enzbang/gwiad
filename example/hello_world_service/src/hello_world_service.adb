@@ -19,22 +19,43 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "../../shared";
-with "../../services/services";
-with "../hello_world_interface/hello_world_interface";
+with Gwiad.Services.Register;
+with Ada.Text_IO;
 
-Project Hello_World_Plugin is
+package body Hello_World_Service is
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Library_Ali_Dir use "lib";
-   for Library_Dir use "../../lib";
-   for Library_Name use "lib_hwp";
-   for Library_Interface use ("hello_world_plugin");
-   for Library_Kind use "dynamic";
-   for Library_Auto_Init use "false";
+   use Gwiad.Services;
 
-   package Compiler renames Shared.Compiler;
-   package Ide renames Shared.Ide;
+   function Builder return access Service'Class;
+   --  Build a new test plugin
 
-end Hello_World_Plugin;
+   -------------
+   -- Builder --
+   -------------
+
+   function Builder return access Service'Class is
+      Test : constant Hello_World_Service_Access := new Hello_World_Service;
+   begin
+      return Test;
+   end Builder;
+
+   -----------------
+   -- Hello_World --
+   -----------------
+
+   overriding function Hello (S : Hello_World_Service) return String is
+      pragma Unreferenced (S);
+   begin
+      return "hello_world_plugin says Hello World";
+   end Hello;
+
+begin
+   Gwiad.Services.Register.Register
+     (Name        => "hello_world_plugin",
+      Description => "A simple hello world for gwiad",
+      Builder     => Builder'Access);
+
+exception
+   when others =>
+      Ada.Text_IO.Put_Line ("hello_world_plugin registration failed");
+end Hello_World_Service;

@@ -27,7 +27,7 @@ package Hello_World_Interface is
 
    type Hello_Interface is interface;
 
-   function Hello (P : Hello_Interface) return String is abstract;
+   function Hello (S : Hello_Interface) return String is abstract;
 
    type HW_Service is abstract new Service and Hello_Interface
    with null record;
