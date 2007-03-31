@@ -19,14 +19,14 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins;
+with Gwiad.Services;
 with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Strings.Hash;
 with Ada.Strings.Unbounded;
 
-package Gwiad.Plugins.Register is
+package Gwiad.Services.Register is
 
-   use Plugins;
+   use Services;
    use Ada.Strings.Unbounded;
 
    procedure Register (Library_Path : in String);
@@ -89,4 +89,4 @@ private
 
    type Cursor is new Register_Maps.Cursor;
 
-end Gwiad.Plugins.Register;
+end Gwiad.Services.Register;

@@ -22,7 +22,7 @@
 with Ada.Text_IO;
 with Ada.Exceptions;
 
-package body Gwiad.Plugins.Register is
+package body Gwiad.Services.Register is
 
    use Ada.Exceptions;
 
@@ -173,4 +173,4 @@ package body Gwiad.Plugins.Register is
       Plugin_Map.Delete (Position);
    end Unregister;
 
-end Gwiad.Plugins.Register;
+end Gwiad.Services.Register;

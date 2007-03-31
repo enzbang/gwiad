@@ -19,7 +19,7 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-package Gwiad.Plugins is
+package Gwiad.Services is
 
    type Plugin is abstract tagged null record;
 
@@ -29,4 +29,4 @@ package Gwiad.Plugins is
 
    Plugin_Error : exception;
 
-end Gwiad.Plugins;
+end Gwiad.Services;
