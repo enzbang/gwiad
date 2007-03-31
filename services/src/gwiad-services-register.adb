@@ -28,18 +28,18 @@ package body Gwiad.Services.Register is
 
    Last_Library_Path : Unbounded_String;
 
-   Plugin_Map : Register_Maps.Map;
+   Service_Map : Register_Maps.Map;
 
    -----------------
    -- Description --
    -----------------
 
    function Description (Position : Cursor) return String is
-      P : Registered_Plugin;
+      RS : Registered_Service;
    begin
-      P := Register_Maps.Element (Position => Register_Maps.Cursor (Position));
-
-      return To_String (P.Description);
+      RS := Register_Maps.Element
+        (Position => Register_Maps.Cursor (Position));
+      return To_String (RS.Description);
    end Description;
 
    ------------
@@ -48,7 +48,7 @@ package body Gwiad.Services.Register is
 
    function Exists (Name : in String) return Boolean is
    begin
-      return Register_Maps.Contains (Plugin_Map, Name);
+      return Register_Maps.Contains (Service_Map, Name);
    end Exists;
 
    ----------
@@ -57,7 +57,7 @@ package body Gwiad.Services.Register is
 
    function Find (Key : in String) return Cursor is
    begin
-      return Cursor (Register_Maps.Find (Plugin_Map, Key));
+      return Cursor (Register_Maps.Find (Service_Map, Key));
    end Find;
 
    -----------
@@ -66,24 +66,24 @@ package body Gwiad.Services.Register is
 
    function First return Cursor is
    begin
-      return Cursor (Plugin_Map.First);
+      return Cursor (Service_Map.First);
    end First;
 
    ---------
    -- Get --
    ---------
 
-   function Get (Name : in String) return Plugin_Access is
-      Get_Registered_Plugin : Registered_Plugin;
+   function Get (Name : in String) return Service_Access is
+      RS : Registered_Service;
    begin
-      Get_Registered_Plugin := Register_Maps.Element (Container => Plugin_Map,
-                                                      Key       => Name);
+      RS := Register_Maps.Element (Container => Service_Map,
+                                   Key       => Name);
 
-      return Plugin_Access (Get_Registered_Plugin.Builder.all);
+      return Service_Access (RS.Builder.all);
    exception
       when E : others =>
          Ada.Text_IO.Put_Line (Exception_Information (E));
-         raise Plugin_Error;
+         raise Service_Error;
    end Get;
 
    -----------------
@@ -118,10 +118,10 @@ package body Gwiad.Services.Register is
    ----------
 
    function Path (Position : Cursor) return String is
-      P : Registered_Plugin := Register_Maps.Element
+      RS : Registered_Service := Register_Maps.Element
         (Register_Maps.Cursor (Position));
    begin
-      return To_String (P.Path);
+      return To_String (RS.Path);
    end Path;
 
    --------------
@@ -140,14 +140,14 @@ package body Gwiad.Services.Register is
    procedure Register
      (Name           : in String;
       Description    : in String;
-      Builder        : in Plugin_Builder) is
+      Builder        : in Service_Builder) is
    begin
       if Last_Library_Path = Null_Unbounded_String then
-         raise Plugin_Error;
+         raise Service_Error;
       end if;
 
       Register_Maps.Insert
-        (Plugin_Map,
+        (Service_Map,
          Name,
          (Builder     => Builder,
           Path        => Last_Library_Path,
@@ -164,13 +164,13 @@ package body Gwiad.Services.Register is
    procedure Unregister (Name : in String) is
       use Register_Maps;
 
-      Position : Register_Maps.Cursor := Plugin_Map.Find (Name);
+      Position : Register_Maps.Cursor := Service_Map.Find (Name);
    begin
       if Position = No_Element then
-         raise Plugin_Error;
+         raise Service_Error;
       end if;
 
-      Plugin_Map.Delete (Position);
+      Service_Map.Delete (Position);
    end Unregister;
 
 end Gwiad.Services.Register;

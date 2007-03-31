@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------------
 
 with "../../shared";
-with "../../plugins/plugins";
+with "../../services/services";
 
 Project Hello_World_Interface is
 

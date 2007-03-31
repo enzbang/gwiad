@@ -19,18 +19,19 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins;
+with Gwiad.Services;
 
 package Hello_World_Interface is
 
-   use Gwiad.Plugins;
+   use Gwiad.Services;
 
    type Hello_Interface is interface;
 
    function Hello (P : Hello_Interface) return String is abstract;
 
-   type HW_Plugin is abstract new Plugin and Hello_Interface with null record;
+   type HW_Service is abstract new Service and Hello_Interface
+   with null record;
 
-   type HW_Plugin_Access is access all HW_Plugin;
+   type HW_Service_Access is access all HW_Service;
 
 end Hello_World_Interface;

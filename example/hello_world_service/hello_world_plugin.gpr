@@ -19,24 +19,22 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins;
-with Hello_World_Interface;
+with "../../shared";
+with "../../services/services";
+with "../hello_world_interface/hello_world_interface";
 
-package Hello_World_Plugin is
+Project Hello_World_Plugin is
 
-   use Gwiad.Plugins;
-   use Hello_World_Interface;
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Ali_Dir use "lib";
+   for Library_Dir use "../../lib";
+   for Library_Name use "lib_hwp";
+   for Library_Interface use ("hello_world_plugin");
+   for Library_Kind use "dynamic";
+   for Library_Auto_Init use "false";
 
-   type Hello_World_Plugin is new HW_Plugin with null record;
-
-   type Hello_World_Plugin_Access is access all Hello_World_Plugin;
-
-   overriding function Hello (P : Hello_World_Plugin) return String;
-   --  Hello world
-
-private
-
-   function Builder return access Plugin'Class;
-   --  Build a new test plugin
+   package Compiler renames Shared.Compiler;
+   package Ide renames Shared.Ide;
 
 end Hello_World_Plugin;

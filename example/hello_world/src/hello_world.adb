@@ -26,7 +26,7 @@ with AWS.Response;
 with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
-with Gwiad.Plugins.Register;
+with Gwiad.Services.Register;
 with Gwiad.Web;
 
 with Hello_World_Interface;
@@ -36,13 +36,13 @@ package body Hello_World is
    use AWS;
 
    use Gwiad;
-   use Gwiad.Plugins;
+   use Gwiad.Services;
 
    use Hello_World_Interface;
 
    Hello_Web_Dir : constant String := "/hello/";
 
-   Main_Dispatcher : Services.Dispatchers.URI.Handler;
+   Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
    function Default_Callback
      (Request : in Status.Data) return Response.Data;
@@ -67,34 +67,34 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
 
-      Plugin_Name : constant String := "hello_world_plugin";
+      Service_Name : constant String := "hello_world_plugin";
 
    begin
 
-      if not Plugins.Register.Exists (Name => Plugin_Name) then
+      if not Register.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
       end if;
 
       declare
-         Hello_World_Plugin_Access : constant HW_Plugin_Access :=
-                                       HW_Plugin_Access
-                                         (Plugins.Register.Get (Plugin_Name));
-         Hello_World_Plugin        : HW_Plugin'Class :=
-                                       Hello_World_Plugin_Access.all;
+         Hello_World_Service_Access : constant HW_Service_Access :=
+                                       HW_Service_Access
+                                         (Register.Get (Service_Name));
+         Hello_World_Service        : HW_Service'Class :=
+                                       Hello_World_Service_Access.all;
       begin
-         return Response.Build (MIME.Text_HTML, Hello_World_Plugin.Hello);
+         return Response.Build (MIME.Text_HTML, Hello_World_Service.Hello);
       end;
    end Hello_World;
 
 begin
 
-   Services.Dispatchers.URI.Register
+   AWS.Services.Dispatchers.URI.Register
      (Dispatcher => Main_Dispatcher,
       URI        => Hello_Web_Dir & "world",
       Action     => Dispatchers.Callback.Create (Hello_World'Access));
 
-   Services.Dispatchers.URI.Register_Default_Callback
+   AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
       Dispatchers.Callback.Create (Default_Callback'Access));
 

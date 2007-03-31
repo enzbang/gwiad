@@ -19,38 +19,24 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Plugins.Register;
-with Ada.Text_IO;
+with Gwiad.Services;
+with Hello_World_Interface;
 
-package body Hello_World_Plugin is
+package Hello_World_Plugin is
 
-   -------------
-   -- Builder --
-   -------------
+   use Gwiad.Services;
+   use Hello_World_Interface;
 
-   function Builder return access Plugin'Class is
-      Test : constant Hello_World_Plugin_Access := new Hello_World_Plugin;
-   begin
-      return Test;
-   end Builder;
+   type Hello_World_Service is new HW_Service with null record;
 
-   -----------------
-   -- Hello_World --
-   -----------------
+   type Hello_World_Service_Access is access all Hello_World_Service;
 
-   overriding function Hello (P : Hello_World_Plugin) return String is
-      pragma Unreferenced (P);
-   begin
-      return "hello_world_plugin says Hello World";
-   end Hello;
+   overriding function Hello (P : Hello_World_Service) return String;
+   --  Hello world
 
-begin
-   Gwiad.Plugins.Register.Register
-     (Name        => "hello_world_plugin",
-      Description => "A simple hello world for gwiad",
-      Builder     => Builder'Access);
+private
 
-exception
-   when others =>
-      Ada.Text_IO.Put_Line ("hello_world_plugin registration failed");
+   function Builder return access Service'Class;
+   --  Build a new test plugin
+
 end Hello_World_Plugin;

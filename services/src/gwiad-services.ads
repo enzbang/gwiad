@@ -21,12 +21,12 @@
 
 package Gwiad.Services is
 
-   type Plugin is abstract tagged null record;
+   type Service is abstract tagged null record;
 
-   type Plugin_Access is access all Plugin'Class;
+   type Service_Access is access all Service'Class;
 
-   type Plugin_Builder is access function return access Plugin'Class;
+   type Service_Builder is access function return access Service'Class;
 
-   Plugin_Error : exception;
+   Service_Error : exception;
 
 end Gwiad.Services;
