@@ -19,14 +19,6 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-# Options
-MODE=Debug
-CP=cp -p
-MKDIR=mkdir -p
-RM=rm -f
-
-OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
-
 # Modules support
 
 MODULES = services_admin

@@ -46,16 +46,16 @@ package body Hello_World_Service is
    overriding function Hello (S : Hello_World_Service) return String is
       pragma Unreferenced (S);
    begin
-      return "hello_world_plugin says Hello World";
+      return "hello_world_service says Hello World";
    end Hello;
 
 begin
    Gwiad.Services.Register.Register
-     (Name        => "hello_world_plugin",
-      Description => "A simple hello world for gwiad",
+     (Name        => "hello_world_service",
+      Description => "A simple hello world service for gwiad",
       Builder     => Builder'Access);
 
 exception
    when others =>
-      Ada.Text_IO.Put_Line ("hello_world_plugin registration failed");
+      Ada.Text_IO.Put_Line ("hello_world_service registration failed");
 end Hello_World_Service;

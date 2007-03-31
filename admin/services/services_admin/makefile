@@ -20,8 +20,9 @@
 ##############################################################################
 
 all:
+##  Workaround for GNAT bug with Ali_Directory
 	-gnat clean -r -Pservices_admin
-	 # Workaround for GNAT bug with Ali_Directory
+##  When building without cleaning first. Build failed to delete old ALI files
 	gnat make -XPRJ_BUILD=$(MODE) -Pservices_admin
 	gnat make -XPRJ_BUILD=$(MODE) -Pservices_admin
 

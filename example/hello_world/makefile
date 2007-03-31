@@ -20,7 +20,9 @@
 ##############################################################################
 
 all:
-	-gnat clean -r -Phello_world # Workaround for GNAT bug with Ali_Directory
+# Workaround for GNAT bug with Ali_Directory
+	-gnat clean -r -Phello_world
+##  When building without cleaning first. Build failed to delete old ALI files
 	gnat make -XPRJ_BUILD=$(MODE) -Phello_world
 	gnat make -XPRJ_BUILD=$(MODE) -Phello_world
 

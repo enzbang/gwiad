@@ -67,7 +67,7 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
 
-      Service_Name : constant String := "hello_world_plugin";
+      Service_Name : constant String := "hello_world_service";
 
    begin
 
