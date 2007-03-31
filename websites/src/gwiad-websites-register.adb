@@ -137,6 +137,12 @@ package body Gwiad.Websites.Register is
          raise Website_Error;
       end if;
 
+      declare
+         RW : Registered_Website := Element (Position);
+      begin
+         RW.Unregister_CB.all;
+      end;
+
       Website_Map.Delete (Position);
    end Unregister;
 
