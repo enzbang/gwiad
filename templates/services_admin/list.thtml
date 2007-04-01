@@ -10,7 +10,8 @@
     <td>@_NAME_@</td>
     <td>@_DESCRIPTION_@</td>
     <td>
-      <a href="/stop?service=@_NAME_@" title="Stop the service @_NAME_@">Stop</a>
+      <a href="@_SERVICES_ADMIN_URL_@stop?service=@_NAME_@"
+         title="Stop the service @_NAME_@">Stop</a>
     </td>
   </tr>
 @@END_TABLE@@

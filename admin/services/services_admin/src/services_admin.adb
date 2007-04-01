@@ -43,6 +43,8 @@ package body Services_Admin is
    use AWS;
    use AWS.Templates;
 
+   Services_Admin_URL : constant String := "/admin/services/";
+
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
    function Default_Callback (Request : in Status.Data) return Response.Data;
@@ -76,8 +78,8 @@ package body Services_Admin is
 
       if Response.Status_Code (Web_Page) = Messages.S404 then
          --  Page not found
-         return AWS.Services.ECWF.Registry.Build
-           ("/404", Request, Translations);
+         return Response.Build (MIME.Text_HTML,
+                                "<p>Page not found</p>");
 
       else
          return Web_Page;
@@ -111,6 +113,10 @@ package body Services_Admin is
       Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
       Templates.Insert (Translations,
                         Templates.Assoc ("DESCRIPTION", Tag_Description));
+      Templates.Insert
+        (Translations,
+         Templates.Assoc ("SERVICES_ADMIN_URL", Services_Admin_URL));
+
    end List_Services;
 
    ------------------
@@ -122,7 +128,8 @@ package body Services_Admin is
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
-   pragma Unreferenced (Context, Translations);
+      pragma Unreferenced (Context);
+
       use Gwiad.Services.Register;
       use Dynamic_Libraries.Manager;
       use Ada.Strings.Unbounded;
@@ -145,6 +152,15 @@ package body Services_Admin is
          Unregister (Service_Name);
          Manager.Unload (To_String (Library_Path));
       end if;
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc ("NAME", Service_Name));
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc ("SERVICES_ADMIN_URL", Services_Admin_URL));
+
    end Stop_Service;
 
 begin
@@ -157,18 +173,18 @@ begin
    --  Register ECWF pages
 
    AWS.Services.ECWF.Registry.Register
-     ("/list",
+     (Services_Admin_URL & "list",
       "templates/services_admin/list.thtml",
       List_Services'Access,
       MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
-     ("/stop",
+     (Services_Admin_URL & "stop",
       "templates/services_admin/stop.thtml",
       Stop_Service'Access,
       MIME.Text_HTML);
 
-   Gwiad.Web.Register (Hostname => "localhost",
-                       Action   => Main_Dispatcher);
+   Gwiad.Web.Register_Web_Directory (Web_Dir => Services_Admin_URL,
+                                     Action  => Main_Dispatcher);
 
 end Services_Admin;
