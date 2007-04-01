@@ -19,6 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Directories;
+
 with AWS.Status;
 with AWS.Dispatchers.Callback;
 with AWS.Messages;
@@ -37,6 +39,7 @@ with Gwiad.Web;
 
 package body Websites_Admin is
 
+   use Ada;
    use Gwiad;
 
    use AWS;
@@ -60,6 +63,12 @@ package body Websites_Admin is
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Stop a website
+
+   procedure Unload_Websites
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Unload a library and all associated websites
 
    ----------------------
    -- Default_Callback --
@@ -97,21 +106,36 @@ package body Websites_Admin is
       pragma Unreferenced (Request, Context);
       use Gwiad.Websites.Register;
 
-      Position : Cursor := First;
+      Position     : Cursor := First;
 
-      Tag_Name : Templates.Tag;
-      Tag_Description : Templates.Tag;
+      Names        : Templates.Tag;
+      Simple_Paths : Templates.Tag;
+      Paths        : Templates.Tag;
+      Descriptions : Templates.Tag;
 
    begin
       while Has_Element (Position) loop
-         Tag_Name        := Tag_Name & Name (Position);
-         Tag_Description := Tag_Description & Description (Position);
+         Names        := Names & Name (Position);
+         Paths        := Paths & Path (Position);
+         Simple_Paths := Simple_Paths
+           & Directories.Simple_Name (Path (Position));
+         Descriptions := Descriptions & Description (Position);
          Next (Position);
       end loop;
 
-      Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
+      Templates.Insert (Translations, Templates.Assoc ("NAME", Names));
+
+      Templates.Insert (Translations, Templates.Assoc ("PATH", Paths));
+
       Templates.Insert (Translations,
-                        Templates.Assoc ("DESCRIPTION", Tag_Description));
+                        Templates.Assoc ("DESCRIPTION", Descriptions));
+
+      Templates.Insert
+        (Translations, Templates.Assoc ("SIMPLE_PATH", Simple_Paths));
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc ("WEBSITES_ADMIN_URL", Websites_Admin_URL));
    end List_Websites;
 
    ------------------
@@ -123,9 +147,8 @@ package body Websites_Admin is
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
-   pragma Unreferenced (Context, Translations);
+      pragma Unreferenced (Context, Translations);
       use Gwiad.Websites.Register;
-      use Dynamic_Libraries.Manager;
       use Ada.Strings.Unbounded;
 
       P            : Parameters.List  := Status.Parameters (Request);
@@ -135,7 +158,7 @@ package body Websites_Admin is
    begin
 
       declare
-         Position     : constant Cursor := Find (Service_Name);
+         Position : constant Cursor := Find (Service_Name);
       begin
          if Has_Element (Position) then
             Library_Path := To_Unbounded_String (Path (Position));
@@ -144,9 +167,72 @@ package body Websites_Admin is
 
       if Library_Path /= "" then
          Unregister (Service_Name);
-         Manager.Unload (To_String (Library_Path));
       end if;
    end Stop_Website;
+
+   --------------------
+   -- Unload_Website --
+   --------------------
+
+   procedure Unload_Websites
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set)
+   is
+      pragma Unreferenced (Context);
+      use Gwiad.Websites.Register;
+      use Dynamic_Libraries.Manager;
+      use Ada.Strings.Unbounded;
+
+      P            : Parameters.List  := Status.Parameters (Request);
+      Library_Path : constant String  := Parameters.Get (P, "lib");
+      Dry_Run      : constant String  := Parameters.Get (P, "dry_run");
+
+      Tag_Name : Templates.Tag;
+   begin
+
+      declare
+         Position : Cursor := First;
+      begin
+         while Has_Element (Position) loop
+            if Path (Position) /= Library_Path then
+               Next (Position);
+            else
+               if Dry_Run /= "" then
+                  Tag_Name := Tag_Name & Name (Position);
+                  Next (Position);
+               else
+                  declare
+                     Last_Position : constant Cursor := Position;
+                  begin
+                     Next (Position);
+                     Unregister (Name (Last_Position));
+                  end;
+               end if;
+            end if;
+         end loop;
+      end;
+
+      Templates.Insert (Translations, Templates.Assoc ("PATH", Library_Path));
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc
+           ("SIMPLE_PATH", Directories.Simple_Name (Library_Path)));
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc ("WEBSITES_ADMIN_URL", Websites_Admin_URL));
+
+
+      if Dry_Run /= "" then
+         Templates.Insert (Translations, Templates.Assoc ("DRY_RUN", "yes"));
+         Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
+      else
+         Manager.Unload (Library_Path);
+      end if;
+
+   end Unload_Websites;
 
 begin
 
@@ -159,14 +245,20 @@ begin
 
    AWS.Services.ECWF.Registry.Register
      (Websites_Admin_URL & "list",
-      "templates/services_admin/list.thtml",
+      "templates/websites_admin/list.thtml",
       List_Websites'Access,
       MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
      (Websites_Admin_URL & "stop",
-      "templates/services_admin/stop.thtml",
+      "templates/websites_admin/stop.thtml",
       Stop_Website'Access,
+      MIME.Text_HTML);
+
+   AWS.Services.ECWF.Registry.Register
+     (Websites_Admin_URL & "unload",
+      "templates/websites_admin/unload.thtml",
+      Unload_Websites'Access,
       MIME.Text_HTML);
 
    Gwiad.Web.Register_Web_Directory (Web_Dir  => Websites_Admin_URL,
