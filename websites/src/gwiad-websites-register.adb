@@ -25,7 +25,7 @@ package body Gwiad.Websites.Register is
 
    Website_Map : Register_Maps.Map;
 
-      -----------------
+   -----------------
    -- Description --
    -----------------
 
@@ -122,6 +122,7 @@ package body Gwiad.Websites.Register is
           Description   => To_Unbounded_String (Description)));
 
       Last_Library_Path := Null_Unbounded_String;
+
    end Register;
 
    ----------------
