@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+<body>
+@@IF@@ @_DRY_RUN_@ /= "yes"
+<h1>The library has been unload</h1>
+@@ELSE@@
+<h1>Warning !</h1>
+<p>If you unload this library (@_SIMPLE_PATH_@) the following website will be
+  down :</p>
+<ul>
+@@TABLE@@
+<li>@_NAME_@</li>
+@@END_TABLE@@
+</ul>
+<p>
+<a href="@_WEBSITES_ADMIN_URL_@unload?lib=@_PATH_@"
+   title="Unload library @_SIMPLE_PATH_@">Ok. I'm sure !</a></p>
+@@END_IF@@
+</body>
+</html>

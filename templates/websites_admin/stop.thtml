@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+<body>
+<h1>The service has been stopped</h1>
+<p><a href="/list">List of running services</a></p>
+</body>
+</html>

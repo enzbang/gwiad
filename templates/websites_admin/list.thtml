@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+<body>
+
+<table>
+  <caption>Gwiad websites</caption>
+  <tr><th>Name</th><th>Description</th><th>Status</th><th>Library</th></tr>
+@@TABLE@@
+  <tr>
+    <td>@_NAME_@</td>
+    <td>@_DESCRIPTION_@</td>
+    <td>
+      <a href="@_WEBSITES_ADMIN_URL_@stop?website=@_NAME_@" title="Unregister website @_NAME_@">Stop</a>
+    </td>
+    <td>
+      Provided by @_SIMPLE_PATH_@
+      <a href="@_WEBSITES_ADMIN_URL_@unload?lib=@_PATH_@&dry_run=yes"
+         title="Unload library @_SIMPLE_PATH_@">Unload library</a>
+    </td>
+  </tr>
+@@END_TABLE@@
+</table>
+
+</body>
+</html>
