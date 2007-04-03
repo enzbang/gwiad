@@ -33,6 +33,60 @@ package body Gwiad.Web is
    Configuration : Config.Object;
    HTTP          : Server.HTTP;
 
+   task Reload_Dispatcher;
+
+   protected Reload is
+      procedure Required;
+      --  Requires a dispatcher reload.
+
+      procedure Do_Reload;
+      --  Reload the virtual hosts dispatcher as it can't be done
+      --  on Web callbacks (blocking call)
+   private
+      Is_Required : Boolean := False;
+   end Reload;
+
+   ------------
+   -- Reload --
+   ------------
+
+   protected body Reload is
+
+      ---------------
+      -- Do_Reload --
+      ---------------
+
+      procedure Do_Reload is
+      begin
+         if Is_Required then
+            Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+            Is_Required := False;
+         end if;
+      end Do_Reload;
+
+      --------------
+      -- Required --
+      --------------
+
+      procedure Required is
+      begin
+         Is_Required := True;
+      end Required;
+
+   end Reload;
+
+   -----------------------
+   -- Reload_Dispatcher --
+   -----------------------
+
+   task body Reload_Dispatcher is
+   begin
+      loop
+         delay 1.0;
+         Reload.Do_Reload;
+      end loop;
+   end Reload_Dispatcher;
+
    --------------
    -- Register --
    --------------
@@ -45,7 +99,7 @@ package body Gwiad.Web is
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Host,
          Hostname         => Redirected_Hostname);
-      Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+      Reload.Required;
    end Register;
 
    --------------
@@ -61,7 +115,7 @@ package body Gwiad.Web is
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Hostname,
          Action           => Action);
-      Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+      Reload.Required;
    end Register;
 
    ----------------------------
@@ -72,9 +126,9 @@ package body Gwiad.Web is
      (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class)
    is
    begin
-      Ada.Text_IO.Put_Line ("Web Directory " & Web_Dir & " registered. ");
       Main_Host.Register (Web_Dir, Action);
-      Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+      Reload.Required;
+      Ada.Text_IO.Put_Line ("Web Directory " & Web_Dir & " registered. ");
    end Register_Web_Directory;
 
    -----------
@@ -104,7 +158,8 @@ package body Gwiad.Web is
    procedure Unregister_Web_Directory (Web_Dir : in String) is
    begin
       Main_Host.Unregister (Web_Dir);
-      Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+      Reload.Required;
+      Ada.Text_IO.Put_Line ("Web Directory " & Web_Dir & " unregistered. ");
    end Unregister_Web_Directory;
 
    ----------
