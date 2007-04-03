@@ -21,7 +21,7 @@
 
 all:
 ##  Workaround for GNAT bug with Ali_Directory
-	-gnat clean -r -Pwebsites_admin
+	chmod a+w lib/
 ##  When building without cleaning first. Build failed to delete old ALI files
 	gnat make -XPRJ_BUILD=$(MODE) -Pwebsites_admin
 	gnat make -XPRJ_BUILD=$(MODE) -Pwebsites_admin
