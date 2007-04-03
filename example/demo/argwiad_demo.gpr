@@ -20,14 +20,15 @@
 ------------------------------------------------------------------------------
 
 with "aws";
-with "gwiad";
-with "gwiad-ecwf";
-with "../shared";
-with "../dynamic_libraries/dynamic_libraries";
+with "../../shared";
+with "../../gwiad/gwiad";
+with "../../gwiad/gwiad-ecwf";
+with "../../web/gwiad-web";
+with "../../dynamic_libraries/dynamic_libraries";
 
-project Gwiad.Web is
+project Argwiad_Demo is
 
-   for Source_Dirs use ("websrc");
+   for Source_Dirs use ("src");
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
    for Main use ("argwiad.adb");
@@ -69,5 +70,5 @@ project Gwiad.Web is
 
    package Ide renames Shared.Ide;
 
-end Gwiad.Web;
+end Argwiad_Demo;
 

@@ -21,7 +21,7 @@
 
 # Modules support
 
-MODULES = hello_world hello_world_service hello_world_interface
+MODULES = demo hello_world hello_world_service hello_world_interface
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

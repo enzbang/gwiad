@@ -23,7 +23,7 @@ with "aws";
 with "../../../shared";
 with "../../../websites/websites";
 with "../../../dynamic_libraries/dynamic_libraries";
-with "../../../gwiad/gwiad-web";
+with "../../../web/gwiad-web";
 
 Project Websites_Admin is
 

@@ -29,7 +29,7 @@ OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
 # Modules support
 
-MODULES = services dynamic_libraries gwiad admin example
+MODULES =  gwiad services dynamic_libraries web admin example
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

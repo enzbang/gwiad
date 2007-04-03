@@ -20,13 +20,10 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-ecwf
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-ecwf
+	gnat make -XPRJ_BUILD=$(MODE) -Pargwiad_demo
+	gnat make -XPRJ_BUILD=$(MODE) -Pargwiad_demo
 
 clean:
-	-gnat clean -r -Pgwiad
-	-gnat clean -r -Pgwiad-ecwf
+	-gnat clean -r -Pargwiad_demo
 
 check:
