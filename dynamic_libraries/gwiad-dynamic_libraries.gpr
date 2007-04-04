@@ -21,10 +21,10 @@
 
 with "../shared";
 with "../gwiad/gwiad";
-with "../services/services";
-with "../websites/websites";
+with "../services/gwiad-services";
+with "../websites/gwiad-websites";
 
-project Dynamic_Libraries is
+project Gwiad.Dynamic_Libraries is
 
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
@@ -36,4 +36,4 @@ project Dynamic_Libraries is
    package Compiler renames Shared.Compiler;
    package Ide renames Shared.Ide;
 
-end Dynamic_Libraries;
+end Gwiad.Dynamic_Libraries;

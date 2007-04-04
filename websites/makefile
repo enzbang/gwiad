@@ -20,10 +20,10 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pwebsites
-	gnat make -XPRJ_BUILD=$(MODE) -Pwebsites
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-websites
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-websites
 
 clean:
-	-gnat clean -r -Pwebsites
+	-gnat clean -r -Pgwiad-websites
 
 check:

@@ -23,7 +23,7 @@ with "aws";
 with "../gwiad/gwiad";
 with "../gwiad/gwiad-ecwf";
 with "../shared";
-with "../dynamic_libraries/dynamic_libraries";
+with "../dynamic_libraries/gwiad-dynamic_libraries";
 
 project Gwiad.Web is
 

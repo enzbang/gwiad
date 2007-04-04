@@ -20,10 +20,10 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pdynamic_libraries
-	gnat make -XPRJ_BUILD=$(MODE) -Pdynamic_libraries
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-dynamic_libraries
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-dynamic_libraries
 
 clean:
-	-gnat clean -r -Pdynamic_libraries
+	-gnat clean -r -Pgwiad-dynamic_libraries
 
 check:
