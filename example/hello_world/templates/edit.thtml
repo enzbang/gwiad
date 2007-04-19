@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+<head>
+</head>
+<body>
+<h1>test</h1>
+
+<form method="post" action="/wiki/preview">
+  <textarea rows="40" cols="80" name="text_plain" id="text_plain">
+@_TEXT_PLAIN_@
+  </textarea>
+  <input type="submit" name="submit"/>
+</form>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 ##############################################################################
-##                                  Gwiad                                   ##
+##                               Diouzhtu                                   ##
 ##                                                                          ##
 ##                           Copyright (C) 2007                             ##
 ##                            Olivier Ramonat                               ##
@@ -23,10 +23,10 @@ all:
 # Workaround for GNAT bug with Ali_Directory
 	chmod -R a+w lib/
 ##  When building without cleaning first. Build failed to delete old ALI files
-	gnat make -XPRJ_BUILD=$(MODE) -Phello_world
-	gnat make -XPRJ_BUILD=$(MODE) -Phello_world
+	gnat make -XPRJ_BUILD=$(MODE) -Pwiki_website
+	gnat make -XPRJ_BUILD=$(MODE) -Pwiki_website
 
 clean:
-	-gnat clean -r -Phello_world
+	-gnat clean -r -Pwiki_website
 
 check:
