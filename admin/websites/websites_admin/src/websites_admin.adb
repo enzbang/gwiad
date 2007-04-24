@@ -45,9 +45,9 @@ package body Websites_Admin is
    use AWS;
    use AWS.Templates;
 
-   Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
-
    Websites_Admin_URL : constant String := "/admin/websites/";
+
+   Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
    function Default_Callback (Request : in Status.Data) return Response.Data;
    --  Registers default callback
@@ -151,8 +151,9 @@ package body Websites_Admin is
       use Gwiad.Websites.Register;
       use Ada.Strings.Unbounded;
 
-      P            : Parameters.List  := Status.Parameters (Request);
-      Service_Name : constant String  := Parameters.Get (P, "service");
+      P            : constant Parameters.List := Status.Parameters (Request);
+      Service_Name : constant String          := Parameters.Get (P, "service");
+
       Library_Path : Unbounded_String := Null_Unbounded_String;
 
    begin
