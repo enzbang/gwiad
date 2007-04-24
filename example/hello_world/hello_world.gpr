@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
---                               Diouzhtu                                   --
+--                                  Gwiad                                   --
 --                                                                          --
 --                           Copyright (C) 2007                             --
 --                            Olivier Ramonat                               --
@@ -19,12 +19,25 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Wiki_Interface;
+with "aws";
+with "../../shared";
+with "../../services/gwiad-services";
+with "../../websites/gwiad-websites";
+with "../../web/gwiad-web";
+with "../hello_world_interface/hello_world_interface";
 
-package Wiki_Website is
+Project Hello_World is
 
-private
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Ali_Dir use "lib";
+   for Library_Dir use "../../lib";
+   for Library_Interface use ("hello_world");
+   for Library_Name use "hello_world";
+   for Library_Kind use "dynamic";
+   for Library_Auto_Init use "false";
 
-   function Get_Wiki_Service return Wiki_Interface.GW_Service'Class;
-   --  Returns the service
-end Wiki_Website;
+   package Compiler renames Shared.Compiler;
+   package Ide renames Shared.Ide;
+
+end Hello_World;

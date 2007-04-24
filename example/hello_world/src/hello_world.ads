@@ -19,26 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "aws";
-with "gwiad-ecwf";
-with "../../shared";
-with "gwiad-services";
-with "gwiad-websites";
-with "gwiad-web";
-with "../interface/wiki_interface";
+package Hello_World is
 
-Project Wiki_Website is
+   pragma Elaborate_Body;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Library_Ali_Dir use "lib";
-   for Library_Dir use "../lib";
-   for Library_Name use "wiki_website";
-   for Library_Interface use ("wiki_website");
-   for Library_Kind use "dynamic";
-   for Library_Auto_Init use "false";
-
-   package Compiler renames Shared.Compiler;
-   package Ide renames Shared.Ide;
-
-end Wiki_Website;
+end Hello_World;
