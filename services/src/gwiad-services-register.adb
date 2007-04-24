@@ -19,6 +19,7 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with AWS.Utils;
 with Ada.Text_IO;
 with Ada.Exceptions;
 
@@ -26,9 +27,13 @@ package body Gwiad.Services.Register is
 
    use Ada.Exceptions;
 
+   package Service_Access_Cache is new Ada.Containers.Indefinite_Hashed_Maps
+     (String, Service_Access, Ada.Strings.Hash, "=", "=");
+
    Last_Library_Path : Unbounded_String;
 
    Service_Map : Register_Maps.Map;
+   Cache       : Service_Access_Cache.Map;
 
    -----------------
    -- Description --
@@ -73,13 +78,25 @@ package body Gwiad.Services.Register is
    -- Get --
    ---------
 
-   function Get (Name : in String) return Service_Access is
-      RS : Registered_Service;
+   function Get
+     (Name : in String;
+      Id   : in Service_Id := Null_Service_Id)
+      return Service_Access is
    begin
-      RS := Register_Maps.Element (Container => Service_Map,
-                                   Key       => Name);
 
-      return Service_Access (RS.Builder.all);
+      if Id /= Null_Service_Id then
+         return Service_Access_Cache.Element (Container => Cache,
+                                              Key       => Name & String (Id));
+      end if;
+
+      declare
+         RS : Registered_Service;
+      begin
+         RS := Register_Maps.Element (Container => Service_Map,
+                                      Key       => Name);
+
+         return Service_Access (RS.Builder.all);
+      end;
    exception
       when E : others =>
          Ada.Text_IO.Put_Line (Exception_Information (E));
@@ -156,6 +173,65 @@ package body Gwiad.Services.Register is
       Last_Library_Path := Null_Unbounded_String;
 
    end Register;
+
+   ---------
+   -- Set --
+   ---------
+
+   function Set
+     (Name : in String; Item : in Service_Access)
+      return Service_Id
+   is
+      SID     : Service_Id;
+      Cursor  : Service_Access_Cache.Cursor;
+      Success : Boolean := False;
+
+      function Generate_Id return Service_Id;
+      --  Returns a session ID. This ID is not certified to be uniq in the
+      --  system. It is required that the caller check for uniqness if
+      --  necessary. (imported from AWS)
+
+      function Generate_Id return Service_Id is
+
+         type NID is new AWS.Utils.Random_Integer;
+
+         Chars : constant String
+           := "0123456789"
+             & "abcdefghijklmnopqrstuvwxyz"
+             & "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+         Rand   : NID := 0;
+         Result : Service_Id;
+
+      begin
+         for I in Service_Id'Range loop
+            if Rand = 0 then
+               Rand := Random;
+            end if;
+
+            Result (I) := Chars (Integer (Rand rem Chars'Length) + 1);
+            Rand := Rand / Chars'Length;
+         end loop;
+
+         return Result;
+      end Generate_Id;
+
+   begin
+      loop
+         SID := Generate_Id;
+
+         if SID /= Null_Service_Id then
+            Service_Access_Cache.Insert
+              (Cache, Name & String (SID), Item, Cursor, Success);
+         end if;
+
+         exit when Success;
+      end loop;
+      return SID;
+   exception
+      when E : others =>
+         Ada.Text_IO.Put_Line (Exception_Information (E));
+         raise Service_Error;
+   end Set;
 
    ----------------
    -- Unregister --

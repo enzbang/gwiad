@@ -28,6 +28,10 @@ package Gwiad.Services.Register is
 
    use Services;
 
+   type Service_Id is new String (1 .. 11);
+
+   Null_Service_Id : Service_Id := (others => ' ');
+
    procedure Register (Library_Path : in String);
    --  Registers a new dynamic library
    --  This must be called before registering the service to set the library
@@ -50,8 +54,14 @@ package Gwiad.Services.Register is
    function Exists (Name : in String) return Boolean;
    --  Returns true if a service with the given name is registered
 
-   function Get (Name : in String) return Service_Access;
+   function Get
+     (Name : in String;
+      Id   : in Service_Id := Null_Service_Id)
+      return Service_Access;
    --  Returns the service
+
+   function Set (Name : in String; Item : in Service_Access) return Service_Id;
+   --  Adds the service to cache
 
    type Cursor is private;
 
