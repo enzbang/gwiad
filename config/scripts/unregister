@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# example : ./unregister 127.0.0.1:8080 website /opt/gwiad/lib/libwiki_website.so
+
+SERVER="$1"                       # if port is not 80 server:port
+TYPE="$2"                         # Service or website
+NAME="$3"                      # library full path or service name
+
+WGET="wget -q"
+
+if [[ $TYPE == "website" ]]; then
+    $WGET http://$SERVER/admin/websites/unload?lib=$NAME
+else
+    $WGET http://$SERVER/admin/services/stop?service=$NAME
+ fi
