@@ -105,7 +105,9 @@ install_web:
 	$(MKDIR) /opt/gwiad/templates
 	$(MKDIR) /opt/gwiad/templates/services_admin
 	$(MKDIR) /opt/gwiad/templates/websites_admin
+	$(MKDIR) /opt/gwiad/scripts
 	$(CP) -r lib/*.so /opt/gwiad/lib
+	$(CP) config/scripts/unregister /opt/gwiad/scripts/
 	$(CP) -r templates/websites_admin/*.thtml /opt/gwiad/templates/websites_admin
 	$(CP) -r templates/services_admin/*.thtml /opt/gwiad/templates/services_admin/
 	$(CP) example/demo/bin/argwiad /opt/gwiad/bin/
