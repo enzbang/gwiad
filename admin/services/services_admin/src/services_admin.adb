@@ -21,7 +21,7 @@
 
 with Gwiad.Services.Register;
 with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web;
+with Gwiad.Web.Register;
 
 with AWS.Status;
 with AWS.Dispatchers.Callback;
@@ -184,7 +184,7 @@ begin
       Stop_Service'Access,
       MIME.Text_HTML);
 
-   Gwiad.Web.Register_Web_Directory (Web_Dir => Services_Admin_URL,
-                                     Action  => Main_Dispatcher);
+   Gwiad.Web.Register.Register (Web_Dir => Services_Admin_URL,
+                                Action  => Main_Dispatcher);
 
 end Services_Admin;

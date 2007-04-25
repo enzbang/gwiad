@@ -19,33 +19,49 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-private with AWS.Services.Dispatchers.Virtual_Host;
+package body Gwiad.Web.Register.Virtual_Host is
 
-package Gwiad.Web is
+   use AWS;
 
-   procedure Start;
+   --------------
+   -- Register --
+   --------------
 
-   procedure Wait;
+   procedure Register
+     (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class)
+   is
+   begin
+      Services.Dispatchers.Virtual_Host.Register
+        (Dispatcher       => Virtual_Hosts_Dispatcher,
+         Virtual_Hostname => Hostname,
+         Action           => Action);
+      Gwiad.Web.Reload.Require;
+   end Register;
 
-   Admin_URI        : constant String := "/admin/status";
-   Upload_Directory : constant String := "./uploads/";
+   --------------
+   -- Register --
+   --------------
 
-private
-   protected Reload is
-      procedure Require;
-      --  Requires a dispatcher reload.
+   procedure Register
+     (Host : in String; Redirected_Hostname : in String)
+   is
+   begin
+      Services.Dispatchers.Virtual_Host.Register
+        (Dispatcher       => Virtual_Hosts_Dispatcher,
+         Virtual_Hostname => Host,
+         Hostname         => Redirected_Hostname);
+      Reload.Require;
+   end Register;
 
-      function Is_Required return Boolean;
-      --  Reload the virtual hosts dispatcher as it can't be done
-      --  on Web callbacks (blocking call)
+   ----------------
+   -- Unregister --
+   ----------------
 
-      procedure Done;
-      --  Set Is_Required to false
+   procedure Unregister (Hostname : in String) is
+   begin
+      Services.Dispatchers.Virtual_Host.Unregister
+        (Dispatcher       => Virtual_Hosts_Dispatcher,
+         Virtual_Hostname => Hostname);
+   end Unregister;
 
-   private
-      Reload_Required : Boolean := False;
-   end Reload;
-
-   Virtual_Hosts_Dispatcher : AWS.Services.Dispatchers.Virtual_Host.Handler;
-
-end Gwiad.Web;
+end Gwiad.Web.Register.Virtual_Host;

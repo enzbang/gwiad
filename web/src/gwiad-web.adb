@@ -19,10 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;
-
 with AWS.Server.Log;
-with AWS.Config;
+with AWS.Config.Set;
 
 with Gwiad.Web.Main_Host;
 
@@ -34,21 +32,6 @@ package body Gwiad.Web is
    HTTP          : Server.HTTP;
 
    task Reload_Dispatcher;
-
-   protected Reload is
-      procedure Require;
-      --  Requires a dispatcher reload.
-
-      function Is_Required return Boolean;
-      --  Reload the virtual hosts dispatcher as it can't be done
-      --  on Web callbacks (blocking call)
-
-      procedure Done;
-      --  Set Is_Required to false
-
-   private
-      Reload_Required : Boolean := False;
-   end Reload;
 
    ------------
    -- Reload --
@@ -101,50 +84,6 @@ package body Gwiad.Web is
       end loop;
    end Reload_Dispatcher;
 
-   --------------
-   -- Register --
-   --------------
-
-   procedure Register
-     (Host : in String; Redirected_Hostname : in String)
-   is
-   begin
-      Services.Dispatchers.Virtual_Host.Register
-        (Dispatcher       => Virtual_Hosts_Dispatcher,
-         Virtual_Hostname => Host,
-         Hostname         => Redirected_Hostname);
-      Reload.Require;
-   end Register;
-
-   --------------
-   -- Register --
-   --------------
-
-   procedure Register
-     (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class)
-   is
-   begin
-      Ada.Text_IO.Put_Line ("Virtual Host " & Hostname & " registered. ");
-      Services.Dispatchers.Virtual_Host.Register
-        (Dispatcher       => Virtual_Hosts_Dispatcher,
-         Virtual_Hostname => Hostname,
-         Action           => Action);
-      Reload.Require;
-   end Register;
-
-   ----------------------------
-   -- Register_Web_Directory --
-   ----------------------------
-
-   procedure Register_Web_Directory
-     (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class)
-   is
-   begin
-      Main_Host.Register (Web_Dir, Action);
-      Reload.Require;
-      Ada.Text_IO.Put_Line ("Web Directory " & Web_Dir & " registered. ");
-   end Register_Web_Directory;
-
    -----------
    -- Start --
    -----------
@@ -162,19 +101,13 @@ package body Gwiad.Web is
 
       --  Server configuration
 
+      Config.Set.Session (Configuration, True);
+      Config.Set.Upload_Directory (Configuration, Upload_Directory);
+      Config.Set.Admin_URI (Configuration, Admin_URI);
+
       Server.Start (HTTP, Virtual_Hosts_Dispatcher, Configuration);
+
    end Start;
-
-   ------------------------------
-   -- Unregister_Web_Directory --
-   ------------------------------
-
-   procedure Unregister_Web_Directory (Web_Dir : in String) is
-   begin
-      Main_Host.Unregister (Web_Dir);
-      Reload.Require;
-      Ada.Text_IO.Put_Line ("Web Directory " & Web_Dir & " unregistered. ");
-   end Unregister_Web_Directory;
 
    ----------
    -- Wait --

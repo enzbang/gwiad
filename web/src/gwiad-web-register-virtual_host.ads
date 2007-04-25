@@ -19,33 +19,19 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-private with AWS.Services.Dispatchers.Virtual_Host;
+with AWS.Dispatchers;
 
-package Gwiad.Web is
+package Gwiad.Web.Register.Virtual_Host is
 
-   procedure Start;
+   procedure Register
+     (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class);
+   --  Registers a new virtual host handler
 
-   procedure Wait;
+   procedure Register
+     (Host : in String; Redirected_Hostname : in String);
+   --  Register a new redirection
 
-   Admin_URI        : constant String := "/admin/status";
-   Upload_Directory : constant String := "./uploads/";
+   procedure Unregister (Hostname : in String);
+   --  Unregister a virtual host
 
-private
-   protected Reload is
-      procedure Require;
-      --  Requires a dispatcher reload.
-
-      function Is_Required return Boolean;
-      --  Reload the virtual hosts dispatcher as it can't be done
-      --  on Web callbacks (blocking call)
-
-      procedure Done;
-      --  Set Is_Required to false
-
-   private
-      Reload_Required : Boolean := False;
-   end Reload;
-
-   Virtual_Hosts_Dispatcher : AWS.Services.Dispatchers.Virtual_Host.Handler;
-
-end Gwiad.Web;
+end Gwiad.Web.Register.Virtual_Host;

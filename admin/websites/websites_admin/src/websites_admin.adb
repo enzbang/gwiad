@@ -35,7 +35,7 @@ with Ada.Strings.Unbounded;
 
 with Gwiad.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web;
+with Gwiad.Web.Register;
 
 package body Websites_Admin is
 
@@ -262,7 +262,7 @@ begin
       Unload_Websites'Access,
       MIME.Text_HTML);
 
-   Gwiad.Web.Register_Web_Directory (Web_Dir  => Websites_Admin_URL,
-                                     Action   => Main_Dispatcher);
+   Gwiad.Web.Register.Register (Web_Dir  => Websites_Admin_URL,
+                                Action   => Main_Dispatcher);
 
 end Websites_Admin;
