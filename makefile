@@ -98,17 +98,17 @@ install: install_dirs
 	$(CP) config/projects/gwiad-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-websites.gpr $(I_GPR)
 
-install_web:
-	$(MKDIR) /opt/gwiad/data
-	$(MKDIR) /opt/gwiad/bin
-	$(MKDIR) /opt/gwiad/lib
-	$(MKDIR) /opt/gwiad/templates
-	$(MKDIR) /opt/gwiad/templates/services_admin
-	$(MKDIR) /opt/gwiad/templates/websites_admin
-	$(MKDIR) /opt/gwiad/scripts
-	$(CP) -r lib/*.so /opt/gwiad/lib
-	$(CP) config/scripts/unregister /opt/gwiad/scripts/
-	$(CP) -r templates/websites_admin/*.thtml /opt/gwiad/templates/websites_admin
-	$(CP) -r templates/services_admin/*.thtml /opt/gwiad/templates/services_admin/
-	$(CP) example/demo/bin/argwiad /opt/gwiad/bin/
+install_demo:
+	$(MKDIR) $(DEMO_INSTALL)/data
+	$(MKDIR) $(DEMO_INSTALL)/bin
+	$(MKDIR) $(DEMO_INSTALL)/lib
+	$(MKDIR) $(DEMO_INSTALL)/templates
+	$(MKDIR) $(DEMO_INSTALL)/templates/services_admin
+	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
+	$(MKDIR) $(DEMO_INSTALL)/scripts
+	$(CP) -r lib/*.so $(DEMO_INSTALL)/lib
+	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts/
+	$(CP) -r templates/websites_admin/*.thtml $(DEMO_INSTALL)/templates/websites_admin
+	$(CP) -r templates/services_admin/*.thtml $(DEMO_INSTALL)/templates/services_admin/
+	$(CP) example/demo/bin/argwiad/ $(DEMO_INSTALL)bin/
 
