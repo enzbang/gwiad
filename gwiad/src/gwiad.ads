@@ -25,5 +25,4 @@ package Gwiad is
 
    Version : constant String := "0.1";
 
-
 end Gwiad;
