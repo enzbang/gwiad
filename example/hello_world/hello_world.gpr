@@ -37,6 +37,14 @@ Project Hello_World is
    for Library_Kind use "dynamic";
    for Library_Auto_Init use "false";
 
+   case Shared.OS is
+      when "Windows_NT" =>
+         for Library_Options
+           use ("-laws", "-laws_include", "-laws_win32", "-lwsock32");
+      when others =>
+         null;
+   end case;
+
    package Compiler renames Shared.Compiler;
    package Ide renames Shared.Ide;
 

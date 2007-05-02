@@ -31,6 +31,13 @@ Project Gwiad.Services is
    for Library_Name use "gwiad_services";
    for Library_Kind use "dynamic";
 
+   case Shared.OS is
+      when "Windows_NT" =>
+         for Library_Options use ("-laws", "-laws_include", "-lwsock32");
+      when others =>
+         null;
+   end case;
+
    package Compiler renames Shared.Compiler;
 
 end Gwiad.Services;

@@ -33,9 +33,15 @@ project Gwiad.Web is
    for Library_Name use "gwiad_web";
    for Library_Kind use "dynamic";
 
+   case Shared.OS is
+      when "Windows_NT" =>
+         for Library_Options use ("-laws", "-laws_include", "-lwsock32");
+      when others =>
+         null;
+   end case;
+
    package Builder renames Shared.Builder;
    package Compiler renames Shared.Compiler;
    package Ide renames Shared.Ide;
 
 end Gwiad.Web;
-

@@ -31,11 +31,23 @@ project Gwiad.ECWF is
    for Library_Name use "gwiad_ecwf";
    for Library_Kind use "dynamic";
 
+   case Shared.OS is
+      when "Windows_NT" =>
+         for Library_Options use ("-laws", "-laws_include", "-lwsock32");
+      when others =>
+         null;
+   end case;
+
    ---------
    -- Ide --
    ---------
 
    package Ide renames Shared.Ide;
 
-end Gwiad.ECWF;
+   --------------
+   -- Compiler --
+   --------------
 
+   package Compiler renames Shared.Compiler;
+
+end Gwiad.ECWF;

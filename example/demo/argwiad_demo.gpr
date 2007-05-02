@@ -56,12 +56,20 @@ project Argwiad_Demo is
    ------------
 
    package Linker is
-      case Shared.Build is
-         when "Debug" =>
-            for Default_Switches ("Ada") use ("-g", "-ldl", "-rdynamic");
-         when "Release" =>
-            for Default_Switches ("Ada") use ("-ldl", "-rdynamic");
+
+      case Shared.OS is
+         when "Windows_NT" =>
+            null;
+
+         when others =>
+            case Shared.Build is
+               when "Debug" =>
+                  for Default_Switches ("Ada") use ("-g", "-ldl", "-rdynamic");
+               when "Release" =>
+                  for Default_Switches ("Ada") use ("-ldl", "-rdynamic");
+            end case;
       end case;
+
    end Linker;
 
    ---------

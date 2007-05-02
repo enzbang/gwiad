@@ -125,6 +125,7 @@ package body Gwiad.Dynamic_Libraries is
       Result    : constant Dynamic_Library_Access := new Dynamic_Library;
 
    begin
+      --  ??? 2 new here ...
       Result.Ref := new Implementation;
       Result.Ref.all := Implementation (Dlopen (C_Path, RTLD_LAZY));
 
@@ -147,6 +148,7 @@ package body Gwiad.Dynamic_Libraries is
 
       Result : int := 1;
    begin
+      --  ??? A single deallocation there
       Result := dlclose (System.Address (Library.Ref.all));
 
       Free (Library.Ref);
