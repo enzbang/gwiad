@@ -23,6 +23,14 @@ include mk.config
 
 OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
+ifeq ($(OS),Windows_NT)
+SOEXT=.dll
+EXEEXT=.exe
+else
+SOEXT=.so
+EXEEXT=
+endif
+
 # Modules support
 
 MODULES =  gwiad services dynamic_libraries web admin example
@@ -106,9 +114,8 @@ install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/templates/services_admin
 	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
 	$(MKDIR) $(DEMO_INSTALL)/scripts
-	$(CP) -r lib/*.so $(DEMO_INSTALL)/lib
+	$(CP) -r lib/*$(SOEXT) $(DEMO_INSTALL)/lib
 	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts/
 	$(CP) -r templates/websites_admin/*.thtml $(DEMO_INSTALL)/templates/websites_admin
 	$(CP) -r templates/services_admin/*.thtml $(DEMO_INSTALL)/templates/services_admin/
-	$(CP) example/demo/bin/argwiad/ $(DEMO_INSTALL)bin/
-
+	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_INSTALL)bin/
