@@ -115,7 +115,7 @@ install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
 	$(MKDIR) $(DEMO_INSTALL)/scripts
 	$(CP) -r lib/*$(SOEXT) $(DEMO_INSTALL)/lib
-	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts/
+	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts
 	$(CP) -r templates/websites_admin/*.thtml $(DEMO_INSTALL)/templates/websites_admin
-	$(CP) -r templates/services_admin/*.thtml $(DEMO_INSTALL)/templates/services_admin/
-	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_INSTALL)bin/
+	$(CP) -r templates/services_admin/*.thtml $(DEMO_INSTALL)/templates/services_admin
+	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_INSTALL)/bin
