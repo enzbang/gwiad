@@ -32,4 +32,6 @@ Project Gwiad.Websites is
 
    package Compiler renames Shared.Compiler;
 
+   package Ide renames Shared.Ide;
+
 end Gwiad.Websites;
