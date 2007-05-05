@@ -40,4 +40,6 @@ Project Gwiad.Services is
 
    package Compiler renames Shared.Compiler;
 
+   package Ide renames Shared.Ide;
+
 end Gwiad.Services;
