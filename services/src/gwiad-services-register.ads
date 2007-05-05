@@ -19,10 +19,11 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Services;
 private with Ada.Containers.Indefinite_Hashed_Maps;
 private with Ada.Strings.Hash;
 private with Ada.Strings.Unbounded;
+
+with Gwiad.Services;
 
 package Gwiad.Services.Register is
 
@@ -38,9 +39,9 @@ package Gwiad.Services.Register is
    --  path before the service registration
 
    procedure Register
-     (Name           : in String;
-      Description    : in String;
-      Builder        : in Service_Builder);
+     (Name        : in String;
+      Description : in String;
+      Builder     : in Service_Builder);
    --  Registers a new service
    --  This is called by a service library after that the library path has been
    --  set by the dynamic library manager (as the library has no knowlegde of
@@ -56,8 +57,7 @@ package Gwiad.Services.Register is
 
    function Get
      (Name : in String;
-      Id   : in Service_Id := Null_Service_Id)
-      return Service_Access;
+      Id   : in Service_Id := Null_Service_Id) return Service_Access;
    --  Returns the service
 
    function Set (Name : in String; Item : in Service_Access) return Service_Id;
@@ -74,16 +74,16 @@ package Gwiad.Services.Register is
    procedure Next (Position : in out Cursor);
    --  Select the next element
 
-   function Has_Element (Position : Cursor) return Boolean;
+   function Has_Element (Position : in Cursor) return Boolean;
    --  Returns true if cursor is not No_Element
 
-   function Name (Position : Cursor) return String;
+   function Name (Position : in Cursor) return String;
    --  Returns the name of the service
 
-   function Description (Position : Cursor) return String;
+   function Description (Position : in Cursor) return String;
    --  Returns the description of the service
 
-   function Path (Position : Cursor) return String;
+   function Path (Position : in Cursor) return String;
    --  Returns the path of the shared library providing the service
 
 private
