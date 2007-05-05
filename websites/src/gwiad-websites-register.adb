@@ -22,18 +22,17 @@
 package body Gwiad.Websites.Register is
 
    Last_Library_Path : Unbounded_String;
-
-   Website_Map : Register_Maps.Map;
+   Website_Map       : Register_Maps.Map;
 
    -----------------
    -- Description --
    -----------------
 
-   function Description (Position : Cursor) return String is
-      RW : Registered_Website;
+   function Description (Position : in Cursor) return String is
+      RW : constant Registered_Website :=
+             Register_Maps.Element
+               (Position => Register_Maps.Cursor (Position));
    begin
-      RW := Register_Maps.Element
-        (Position => Register_Maps.Cursor (Position));
       return To_String (RW.Description);
    end Description;
 
@@ -58,7 +57,7 @@ package body Gwiad.Websites.Register is
    -- Has_Element --
    -----------------
 
-   function Has_Element (Position : Cursor) return Boolean is
+   function Has_Element (Position : in Cursor) return Boolean is
    begin
       return Register_Maps.Has_Element (Register_Maps.Cursor (Position));
    end Has_Element;
@@ -67,7 +66,7 @@ package body Gwiad.Websites.Register is
    -- Name --
    ----------
 
-   function Name (Position : Cursor) return String is
+   function Name (Position : in Cursor) return String is
    begin
       return  Register_Maps.Key (Position => Register_Maps.Cursor (Position));
    end Name;
@@ -85,9 +84,9 @@ package body Gwiad.Websites.Register is
    -- Path --
    ----------
 
-   function Path (Position : Cursor) return String is
-      RW : Registered_Website := Register_Maps.Element
-        (Register_Maps.Cursor (Position));
+   function Path (Position : in Cursor) return String is
+      RW : constant Registered_Website :=
+             Register_Maps.Element (Register_Maps.Cursor (Position));
    begin
       return To_String (RW.Path);
    end Path;
@@ -122,7 +121,6 @@ package body Gwiad.Websites.Register is
           Description   => To_Unbounded_String (Description)));
 
       Last_Library_Path := Null_Unbounded_String;
-
    end Register;
 
    ----------------

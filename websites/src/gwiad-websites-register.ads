@@ -55,16 +55,16 @@ package Gwiad.Websites.Register is
    procedure Next (Position : in out Cursor);
    --  Select the next element
 
-   function Has_Element (Position : Cursor) return Boolean;
+   function Has_Element (Position : in Cursor) return Boolean;
    --  Returns true if cursor is not No_Element
 
-   function Name (Position : Cursor) return String;
+   function Name (Position : in Cursor) return String;
    --  Returns the name of the service
 
-   function Description (Position : Cursor) return String;
+   function Description (Position : in Cursor) return String;
    --  Returns the description of the service
 
-   function Path (Position : Cursor) return String;
+   function Path (Position : in Cursor) return String;
    --  Returns the path of the shared library providing the service
 
 private
