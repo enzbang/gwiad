@@ -19,14 +19,15 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with System;
-with Interfaces.C.Strings;
-with Unchecked_Conversion;
-with Unchecked_Deallocation;
 with Ada.Directories;
+with Ada.Unchecked_Conversion;
+with Ada.Unchecked_Deallocation;
+with Interfaces.C.Strings;
+with System;
 
 package body Gwiad.Dynamic_Libraries is
 
+   use Ada;
    use Interfaces.C.Strings;
    use Interfaces.C;
    use System;
@@ -37,34 +38,32 @@ package body Gwiad.Dynamic_Libraries is
    pragma Import (C, dlerror, "dlerror");
 
    procedure Free is
-     new Unchecked_Deallocation (Object => Implementation,
-                                 Name   => Reference);
+     new Unchecked_Deallocation
+       (Object => Implementation, Name => Reference);
+
    ----------
    -- Call --
    ----------
 
    procedure Call
-     (Library       : in  Dynamic_Library;
-      Function_Name : in  String;
-      Call_Function : out Call_Function_Access)
+     (Library       : in     Dynamic_Library;
+      Function_Name : in     String;
+      Call_Function :    out Call_Function_Access)
    is
 
       function dlsym
-        (Handle   : System.Address;
-         Sym_Name : Interfaces.C.Strings.chars_ptr)
-         return System.Address;
+        (Handle   : in System.Address;
+         Sym_Name : in Interfaces.C.Strings.chars_ptr) return System.Address;
       pragma Import (C, dlsym, "dlsym");
 
-      function Address_To_Access is new
-        Unchecked_Conversion (Source => System.Address,
-                              Target => Call_Function_Access);
+      function Address_To_Access is new Unchecked_Conversion
+        (Source => System.Address, Target => Call_Function_Access);
 
       Addr : System.Address;
 
       C_Function_Name : chars_ptr := New_String (Function_Name);
 
    begin
-
       --  Get a pointer to the function within the dynamic library
 
       Addr := dlsym (System.Address (Library.Ref.all), C_Function_Name);
@@ -92,8 +91,8 @@ package body Gwiad.Dynamic_Libraries is
    ----------
 
    procedure Init (Library : Dynamic_Library; Path : String) is
-      use Interfaces;
       use Ada.Directories;
+      use Interfaces;
 
       Lib_Name  : constant String := Base_Name (Path);
       Init_Name : constant String :=
@@ -116,13 +115,12 @@ package body Gwiad.Dynamic_Libraries is
    function Load (Path : String) return Dynamic_Library_Access is
 
       function Dlopen
-        (Lib_Name : chars_ptr; Mode : int)
-        return System.Address;
+        (Lib_Name : in chars_ptr; Mode : in int) return System.Address;
       pragma Import (C, Dlopen, "dlopen");
 
       RTLD_LAZY : constant := 1;
-      C_Path    : chars_ptr := New_String (Path);
       Result    : constant Dynamic_Library_Access := new Dynamic_Library;
+      C_Path    : chars_ptr := New_String (Path);
 
    begin
       --  ??? 2 new here ...
@@ -143,7 +141,7 @@ package body Gwiad.Dynamic_Libraries is
    ------------
 
    procedure Unload (Library : in out Dynamic_Library) is
-      function dlclose (Handle : System.Address) return Interfaces.C.int;
+      function dlclose (Handle : in System.Address) return Interfaces.C.int;
       pragma Import (C, dlclose, "dlclose");
 
       Result : int := 1;

@@ -51,10 +51,11 @@ package body Gwiad.Web.Main_Host is
    procedure Register
      (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class) is
    begin
-      Services.Dispatchers.URI.Register (Dispatcher => Main_Host_Dispatcher,
-                                         URI        => Web_Dir,
-                                         Action     => Action,
-                                         Prefix     => True);
+      Services.Dispatchers.URI.Register
+        (Dispatcher => Main_Host_Dispatcher,
+         URI        => Web_Dir,
+         Action     => Action,
+         Prefix     => True);
 
       --  Call register default callback to update Main_Host_Dispatcher
 
@@ -94,7 +95,6 @@ package body Gwiad.Web.Main_Host is
       Services.Dispatchers.Virtual_Host.Register_Default_Callback
         (Virtual_Hosts_Dispatcher,
          Main_Host_Dispatcher);
-
    end Unregister;
 
 end Gwiad.Web.Main_Host;

@@ -19,8 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Strings.Hash;
 with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Strings.Hash;
 
 package Gwiad.Dynamic_Libraries.Manager is
 
@@ -31,6 +31,7 @@ package Gwiad.Dynamic_Libraries.Manager is
    use Hashed_Strings;
 
    protected Manager is
+
       procedure Discover_Libraries;
       --  Discovers new libraries to load
 

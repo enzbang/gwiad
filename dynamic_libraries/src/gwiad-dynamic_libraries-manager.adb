@@ -32,6 +32,10 @@ package body Gwiad.Dynamic_Libraries.Manager is
    use Ada.Containers;
    use Ada.Exceptions;
 
+   --------------
+   -- Discover --
+   --------------
+
    task body Discover is
    begin
       loop
@@ -54,8 +58,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
          S : Search_Type;
          D : Directory_Entry_Type;
       begin
-         Start_Search (S, "lib", "*." & Get_Library_Extension,
-                       (Ordinary_File => True, others => False));
+         Start_Search
+           (S, "lib", "*." & Get_Library_Extension,
+            (Ordinary_File => True, others => False));
 
          while More_Entries (S) loop
             Get_Next_Entry (S, D);
