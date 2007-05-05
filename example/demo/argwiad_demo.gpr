@@ -59,15 +59,13 @@ project Argwiad_Demo is
 
       case Shared.OS is
          when "Windows_NT" =>
-            null;
+            for Default_Switches ("Ada")
+              use Shared.Linker'Default_Switches ("Ada");
 
          when others =>
-            case Shared.Build is
-               when "Debug" =>
-                  for Default_Switches ("Ada") use ("-g", "-ldl", "-rdynamic");
-               when "Release" =>
-                  for Default_Switches ("Ada") use ("-ldl", "-rdynamic");
-            end case;
+            for Default_Switches ("Ada")
+              use Shared.Linker'Default_Switches ("Ada")
+              & ("-ldl", "-rdynamic");
       end case;
 
    end Linker;
