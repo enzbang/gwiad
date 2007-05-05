@@ -19,14 +19,15 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with System;
-with Interfaces.C.Strings;
-with Unchecked_Conversion;
-with Unchecked_Deallocation;
 with Ada.Directories;
+with Ada.Unchecked_Conversion;
+with Ada.Unchecked_Deallocation;
+with Interfaces.C.Strings;
+with System;
 
 package body Gwiad.Dynamic_Libraries is
 
+   use Ada;
    use Interfaces.C.Strings;
    use System;
 
@@ -39,21 +40,21 @@ package body Gwiad.Dynamic_Libraries is
    function GetLastError return DWORD;
    pragma Import (Stdcall, GetLastError, "GetLastError");
 
-   procedure Free is
-     new Unchecked_Deallocation (Object => Implementation,
-                                 Name   => Reference);
+   procedure Free is new Unchecked_Deallocation
+     (Object => Implementation, Name => Reference);
+
    ----------
    -- Call --
    ----------
 
    procedure Call
-     (Library       : in  Dynamic_Library;
-      Function_Name : in  String;
-      Call_Function : out Call_Function_Access)
+     (Library       : in     Dynamic_Library;
+      Function_Name : in     String;
+      Call_Function :    out Call_Function_Access)
    is
 
       function GetProcAddress
-        (Handle   : in System.Address;
+        (Handle    : in System.Address;
          Proc_Name : in chars_ptr) return System.Address;
       pragma Import (Stdcall, GetProcAddress, "GetProcAddress");
 
@@ -115,24 +116,26 @@ package body Gwiad.Dynamic_Libraries is
    -- Load --
    ----------
 
-   function Load (Path : String) return Dynamic_Library_Access is
+   function Load (Path : in String) return Dynamic_Library_Access is
 
       function LoadLibrary (FileName : in chars_ptr) return System.Address;
       pragma Import (Stdcall, LoadLibrary, "LoadLibraryA");
 
       Result : constant Dynamic_Library_Access := new Dynamic_Library;
       C_Path : chars_ptr := New_String (Path);
+      Errno  : DWORD;
 
    begin
       Result.Ref := new Implementation;
       Result.Ref.all := Implementation (LoadLibrary (C_Path));
+      Errno := GetLastError;
 
       Free (C_Path);
 
       if Result.Ref.all = Implementation (System.Null_Address) then
          Free (Result.Ref);
          raise Dynamic_Library_Error
-           with "Load returned code " & DWORD'Image (GetLastError);
+           with "Load returned code " & DWORD'Image (Errno);
       end if;
       return Result;
    end Load;
@@ -147,13 +150,15 @@ package body Gwiad.Dynamic_Libraries is
       pragma Import (Stdcall, FreeLibrary, "FreeLibrary");
 
       Result : BOOL;
+      Errno  : DWORD;
    begin
       Result := FreeLibrary (HMODULE (Library.Ref.all));
+      Errno := GetLastError;
       Free (Library.Ref);
 
       if Result /= True then
          raise Dynamic_Library_Error
-           with "Unload returned code " & DWORD'Image (GetLastError);
+           with "Unload returned code " & DWORD'Image (Errno);
       end if;
    end Unload;
 
