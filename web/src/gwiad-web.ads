@@ -31,9 +31,11 @@ package Gwiad.Web is
    Upload_Directory : constant String := "./uploads/";
 
 private
+
    protected Reload is
+
       procedure Require;
-      --  Requires a dispatcher reload.
+      --  Requires a dispatcher reload
 
       function Is_Required return Boolean;
       --  Reload the virtual hosts dispatcher as it can't be done

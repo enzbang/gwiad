@@ -29,25 +29,25 @@ package Gwiad.Dynamic_Libraries is
 
    function Load (Path : in String) return Dynamic_Library_Access;
    --  Load the dynamic library located at path.
-   --  Raise Dynamic_Library_Error if fails
+   --  Raises Dynamic_Library_Error if it fails.
 
-   procedure Init (Library : Dynamic_Library; Path : String);
+   procedure Init (Library : in Dynamic_Library; Path : in String);
    --  Init the dynamic library
    --  As the library is compile with Library_Auto_Init set as false
    --  it has to be manually initialized
    --  The initialization procedure is named by the catentation of the
    --  Library name (without the leading "lib") and "init"
-   --  Raise Dynamic_Library_Error if fails
+   --  Raises Dynamic_Library_Error if fails.
 
    generic
       type Call_Function_Access is private;
    procedure Call
-     (Library       : in  Dynamic_Library;
-      Function_Name : in  String;
-      Call_Function : out Call_Function_Access);
+     (Library       : in     Dynamic_Library;
+      Function_Name : in     String;
+      Call_Function :    out Call_Function_Access);
    --  Returns an access to the function Function_Name within the
-   --  dynamic library P.
-   --  Raise Dynamic_Library_Error if no such function is present
+   --  given dynamic library.
+   --  Raise Dynamic_Library_Error if no such function is present.
 
    procedure Unload (Library : in out Dynamic_Library);
    --  Unloads the dynamic library

@@ -86,7 +86,7 @@ project Shared is
             for Default_Switches ("Ada") use ("-g");
 
          when "Release" =>
-            for Default_Switches ("Ada") use ();
+            null;
       end case;
    end Linker;
 

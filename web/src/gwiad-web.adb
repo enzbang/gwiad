@@ -45,7 +45,7 @@ package body Gwiad.Web is
 
       procedure Done is
       begin
-         Reload_Required :=  False;
+         Reload_Required := False;
       end Done;
 
       ---------------
@@ -80,7 +80,6 @@ package body Gwiad.Web is
             Server.Set (HTTP, Virtual_Hosts_Dispatcher);
             Reload.Done;
          end if;
-
       end loop;
    end Reload_Dispatcher;
 
@@ -106,7 +105,6 @@ package body Gwiad.Web is
       Config.Set.Admin_URI (Configuration, Admin_URI);
 
       Server.Start (HTTP, Virtual_Hosts_Dispatcher, Configuration);
-
    end Start;
 
    ----------

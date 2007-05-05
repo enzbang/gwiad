@@ -19,8 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "../shared";
 with "aws";
+with "../shared";
 with "gwiad";
 
 project Gwiad.ECWF is

@@ -29,7 +29,7 @@ package body Gwiad.Web.Register is
 
    procedure Register
      (Web_Dir : in String;
-      Action : in AWS.Dispatchers.Handler'Class)
+      Action  : in AWS.Dispatchers.Handler'Class)
    is
    begin
       Main_Host.Register (Web_Dir, Action);
