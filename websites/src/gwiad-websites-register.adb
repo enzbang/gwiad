@@ -68,7 +68,7 @@ package body Gwiad.Websites.Register is
 
    function Name (Position : in Cursor) return String is
    begin
-      return  Register_Maps.Key (Position => Register_Maps.Cursor (Position));
+      return Register_Maps.Key (Position => Register_Maps.Cursor (Position));
    end Name;
 
    ----------
