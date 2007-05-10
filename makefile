@@ -61,6 +61,8 @@ I_INC_ECWF = $(INSTALL)/include/gwiad/ecwf
 I_LIB	   = $(INSTALL)/lib/gwiad
 I_GPR	   = $(INSTALL)/lib/gnat
 
+DEMO_DISTRIB = demo_distrib
+
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
 
@@ -120,4 +122,32 @@ install_demo:
 		$(DEMO_INSTALL)/templates/websites_admin
 	$(CP) -r templates/services_admin/*.thtml \
 		$(DEMO_INSTALL)/templates/services_admin
+	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(DEMO_INSTALL)/bin
 	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_INSTALL)/bin
+
+demo_distrib:
+	$(RM) -r $(DEMO_DISTRIB)
+	$(MKDIR) $(DEMO_DISTRIB)/data
+	$(MKDIR) $(DEMO_DISTRIB)/bin
+	$(MKDIR) $(DEMO_DISTRIB)/lib
+	$(MKDIR) $(DEMO_DISTRIB)/templates
+	$(MKDIR) $(DEMO_DISTRIB)/templates/services_admin
+	$(MKDIR) $(DEMO_DISTRIB)/templates/websites_admin
+	$(MKDIR) $(DEMO_DISTRIB)/scripts
+	$(MKDIR) $(DEMO_DISTRIB)/librairies
+	$(CP) -r lib/*$(SOEXT) $(DEMO_DISTRIB)/lib
+	$(CP) config/scripts/unregister $(DEMO_DISTRIB)/scripts
+	$(CP) -r templates/websites_admin/*.thtml \
+		$(DEMO_DISTRIB)/templates/websites_admin
+	$(CP) -r templates/services_admin/*.thtml \
+		$(DEMO_DISTRIB)/templates/services_admin
+	$(CP) $(I_LIB)/*$(SOEXT) $(DEMO_DISTRIB)/bin
+	$(CP) $(ADA_LIB_DIR)/*$(SOEXT) \
+		$(DEMO_DISTRIB)/bin
+	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DEMO_DISTRIB)/bin
+	$(CP) $(I_LIB)/*$(SOEXT) $(DEMO_DISTRIB)/bin
+	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(DEMO_DISTRIB)/bin
+	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_DISTRIB)/bin
+	$(CP) example/demo/start_demo.sh $(DEMO_DISTRIB)/
+	$(TAR_DIR) $(DEMO_DISTRIB).tgz $(DEMO_DISTRIB)
+	$(RM) -r $(DEMO_DISTRIB)
