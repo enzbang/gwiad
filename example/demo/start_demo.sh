@@ -1,0 +1,1 @@
+LD_LIBRARY_PATH=bin/:${LD_LIBRARY_PATH} PATH=bin/:${PATH} ./bin/argwiad
