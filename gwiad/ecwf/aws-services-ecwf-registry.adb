@@ -303,7 +303,8 @@ package body AWS.Services.ECWF.Registry is
         (Request      : in Status.Data;
          Context      : access ECWF.Context.Object;
          Translations : in out Templates.Translate_Set);
-      Content_Type : in String := MIME.Text_HTML)
+      Content_Type : in String  := MIME.Text_HTML;
+      Prefix       : in Boolean := True)
    is
       WO : Web_Object;
    begin
@@ -317,6 +318,10 @@ package body AWS.Services.ECWF.Registry is
       --  Register Tag
 
       WO_Map.Include (Key, WO);
+
+      if Prefix then
+         Prefix_URI.Append (Prefix_URI_Vector, To_Unbounded_String (Key));
+      end if;
    end Register;
 
    --------------
