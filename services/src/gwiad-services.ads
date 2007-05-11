@@ -21,7 +21,7 @@
 
 package Gwiad.Services is
 
-   type Service is abstract tagged null record;
+   type Service is interface;
 
    type Service_Access is access all Service'Class;
 
