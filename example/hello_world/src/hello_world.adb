@@ -51,7 +51,7 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data;
    --  Hello world
 
-   procedure Unregister;
+   procedure Unregister (Name : in String);
    --  Unregister website
 
    ----------------------
@@ -95,10 +95,10 @@ package body Hello_World is
    -- Unregister --
    ----------------
 
-   procedure Unregister is
-      use Gwiad.Web.Register;
+   procedure Unregister (Name : in String) is
+      pragma Unreferenced (Name);
    begin
-      Unregister (Web_Dir => Hello_Web_Dir);
+      Gwiad.Web.Register.Unregister (Web_Dir => Hello_Web_Dir);
    end Unregister;
 
 begin

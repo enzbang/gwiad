@@ -139,7 +139,7 @@ package body Gwiad.Websites.Register is
       declare
          RW : Registered_Website := Element (Position);
       begin
-         RW.Unregister_CB.all;
+         RW.Unregister_CB.all (Name);
       end;
 
       Website_Map.Delete (Position);
