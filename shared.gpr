@@ -47,7 +47,7 @@ project Shared is
    --  Common options used for the Debug and Release modes
 
    Debug_Options   :=
-     ("-g", "-gnata", "-gnatVa", "-gnatQ", "-gnato", "-gnatwe");
+     ("-g", "-gnata", "-gnatVa", "-gnatQ", "-gnato");
 
    Release_Options :=
      ("-O2", "-gnatn");
