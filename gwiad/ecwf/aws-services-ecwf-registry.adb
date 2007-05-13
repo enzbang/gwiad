@@ -380,6 +380,7 @@ package body AWS.Services.ECWF.Registry is
             Context : aliased ECWF.Context.Object :=
                         ECWF.Context.Get (Get_Context_Id (Lazy_Tag));
             T       : Templates.Translate_Set;
+            Template_Name : Unbounded_String;
          begin
             --  Get translation set for this tag
 
@@ -391,12 +392,21 @@ package body AWS.Services.ECWF.Registry is
             Templates.Insert (T, Translations);
             Templates.Insert (T, Lazy_Tag.Translations);
 
+
+            if Element (Position).Callback_Template then
+               Template_Name := To_Unbounded_String
+                 (Element (Position).Template_CB (Lazy_Tag.Request));
+            else
+               Template_Name := Element (Position).Template;
+            end if;
+
+
             Templates.Insert
               (Translations,
                Templates.Assoc
                  (Var_Name,
                   Unbounded_String'(Templates.Parse
-                    (To_String (Element (Position).Template), T,
+                    (To_String (Template_Name), T,
                        Lazy_Tag =>
                          Templates.Dynamic.Lazy_Tag_Access (Lazy_Tag)))));
          end;
