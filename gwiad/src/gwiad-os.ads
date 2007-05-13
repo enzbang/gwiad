@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
---                                 Gwiad                                    --
+--                                  Gwiad                                   --
 --                                                                          --
 --                           Copyright (C) 2007                             --
 --                            Olivier Ramonat                               --
@@ -19,10 +19,24 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-project Gwiad is
-   for Source_Dirs use ("src");
-   for Library_Dir use "lib";
-   for Library_Name use "gwiad_pure";
-   for Library_Kind use "dynamic";
-end Gwiad;
+with Ada.Environment_Variables;
 
+package Gwiad.OS is
+
+   use Ada;
+
+   Is_Windows          : constant Boolean :=
+                           Environment_Variables.Exists ("OS") and then
+                           Environment_Variables.Value ("OS") = "Windows_NT";
+
+   Directory_Separator : constant Character;
+
+private
+
+   subtype Windows_Host is Boolean;
+
+   DS : array (Windows_Host) of Character := (True => '\', False => '/');
+
+   Directory_Separator : constant Character := DS (Is_Windows);
+
+end Gwiad.OS;
