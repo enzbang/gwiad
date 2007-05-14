@@ -1,0 +1,8 @@
+#!/bin/sh
+
+BIN=$1
+DEST=$2
+
+for lib in `ldd $BIN | awk '{print $3}' | grep -v fff | sort -u`; do
+    cp $lib $DEST
+done

@@ -135,17 +135,14 @@ demo_distrib:
 	$(MKDIR) $(DEMO_DISTRIB)/templates/websites_admin
 	$(MKDIR) $(DEMO_DISTRIB)/scripts
 	$(MKDIR) $(DEMO_DISTRIB)/librairies
+	## Copy all .so found in argwiad to $(DEMO_DISTRIB)/bin
+	-sh config/scripts/ldd_copy example/demo/bin/argwiad $(DEMO_DISTRIB)/bin
 	$(CP) -r lib/*$(SOEXT) $(DEMO_DISTRIB)/lib
 	$(CP) config/scripts/unregister $(DEMO_DISTRIB)/scripts
 	$(CP) -r templates/websites_admin/*.thtml \
 		$(DEMO_DISTRIB)/templates/websites_admin
 	$(CP) -r templates/services_admin/*.thtml \
 		$(DEMO_DISTRIB)/templates/services_admin
-	$(CP) $(I_LIB)/*$(SOEXT) $(DEMO_DISTRIB)/bin
-	$(CP) $(ADA_LIB_DIR)/*$(SOEXT) \
-		$(DEMO_DISTRIB)/bin
-	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DEMO_DISTRIB)/bin
-	$(CP) $(I_LIB)/*$(SOEXT) $(DEMO_DISTRIB)/bin
 	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(DEMO_DISTRIB)/bin
 	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_DISTRIB)/bin
 	$(CP) example/demo/start_demo.sh $(DEMO_DISTRIB)/
