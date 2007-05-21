@@ -50,7 +50,7 @@ package body Gwiad.Web.Register.Virtual_Host is
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Host,
          Hostname         => Redirected_Hostname);
-      Reload.Require;
+      Gwiad.Web.Reload.Require;
    end Register;
 
    ----------------
@@ -62,6 +62,7 @@ package body Gwiad.Web.Register.Virtual_Host is
       Services.Dispatchers.Virtual_Host.Unregister
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Hostname);
+      Gwiad.Web.Reload.Require;
    end Unregister;
 
 end Gwiad.Web.Register.Virtual_Host;

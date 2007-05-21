@@ -136,7 +136,9 @@ demo_distrib:
 	$(MKDIR) $(DEMO_DISTRIB)/scripts
 	$(MKDIR) $(DEMO_DISTRIB)/librairies
 	## Copy all .so found in argwiad to $(DEMO_DISTRIB)/bin
+ifneq ($(OS),Windows_NT)
 	-sh config/scripts/ldd_copy example/demo/bin/argwiad $(DEMO_DISTRIB)/bin
+endif
 	$(CP) -r lib/*$(SOEXT) $(DEMO_DISTRIB)/lib
 	$(CP) config/scripts/unregister $(DEMO_DISTRIB)/scripts
 	$(CP) -r templates/websites_admin/*.thtml \
