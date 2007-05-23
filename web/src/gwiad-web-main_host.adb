@@ -19,11 +19,14 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Text_IO;
 with AWS.Status;
 with AWS.Response;
 with AWS.MIME;
 with AWS.Dispatchers.Callback;
 with AWS.Services.Dispatchers.URI;
+
+with Gwiad.Config.Settings;
 
 package body Gwiad.Web.Main_Host is
 
@@ -41,7 +44,9 @@ package body Gwiad.Web.Main_Host is
    function Default_Callback (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
    begin
-      return Response.Build (MIME.Text_HTML, "<h1>Error</h1>");
+      return Response.File
+        (Filename     => Gwiad.Config.Settings.Web_Default_Page,
+         Content_Type => MIME.Text_HTML);
    end Default_Callback;
 
    --------------

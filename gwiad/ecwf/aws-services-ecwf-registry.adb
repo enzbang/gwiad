@@ -304,7 +304,7 @@ package body AWS.Services.ECWF.Registry is
          Context      : access ECWF.Context.Object;
          Translations : in out Templates.Translate_Set);
       Content_Type : in String  := MIME.Text_HTML;
-      Prefix       : in Boolean := True)
+      Prefix       : in Boolean := False)
    is
       WO : Web_Object;
    begin

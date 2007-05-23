@@ -1,0 +1,43 @@
+Copyright (C) 2007 Olivier Ramonat
+See the end of the file for license conditions.
+
+The file INSTALL in this directory says how to build and install Gwiad.
+
+There are several subdirectories:
+
+'admin'             holds the admin interface for services and websites
+
+'config'            holds projects file for system wide installation and
+                    some scripts
+
+'dynamic_libraries' holds the dynamic library manager
+
+'example'           holds the demo server and the hello world plugin
+
+'gwiad'             holds an AWS.Services.ECWF developpement branch
+                    (until next AWS version), gwiad kernel package
+
+'services'          holds the services manager used by all gwiad
+                    services plugins
+
+'web'               holds the dispatchers (virtual hosts,
+                    prefix urls, ...)
+
+'websites'          holds the websites manager used by all gwiad
+                    websites plugins
+
+
+
+Gwiad is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Gwiad is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.

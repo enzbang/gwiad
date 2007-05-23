@@ -117,6 +117,7 @@ install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
 	$(MKDIR) $(DEMO_INSTALL)/scripts
 	$(CP) -r lib/*$(SOEXT) $(DEMO_INSTALL)/lib
+	$(CP) templates/*html $(DEMO_INSTALL)/templates/
 	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts
 	$(CP) -r templates/websites_admin/*.thtml \
 		$(DEMO_INSTALL)/templates/websites_admin
@@ -141,6 +142,7 @@ ifneq ($(OS),Windows_NT)
 endif
 	$(CP) -r lib/*$(SOEXT) $(DEMO_DISTRIB)/lib
 	$(CP) config/scripts/unregister $(DEMO_DISTRIB)/scripts
+	$(CP) templates/*html $(DEMO_DISTRIB)/templates/
 	$(CP) -r templates/websites_admin/*.thtml \
 		$(DEMO_DISTRIB)/templates/websites_admin
 	$(CP) -r templates/services_admin/*.thtml \

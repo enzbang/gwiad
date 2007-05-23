@@ -58,7 +58,7 @@ package AWS.Services.ECWF.Registry is
          Context      : access ECWF.Context.Object;
          Translations : in out Templates.Translate_Set);
       Content_Type : in String  := MIME.Text_HTML;
-      Prefix       : in Boolean := True);
+      Prefix       : in Boolean := False);
    --  Key is a Lazy_Tag or template page name. Template is the corresponding
    --  template file. Data_CB is the callback used to retrieve the translation
    --  table to render the page.
