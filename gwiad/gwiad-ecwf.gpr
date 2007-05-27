@@ -26,7 +26,7 @@ with "gwiad";
 project Gwiad.ECWF is
 
    for Source_Dirs use ("ecwf");
-   for Object_Dir use "obj";
+   for Object_Dir use "ecwf_obj";
    for Library_Dir use "lib";
    for Library_Name use "gwiad_ecwf";
    for Library_Kind use "dynamic";
