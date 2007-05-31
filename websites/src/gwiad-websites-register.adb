@@ -120,7 +120,6 @@ package body Gwiad.Websites.Register is
           Path          => Last_Library_Path,
           Description   => To_Unbounded_String (Description)));
 
-      Last_Library_Path := Null_Unbounded_String;
    end Register;
 
    ----------------
