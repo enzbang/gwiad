@@ -34,6 +34,11 @@ package body Gwiad.Dynamic_Libraries.Manager is
    use Ada.Containers;
    use Ada.Exceptions;
 
+   type Library_Type is (Website_Library, Service_Library);
+
+   Websites_Lib_Dir : constant String := Compose ("lib", "websites");
+   Services_Lib_Dir : constant String := Compose ("lib", "services");
+
    --------------
    -- Discover --
    --------------
@@ -59,39 +64,56 @@ package body Gwiad.Dynamic_Libraries.Manager is
       procedure Discover_Libraries is
          S : Search_Type;
          D : Directory_Entry_Type;
+
+         procedure Discover_Libraries
+           (From : in String; Lib_Type : in Library_Type);
+
+         procedure Discover_Libraries
+           (From : in String; Lib_Type : in Library_Type)
+         is
+         begin
+            Start_Search
+              (S, From, "*." & Get_Library_Extension,
+               (Ordinary_File => True, others => False));
+            while More_Entries (S) loop
+               Get_Next_Entry (S, D);
+               declare
+                  Path    : constant String        := Full_Name (D);
+                  Library : Dynamic_Library_Access := new Dynamic_Library;
+               begin
+                  if not Loaded_Libraries.Contains (Path) then
+                     Ada.Text_IO.Put_Line (Path);
+
+                     --  Set as read only to prevent file operation on runtine
+
+                     System.OS_Lib.Set_Read_Only (Path);
+
+                     Library := Dynamic_Libraries.Load (Path);
+
+                     if Lib_Type = Service_Library then
+                        Services.Register.Register (Library_Path => Path);
+                     else
+                        Websites.Register.Register (Library_Path => Path);
+                     end if;
+
+                     Init (Library.all, Path);
+                     Loaded_Libraries.Insert (Path, Library);
+                  end if;
+               end;
+            end loop;
+         end Discover_Libraries;
+
       begin
-         Start_Search
-           (S, "lib", "*." & Get_Library_Extension,
-            (Ordinary_File => True, others => False));
 
-         while More_Entries (S) loop
-            Get_Next_Entry (S, D);
-            declare
-               Library : Dynamic_Library_Access := new Dynamic_Library;
-               Path    : constant String        := Full_Name (D);
-            begin
-               if not Loaded_Libraries.Contains (Path) then
-                  Ada.Text_IO.Put_Line (Path);
+         --  Search for websites libraries
 
-                  --  Set as read only to prevent file operation on runtine
+         Discover_Libraries (From     => Websites_Lib_Dir,
+                             Lib_Type => Website_Library);
 
-                  System.OS_Lib.Set_Read_Only (Path);
+         --  Search for services libraries
 
-                  Library := Dynamic_Libraries.Load (Path);
-
-                  --  ??? As the type of library is not known (service or
-                  --  website). Register both
-                  --  Library having a different type must be stored in
-                  --  separate directory
-
-                  Services.Register.Register (Library_Path => Path);
-                  Websites.Register.Register (Library_Path => Path);
-
-                  Init (Library.all, Path);
-                  Loaded_Libraries.Insert (Path, Library);
-               end if;
-            end;
-         end loop;
+         Discover_Libraries (From     => Services_Lib_Dir,
+                             Lib_Type => Service_Library);
 
       exception
          when E : others =>

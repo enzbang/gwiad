@@ -111,12 +111,14 @@ install: install_dirs
 install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/data
 	$(MKDIR) $(DEMO_INSTALL)/bin
-	$(MKDIR) $(DEMO_INSTALL)/lib
+	$(MKDIR) $(DEMO_INSTALL)/lib/websites
+	$(MKDIR) $(DEMO_INSTALL)/lib/services
 	$(MKDIR) $(DEMO_INSTALL)/templates
 	$(MKDIR) $(DEMO_INSTALL)/templates/services_admin
 	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
 	$(MKDIR) $(DEMO_INSTALL)/scripts
-	$(CP) -r lib/*$(SOEXT) $(DEMO_INSTALL)/lib
+	$(CP) -r lib/services/*$(SOEXT) $(DEMO_INSTALL)/lib/services/
+	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_INSTALL)/lib/websites/
 	$(CP) templates/*html $(DEMO_INSTALL)/templates/
 	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts
 	$(CP) -r templates/websites_admin/*.thtml \
@@ -130,17 +132,19 @@ demo_distrib:
 	$(RM) -r $(DEMO_DISTRIB)
 	$(MKDIR) $(DEMO_DISTRIB)/data
 	$(MKDIR) $(DEMO_DISTRIB)/bin
-	$(MKDIR) $(DEMO_DISTRIB)/lib
+	$(MKDIR) $(DEMO_DISTRIB)/lib/websites
+	$(MKDIR) $(DEMO_DISTRIB)/lib/services
 	$(MKDIR) $(DEMO_DISTRIB)/templates
 	$(MKDIR) $(DEMO_DISTRIB)/templates/services_admin
 	$(MKDIR) $(DEMO_DISTRIB)/templates/websites_admin
 	$(MKDIR) $(DEMO_DISTRIB)/scripts
 	$(MKDIR) $(DEMO_DISTRIB)/librairies
-	## Copy all .so found in argwiad to $(DEMO_DISTRIB)/bin
+## Copy all .so found in argwiad to $(DEMO_DISTRIB)/bin
 ifneq ($(OS),Windows_NT)
 	-sh config/scripts/ldd_copy example/demo/bin/argwiad $(DEMO_DISTRIB)/bin
 endif
-	$(CP) -r lib/*$(SOEXT) $(DEMO_DISTRIB)/lib
+	$(CP) -r lib/services/*$(SOEXT) $(DEMO_DISTRIB)/lib/services
+	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_DISTRIB)/lib/websites
 	$(CP) config/scripts/unregister $(DEMO_DISTRIB)/scripts
 	$(CP) templates/*html $(DEMO_DISTRIB)/templates/
 	$(CP) -r templates/websites_admin/*.thtml \

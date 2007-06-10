@@ -30,8 +30,8 @@ Project Services_Admin is
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
    for Library_Ali_Dir use "lib";
-   for Library_Dir use "../../../lib";
-   for Library_Name use "libgwiadmin";
+   for Library_Dir use "../../../lib/websites/";
+   for Library_Name use "gwiad_services_admin";
    for Library_Interface use ("services_admin");
    for Library_Kind use "dynamic";
    for Library_Auto_Init use "false";
