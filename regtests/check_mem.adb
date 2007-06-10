@@ -24,7 +24,6 @@ with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Exceptions;
 
---  with Gwiad.Web;
 with Gwiad.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 
@@ -55,7 +54,6 @@ procedure Check_Mem is
    procedure Load is
    begin
       Manager.Load (Lib_Hello_World_Website);
-      Put_Line ("loaded");
    end Load;
 
    ------------
@@ -65,7 +63,6 @@ procedure Check_Mem is
    procedure Unload is
    begin
       Manager.Unload (Lib_Hello_World_Website);
-      Put_Line ("unloaded");
 
       --  Rename the disabled library
 
@@ -90,7 +87,6 @@ procedure Check_Mem is
             Unregister (Name (Last_Position));
          end;
       end loop;
-      Put_Line ("websites unloaded");
 
    end Unload_Websites;
 
