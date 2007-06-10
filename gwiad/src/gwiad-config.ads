@@ -29,4 +29,8 @@ private
 
    Web_Default_Page      : constant String := "index.html";
 
+   Auth_Username         : constant String := "admin";
+
+   Auth_Password         : constant String := "admin";
+
 end Gwiad.Config;

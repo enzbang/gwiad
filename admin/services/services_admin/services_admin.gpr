@@ -21,6 +21,7 @@
 
 with "aws";
 with "../../../shared";
+with "../../../gwiad/gwiad";
 with "../../../services/gwiad-services";
 with "../../../dynamic_libraries/gwiad-dynamic_libraries";
 with "../../../web/gwiad-web";

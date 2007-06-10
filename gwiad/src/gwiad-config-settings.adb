@@ -31,9 +31,28 @@ package body Gwiad.Config.Settings is
 
    Config_Filename : constant String := "gwiad.ini";
 
-   type Attributes is (Web_Default_Directory, Web_Default_Page);
+   type Attributes is (Auth_Username, Auth_Password,
+                       Web_Default_Directory, Web_Default_Page);
 
    package Conf is new Gwiad.Iniparser (Attributes);
+
+   -------------------
+   -- Auth_Password --
+   -------------------
+
+   function Auth_Password return String is
+   begin
+      return Conf.Get_Value (Auth_Password);
+   end Auth_Password;
+
+   -------------------
+   -- Auth_Username --
+   -------------------
+
+   function Auth_Username return String is
+   begin
+      return Conf.Get_Value (Auth_Username);
+   end Auth_Username;
 
    ---------------------------
    -- Web_Default_Directory --
@@ -56,6 +75,8 @@ package body Gwiad.Config.Settings is
 begin
    --  Set default values
 
+   Conf.Set_Value (Auth_Username, Gwiad.Config.Auth_Username);
+   Conf.Set_Value (Auth_Password, Gwiad.Config.Auth_Password);
    Conf.Set_Value (Web_Default_Directory, Gwiad.Config.Web_Default_Directory);
    Conf.Set_Value (Web_Default_Page, Gwiad.Config.Web_Default_Page);
 

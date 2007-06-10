@@ -19,11 +19,10 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Services.Register;
-with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web.Register;
+with Ada.Strings.Unbounded;
 
 with AWS.Status;
+with AWS.Digest;
 with AWS.Dispatchers.Callback;
 with AWS.Messages;
 with AWS.Response;
@@ -33,7 +32,11 @@ with AWS.Services.ECWF.Registry;
 with AWS.Services.ECWF.Context;
 with AWS.Templates;
 with AWS.Parameters;
-with Ada.Strings.Unbounded;
+
+with Gwiad.Config.Settings;
+with Gwiad.Services.Register;
+with Gwiad.Dynamic_Libraries.Manager;
+with Gwiad.Web.Register;
 
 package body Services_Admin is
 
@@ -68,22 +71,48 @@ package body Services_Admin is
 
    function Default_Callback (Request : in Status.Data) return Response.Data is
       use type Messages.Status_Code;
+      use type AWS.Status.Authorization_Type;
       URI          : constant String := Status.URI (Request);
       Translations : Templates.Translate_Set;
       Web_Page     : Response.Data;
+
+      Username    : constant String := AWS.Status.Authorization_Name (Request);
+      Client_Mode : constant AWS.Status.Authorization_Type
+        := AWS.Status.Authorization_Mode (Request);
+
    begin
 
-      Web_Page := AWS.Services.ECWF.Registry.Build
-        (URI, Request, Translations, Cache_Control => Messages.Prevent_Cache);
+      if Client_Mode = Status.Digest
+        and then Username = Config.Settings.Auth_Username
+        and then Status.Check_Digest (Request, Config.Settings.Auth_Password)
+      then
+         if Digest.Check_Nonce
+           (Digest.Nonce (AWS.Status.Authorization_Nonce (Request)))
+         then
+            Web_Page := AWS.Services.ECWF.Registry.Build
+              (URI, Request, Translations,
+               Cache_Control => Messages.Prevent_Cache);
 
-      if Response.Status_Code (Web_Page) = Messages.S404 then
-         --  Page not found
-         return Response.Build (MIME.Text_HTML,
-                                "<p>Page not found</p>");
+            if Response.Status_Code (Web_Page) = Messages.S404 then
+               --  Page not found
+               return Response.Build
+                 (Content_Type  => MIME.Text_HTML,
+                  Message_Body  => "<p>Service admin error</p>");
+            else
+               return Web_Page;
+            end if;
+         else
+            --  Nonce is stale
 
-      else
-         return Web_Page;
+            return AWS.Response.Authenticate
+              ("Gwiad restricted usage", Response.Digest, Stale => True);
+         end if;
       end if;
+
+      --  Unauthorized
+
+      return Response.Authenticate ("Gwiad restricted usage", Response.Digest);
+
    end Default_Callback;
 
    -------------------

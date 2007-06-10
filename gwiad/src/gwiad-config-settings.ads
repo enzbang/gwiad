@@ -21,6 +21,10 @@
 
 package Gwiad.Config.Settings is
 
+   function Auth_Username return String;
+
+   function Auth_Password return String;
+
    function Web_Default_Directory return String;
 
    function Web_Default_Page return String;

@@ -22,6 +22,7 @@
 with Ada.Directories;
 
 with AWS.Status;
+with AWS.Digest;
 with AWS.Dispatchers.Callback;
 with AWS.Messages;
 with AWS.Response;
@@ -33,6 +34,7 @@ with AWS.Templates;
 with AWS.Parameters;
 with Ada.Strings.Unbounded;
 
+with Gwiad.Config.Settings;
 with Gwiad.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Register;
@@ -76,22 +78,48 @@ package body Websites_Admin is
 
    function Default_Callback (Request : in Status.Data) return Response.Data is
       use type Messages.Status_Code;
+      use type AWS.Status.Authorization_Type;
       URI          : constant String := Status.URI (Request);
       Translations : Templates.Translate_Set;
       Web_Page     : Response.Data;
+
+      Username    : constant String := AWS.Status.Authorization_Name (Request);
+      Client_Mode : constant AWS.Status.Authorization_Type
+        := AWS.Status.Authorization_Mode (Request);
+
    begin
 
-      Web_Page := AWS.Services.ECWF.Registry.Build
-        (URI, Request, Translations, Cache_Control => Messages.Prevent_Cache);
+      if Client_Mode = Status.Digest
+        and then Username = Config.Settings.Auth_Username
+        and then Status.Check_Digest (Request, Config.Settings.Auth_Password)
+      then
+         if Digest.Check_Nonce
+           (Digest.Nonce (AWS.Status.Authorization_Nonce (Request)))
+         then
+            Web_Page := Services.ECWF.Registry.Build
+              (URI, Request, Translations,
+               Cache_Control => Messages.Prevent_Cache);
 
-      if Response.Status_Code (Web_Page) = Messages.S404 then
-         --  Page not found
-         return Response.Build
-           (Content_Type  => MIME.Text_HTML,
-            Message_Body  => "<p>Website admin error</p>");
-      else
-         return Web_Page;
+            if Response.Status_Code (Web_Page) = Messages.S404 then
+               --  Page not found
+               return Response.Build
+                 (Content_Type  => MIME.Text_HTML,
+                  Message_Body  => "<p>Website admin error</p>");
+            else
+               return Web_Page;
+            end if;
+         else
+            --  Nonce is stale
+
+            return AWS.Response.Authenticate
+              ("Gwiad restricted usage", Response.Digest, Stale => True);
+         end if;
       end if;
+
+      --  Unauthorized
+
+      return Response.Authenticate ("Gwiad restricted usage", Response.Digest);
+
    end Default_Callback;
 
    -------------------
