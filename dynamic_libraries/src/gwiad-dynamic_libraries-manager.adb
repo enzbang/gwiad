@@ -23,6 +23,8 @@ with Ada.Directories;
 with Ada.Text_IO;
 with Ada.Exceptions;
 
+with System.OS_Lib;
+
 with Gwiad.Services.Register;
 with Gwiad.Websites.Register;
 
@@ -70,6 +72,11 @@ package body Gwiad.Dynamic_Libraries.Manager is
             begin
                if not Loaded_Libraries.Contains (Path) then
                   Ada.Text_IO.Put_Line (Path);
+
+                  --  Set as read only to prevent file operation on runtine
+
+                  System.OS_Lib.Set_Read_Only (Path);
+
                   Library := Dynamic_Libraries.Load (Path);
 
                   --  ??? As the type of library is not known (service or
