@@ -49,7 +49,7 @@ package Gwiad.Dynamic_Libraries is
    --  given dynamic library.
    --  Raise Dynamic_Library_Error if no such function is present.
 
-   procedure Unload (Library : in out Dynamic_Library);
+   procedure Unload (Library : in out Dynamic_Library_Access);
    --  Unloads the dynamic library
 
 private

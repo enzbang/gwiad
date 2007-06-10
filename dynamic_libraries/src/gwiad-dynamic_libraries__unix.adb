@@ -22,14 +22,17 @@
 with Ada.Directories;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
+
 with Interfaces.C.Strings;
 with System;
 
 package body Gwiad.Dynamic_Libraries is
 
    use Ada;
-   use Interfaces.C.Strings;
+
    use Interfaces.C;
+   use Interfaces.C.Strings;
+
    use System;
 
    type Implementation is new System.Address;
@@ -40,6 +43,10 @@ package body Gwiad.Dynamic_Libraries is
    procedure Free is
      new Unchecked_Deallocation
        (Object => Implementation, Name => Reference);
+
+   procedure Free is
+     new Unchecked_Deallocation
+       (Object => Dynamic_Library, Name => Dynamic_Library_Access);
 
    ----------
    -- Call --
@@ -123,7 +130,6 @@ package body Gwiad.Dynamic_Libraries is
       C_Path    : chars_ptr := New_String (Path);
 
    begin
-      --  ??? 2 new here ...
       Result.Ref := new Implementation;
       Result.Ref.all := Implementation (Dlopen (C_Path, RTLD_LAZY));
 
@@ -140,16 +146,16 @@ package body Gwiad.Dynamic_Libraries is
    -- Unload --
    ------------
 
-   procedure Unload (Library : in out Dynamic_Library) is
+   procedure Unload (Library : in out Dynamic_Library_Access) is
       function dlclose (Handle : in System.Address) return Interfaces.C.int;
       pragma Import (C, dlclose, "dlclose");
 
       Result : int := 1;
    begin
-      --  ??? A single deallocation there
-      Result := dlclose (System.Address (Library.Ref.all));
+      Result := dlclose (System.Address (Library.all.Ref.all));
 
-      Free (Library.Ref);
+      Free (Library.all.Ref);
+      Free (Library);
 
       if Result /= 0 then
          raise Dynamic_Library_Error with Value (dlerror);

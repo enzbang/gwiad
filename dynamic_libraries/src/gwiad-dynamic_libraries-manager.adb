@@ -144,7 +144,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
          Library := Loaded_Libraries.Element (Path);
          Loaded_Libraries.Delete (Path);
-         Dynamic_Libraries.Unload (Library.all);
+         Dynamic_Libraries.Unload (Library);
 
          declare
             Path_Disabled : constant String := Path & ".disabled";
