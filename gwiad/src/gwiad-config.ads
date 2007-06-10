@@ -19,15 +19,14 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.OS;
-
 package Gwiad.Config is
 
 private
 
    --  Default parameters
 
-   Web_Default_Page : constant String
-     := "templates" & Gwiad.OS.Directory_Separator & "default.html";
+   Web_Default_Directory : constant String := "www";
+
+   Web_Default_Page      : constant String := "index.html";
 
 end Gwiad.Config;

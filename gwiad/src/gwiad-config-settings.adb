@@ -31,9 +31,18 @@ package body Gwiad.Config.Settings is
 
    Config_Filename : constant String := "gwiad.ini";
 
-   type Attributes is (Web_Default_Page);
+   type Attributes is (Web_Default_Directory, Web_Default_Page);
 
    package Conf is new Gwiad.Iniparser (Attributes);
+
+   ---------------------------
+   -- Web_Default_Directory --
+   ---------------------------
+
+   function Web_Default_Directory return String is
+   begin
+      return Conf.Get_Value (Web_Default_Directory);
+   end Web_Default_Directory;
 
    ----------------------
    -- Web_Default_Page --
@@ -47,6 +56,7 @@ package body Gwiad.Config.Settings is
 begin
    --  Set default values
 
+   Conf.Set_Value (Web_Default_Directory, Gwiad.Config.Web_Default_Directory);
    Conf.Set_Value (Web_Default_Page, Gwiad.Config.Web_Default_Page);
 
    --  Now read the config file if any

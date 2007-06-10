@@ -26,10 +26,14 @@ with AWS.MIME;
 with AWS.Dispatchers.Callback;
 with AWS.Services.Dispatchers.URI;
 
+with Ada.Directories;
+
+with Gwiad.OS;
 with Gwiad.Config.Settings;
 
 package body Gwiad.Web.Main_Host is
 
+   use Ada;
    use AWS;
 
    Main_Host_Dispatcher : Services.Dispatchers.URI.Handler;
@@ -42,11 +46,30 @@ package body Gwiad.Web.Main_Host is
    ----------------------
 
    function Default_Callback (Request : in Status.Data) return Response.Data is
-      pragma Unreferenced (Request);
+      use Ada.Directories;
+      URI      : constant String := Status.URI (Request);
+      Filename : constant String :=
+                   Gwiad.Config.Settings.Web_Default_Directory
+                     & Gwiad.OS.Directory_Separator
+                     & URI (URI'First + 1 .. URI'Last);
    begin
-      return Response.File
-        (Filename     => Gwiad.Config.Settings.Web_Default_Page,
-         Content_Type => MIME.Text_HTML);
+
+      if Exists (Filename)
+        and then Kind (Filename) = Ordinary_File then
+         return Response.File
+           (Filename     => Filename,
+            Content_Type => MIME.Content_Type (Filename));
+      end if;
+
+      if Exists (Gwiad.Config.Settings.Web_Default_Directory
+                 & Gwiad.OS.Directory_Separator
+                 & Gwiad.Config.Settings.Web_Default_Page) then
+         return Response.Moved
+           (Location => "/" &  Gwiad.Config.Settings.Web_Default_Page);
+      else
+         return Response.Build (Content_Type  => MIME.Text_HTML,
+                                Message_Body  => "<h1>Welcome to gwiad</h1>");
+      end if;
    end Default_Callback;
 
    --------------
