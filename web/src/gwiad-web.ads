@@ -27,6 +27,8 @@ package Gwiad.Web is
 
    procedure Wait;
 
+   procedure Stop;
+
    Admin_URI        : constant String := "/admin/status";
    Upload_Directory : constant String := "./uploads/";
 

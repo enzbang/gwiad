@@ -108,12 +108,22 @@ package body Gwiad.Web is
    end Start;
 
    ----------
+   -- Stop --
+   ----------
+
+   procedure Stop is
+   begin
+      Server.Shutdown (HTTP);
+   end Stop;
+
+   ----------
    -- Wait --
    ----------
 
    procedure Wait is
    begin
-      Server.Wait (Server.Forever);
+      --      Server.Wait (Server.Forever);
+      Server.Wait;
    end Wait;
 
 end Gwiad.Web;

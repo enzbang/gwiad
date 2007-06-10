@@ -1,0 +1,61 @@
+with "../shared";
+with "aws";
+with "../gwiad/gwiad";
+with "../gwiad/gwiad-ecwf";
+with "../web/gwiad-web";
+with "../dynamic_libraries/gwiad-dynamic_libraries";
+
+project Regtests is
+
+   for Languages use ("Ada", "Project file");
+
+   for Source_Dirs use (".");
+   for Object_Dir use ".";
+   for Exec_Dir use ".";
+   for Main use ("check_mem.adb");
+
+      ------------
+   -- Binder --
+   ------------
+
+   package Binder renames Shared.Binder;
+
+   --------------
+   -- Compiler --
+   --------------
+
+   package Compiler renames Shared.Compiler;
+
+   -------------
+   -- Builder --
+   -------------
+
+   package Builder renames Shared.Builder;
+
+   ------------
+   -- Linker --
+   ------------
+
+   package Linker is
+
+      case Shared.OS is
+         when "Windows_NT" =>
+            for Default_Switches ("Ada")
+              use Shared.Linker'Default_Switches ("Ada");
+
+         when others =>
+            for Default_Switches ("Ada")
+              use Shared.Linker'Default_Switches ("Ada")
+              & ("-ldl", "-rdynamic");
+      end case;
+
+   end Linker;
+
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide renames Shared.Ide;
+
+end Regtests;
+
