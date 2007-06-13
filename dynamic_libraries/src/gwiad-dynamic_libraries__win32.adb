@@ -144,7 +144,7 @@ package body Gwiad.Dynamic_Libraries is
    -- Unload --
    ------------
 
-   procedure Unload (Library : in out Dynamic_Library) is
+   procedure Unload (Library : in out Dynamic_Library_Access) is
 
       function FreeLibrary (DLL : in HMODULE) return BOOL;
       pragma Import (Stdcall, FreeLibrary, "FreeLibrary");
