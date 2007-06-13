@@ -20,8 +20,17 @@
 ------------------------------------------------------------------------------
 
 with AWS.Dispatchers;
+with Ada.Strings.Unbounded;
 
 package Gwiad.Web.Register.Virtual_Host is
+
+   use Ada.Strings.Unbounded;
+
+   type Virtual_Host_Directory is record
+      Document_Root : Unbounded_String;
+      Default_Page  : Unbounded_String;
+      Secure        : Boolean;
+   end record;
 
    procedure Register
      (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class);
@@ -29,9 +38,14 @@ package Gwiad.Web.Register.Virtual_Host is
 
    procedure Register
      (Host : in String; Redirected_Hostname : in String);
-   --  Register a new redirection
+   --  Registers a new redirection
+
+   procedure Register
+     (Hostname : in String;
+      VH_Dir   : in Virtual_Host_Directory);
+   --  Registers a new virtual host to serve a document root
 
    procedure Unregister (Hostname : in String);
-   --  Unregister a virtual host
+   --  Unregisters a virtual host
 
 end Gwiad.Web.Register.Virtual_Host;
