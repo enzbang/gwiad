@@ -107,6 +107,9 @@ install: install_dirs
 	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-websites.gpr $(I_GPR)
+ifeq ($(OS), Windows_NT)
+	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
+endif
 
 install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/data
@@ -139,9 +142,10 @@ demo_distrib:
 	$(MKDIR) $(DEMO_DISTRIB)/templates/websites_admin
 	$(MKDIR) $(DEMO_DISTRIB)/scripts
 	$(MKDIR) $(DEMO_DISTRIB)/librairies
-## Copy all .so found in argwiad to $(DEMO_DISTRIB)/bin
+## Copy all shared libraries found in argwiad to $(DEMO_DISTRIB)/bin
 ifneq ($(OS),Windows_NT)
-	-sh config/scripts/ldd_copy example/demo/bin/argwiad $(DEMO_DISTRIB)/bin
+	-sh config/scripts/ldd_copy example/demo/bin/argwiad \
+		$(DEMO_DISTRIB)/bin
 endif
 	$(CP) -r lib/services/*$(SOEXT) $(DEMO_DISTRIB)/lib/services
 	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_DISTRIB)/lib/websites
