@@ -20,6 +20,9 @@
 ------------------------------------------------------------------------------
 
 with Ada.Directories;
+with Ada.Text_IO;
+with Ada.Exceptions;
+with Ada.Strings.Unbounded;
 
 with AWS.Status;
 with AWS.Digest;
@@ -32,24 +35,34 @@ with AWS.Services.ECWF.Registry;
 with AWS.Services.ECWF.Context;
 with AWS.Templates;
 with AWS.Parameters;
-with Ada.Strings.Unbounded;
 
 with Gwiad.Config.Settings;
+with Gwiad.Iniparser;
 with Gwiad.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web.Register;
+with Gwiad.Web.Register.Virtual_Host;
 
 package body Websites_Admin is
 
    use Ada;
+   use Ada.Strings.Unbounded;
+
    use Gwiad;
 
    use AWS;
    use AWS.Templates;
 
+   type Attribute is (Document_Root, Default_Page, Secure, Virtual_Host);
+   package Conf is new Gwiad.Iniparser (Attribute);
+
+   Config_Root : constant String := "config";
+
    Websites_Admin_URL : constant String := "/admin/websites/";
 
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
+
+   procedure Discover_Virtual_Host_Directories;
+   --  Search wiki website on plugin root path
 
    function Default_Callback (Request : in Status.Data) return Response.Data;
    --  Registers default callback
@@ -71,6 +84,16 @@ package body Websites_Admin is
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Unload a library and all associated websites
+
+   ------------------------------
+   -- Virtual_Host_Directories --
+   ------------------------------
+
+   procedure Virtual_Host_Directories
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Search for virtual host directories
 
    ----------------------
    -- Default_Callback --
@@ -121,6 +144,68 @@ package body Websites_Admin is
       return Response.Authenticate ("Gwiad restricted usage", Response.Digest);
 
    end Default_Callback;
+
+   ---------------------------------------
+   -- Discover_Virtual_Host_Directories --
+   ---------------------------------------
+
+   procedure Discover_Virtual_Host_Directories is
+      use Ada.Directories;
+      S : Search_Type;
+      D : Directory_Entry_Type;
+   begin
+      Start_Search (Search    => S,
+                    Directory => Config_Root,
+                    Pattern   => "*.ini",
+                    Filter    => (Ordinary_File => True, others => False));
+
+      while More_Entries (S) loop
+         Get_Next_Entry (S, D);
+         declare
+            Name : constant String := Simple_Name (D);
+         begin
+            if Name /= "." and Name /= ".." then
+               --  Now read the config file if any
+
+               Conf.IO.Open (Full_Name (D));
+               Conf.IO.Close;
+
+               declare
+                  use Web.Register.Virtual_Host;
+                  Conf_File_Document_Root : constant String :=
+                                              Conf.Get_Value (Document_Root);
+                  Conf_File_Default_Page  : constant String :=
+                                              Conf.Get_Value (Default_Page);
+                  VH_Dir : Virtual_Host_Directory :=
+                             (Document_Root => To_Unbounded_String
+                                (Conf_File_Document_Root),
+                              Default_Page  => To_Unbounded_String
+                                (Conf_File_Default_Page),
+                              Secure        => Conf.Get_Value (Secure));
+               begin
+                  Register (Hostname => Conf.Get_Value (Virtual_Host),
+                            VH_Dir   => VH_Dir);
+               end;
+            end if;
+         exception
+            when Conf.IO.Uncomplete_Config =>
+               Ada.Text_IO.Put_Line ("uncomplete");
+               Conf.IO.Close;
+            when UP : Conf.IO.Unknown_Parameter =>
+               Text_IO.Put_Line ("Unknown Parameter : "
+                                 & Exceptions.Exception_Message (UP));
+               Conf.IO.Close;
+            when Text_IO.Name_Error =>
+               Ada.Text_IO.Put_Line ("Does not exit");
+               null;
+         end;
+      end loop;
+
+   exception
+      when E : others =>
+         Text_IO.Put_Line (Exceptions.Exception_Information (E));
+   end Discover_Virtual_Host_Directories;
+
 
    -------------------
    -- List_Websites --
@@ -177,7 +262,6 @@ package body Websites_Admin is
    is
       pragma Unreferenced (Context, Translations);
       use Gwiad.Websites.Register;
-      use Ada.Strings.Unbounded;
 
       P            : constant Parameters.List := Status.Parameters (Request);
       Service_Name : constant String          := Parameters.Get (P, "service");
@@ -211,7 +295,6 @@ package body Websites_Admin is
       pragma Unreferenced (Context);
       use Gwiad.Websites.Register;
       use Dynamic_Libraries.Manager;
-      use Ada.Strings.Unbounded;
 
       P            : Parameters.List  := Status.Parameters (Request);
       Library_Path : constant String  := Parameters.Get (P, "lib");
@@ -263,6 +346,20 @@ package body Websites_Admin is
 
    end Unload_Websites;
 
+   ------------------------------
+   -- Virtual_Host_Directories --
+   ------------------------------
+
+   procedure Virtual_Host_Directories
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set)
+   is
+   begin
+      Discover_Virtual_Host_Directories;
+      List_Websites (Request, Context, Translations);
+   end Virtual_Host_Directories;
+
 begin
 
    AWS.Services.Dispatchers.URI.Register_Default_Callback
@@ -288,6 +385,12 @@ begin
      (Websites_Admin_URL & "unload",
       "templates/websites_admin/unload.thtml",
       Unload_Websites'Access,
+      MIME.Text_HTML);
+
+   AWS.Services.ECWF.Registry.Register
+     (Websites_Admin_URL & "find_vhd",
+      "templates/websites_admin/list.thtml",
+      Virtual_Host_Directories'Access,
       MIME.Text_HTML);
 
    Gwiad.Web.Register.Register (Web_Dir  => Websites_Admin_URL,
