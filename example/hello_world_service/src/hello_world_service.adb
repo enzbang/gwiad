@@ -19,12 +19,12 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Services.Register;
+with Gwiad.Registry.Services.Register;
 with Ada.Text_IO;
 
 package body Hello_World_Service is
 
-   use Gwiad.Services;
+   use Gwiad.Registry.Services;
 
    function Builder return access Service'Class;
    --  Build a new test plugin
@@ -50,7 +50,7 @@ package body Hello_World_Service is
    end Hello;
 
 begin
-   Gwiad.Services.Register.Register
+   Gwiad.Registry.Services.Register.Register
      (Name        => "hello_world_service",
       Description => "A simple hello world service for gwiad",
       Builder     => Builder'Access);

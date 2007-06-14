@@ -25,8 +25,8 @@ with AWS.Response;
 with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
-with Gwiad.Services.Register;
-with Gwiad.Websites.Register;
+with Gwiad.Registry.Services.Register;
+with Gwiad.Registry.Websites.Register;
 with Gwiad.Web.Register;
 
 with Hello_World_Interface;
@@ -36,7 +36,7 @@ package body Hello_World is
    use AWS;
 
    use Gwiad;
-   use Gwiad.Services;
+   use Gwiad.Registry.Services;
 
    use Hello_World_Interface;
 
@@ -117,7 +117,7 @@ begin
    Gwiad.Web.Register.Register (Web_Dir => Hello_Web_Dir,
                                 Action  => Main_Dispatcher);
 
-   Gwiad.Websites.Register.Register
+   Gwiad.Registry.Websites.Register.Register
      (Name        => "Hello web site",
       Description => "A test for gwiad using hello world service",
       Unregister  => Unregister'Access);

@@ -20,10 +20,10 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-services
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-services
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-registry-services
+	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-registry-services
 
 clean:
-	-gnat clean -r -Pgwiad-services
+	-gnat clean -r -Pgwiad-registry-services
 
 check:

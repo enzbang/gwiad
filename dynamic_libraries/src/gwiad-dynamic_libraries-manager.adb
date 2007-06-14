@@ -25,8 +25,8 @@ with Ada.Exceptions;
 
 with GNAT.OS_Lib;
 
-with Gwiad.Services.Register;
-with Gwiad.Websites.Register;
+with Gwiad.Registry.Services.Register;
+with Gwiad.Registry.Websites.Register;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
@@ -71,6 +71,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
          procedure Discover_Libraries
            (From : in String; Lib_Type : in Library_Type)
          is
+            use Gwiad.Registry;
          begin
             Start_Search
               (S, From, "*." & Get_Library_Extension,

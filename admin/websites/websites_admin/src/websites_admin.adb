@@ -38,7 +38,7 @@ with AWS.Parameters;
 
 with Gwiad.Config.Settings;
 with Gwiad.Iniparser;
-with Gwiad.Websites.Register;
+with Gwiad.Registry.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Register.Virtual_Host;
 
@@ -217,7 +217,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Websites.Register;
+      use Gwiad.Registry.Websites.Register;
 
       Position     : Cursor := First;
 
@@ -261,7 +261,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context, Translations);
-      use Gwiad.Websites.Register;
+      use Gwiad.Registry.Websites.Register;
 
       P            : constant Parameters.List := Status.Parameters (Request);
       Service_Name : constant String          := Parameters.Get (P, "service");
@@ -293,7 +293,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
-      use Gwiad.Websites.Register;
+      use Gwiad.Registry.Websites.Register;
       use Dynamic_Libraries.Manager;
 
       P            : Parameters.List  := Status.Parameters (Request);

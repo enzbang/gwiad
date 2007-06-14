@@ -19,11 +19,11 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Services;
+with Gwiad.Registry.Services;
 
 package Hello_World_Interface is
 
-   use Gwiad.Services;
+   use Gwiad.Registry.Services;
 
    type Hello_Interface is interface;
 

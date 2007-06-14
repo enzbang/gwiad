@@ -19,14 +19,14 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "gwiad";
+package Gwiad.Registry.Services is
 
-Project Gwiad.Websites is
+   type Service is interface;
 
-   for Source_Dirs use ("../../include/gwiad/ws");
-   for Library_Dir use "../../lib/gwiad";
-   for Library_Name use "gwiad_websites";
-   for Library_Kind use "dynamic";
-   for Externally_Built use "true";
+   type Service_Access is access all Service'Class;
 
-end Gwiad.Websites;
+   type Service_Builder is access function return access Service'Class;
+
+   Service_Error : exception;
+
+end Gwiad.Registry.Services;

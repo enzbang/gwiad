@@ -33,7 +33,7 @@ endif
 
 # Modules support
 
-MODULES =  gwiad services dynamic_libraries web admin example
+MODULES =  gwiad dynamic_libraries web admin example
 
 MODULES_BUILD = ${MODULES:%=%_build}
 
@@ -55,8 +55,9 @@ I_BIN	   = $(INSTALL)/bin
 I_INC	   = $(INSTALL)/include/gwiad
 I_INC_WEB  = $(INSTALL)/include/gwiad/web
 I_INC_DL   = $(INSTALL)/include/gwiad/dl
-I_INC_S    = $(INSTALL)/include/gwiad/s
-I_INC_WS   = $(INSTALL)/include/gwiad/ws
+I_INC_R    = $(INSTALL)/include/gwiad/registry
+I_INC_RS   = $(INSTALL)/include/gwiad/registry/s
+I_INC_RWS  = $(INSTALL)/include/gwiad/registry/ws
 I_INC_ECWF = $(INSTALL)/include/gwiad/ecwf
 I_LIB	   = $(INSTALL)/lib/gwiad
 I_GPR	   = $(INSTALL)/lib/gnat
@@ -83,8 +84,9 @@ install_dirs: install_clean
 	$(MKDIR) $(I_INC_ECWF)
 	$(MKDIR) $(I_INC_WEB)
 	$(MKDIR) $(I_INC_DL)
-	$(MKDIR) $(I_INC_S)
-	$(MKDIR) $(I_INC_WS)
+	$(MKDIR) $(I_INC_R)
+	$(MKDIR) $(I_INC_RS)
+	$(MKDIR) $(I_INC_RWS)
 	$(MKDIR) $(I_LIB)
 	$(MKDIR) $(I_GPR)
 
@@ -92,21 +94,24 @@ install: install_dirs
 	$(CP) gwiad/src/*.ad[sb] $(I_INC)
 	$(CP) gwiad/ecwf/*.ad[sb] $(I_INC_ECWF)
 	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
-	$(CP) services/src/*.ad[sb] $(I_INC_S)
-	$(CP) websites/src/*.ad[sb] $(I_INC_WS)
+	$(CP) registry/*.ads $(I_INC_R)
+	$(CP) registry/*.ali $(I_LIB)
+	$(CP) registry/services/src/*.ad[sb] $(I_INC_RS)
+	$(CP) registry/websites/src/*.ad[sb] $(I_INC_RWS)
 	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
 	$(CP) gwiad/lib/gwiad.ali $(I_INC)
 	$(CP) gwiad/lib/* $(I_LIB)
 	$(CP) dynamic_libraries/lib/* $(I_LIB)
-	$(CP) services/lib/* $(I_LIB)
-	$(CP) websites/lib/* $(I_LIB)
+	$(CP) registry/services/lib/* $(I_LIB)
+	$(CP) registry/websites/lib/* $(I_LIB)
 	$(CP) web/lib/* $(I_LIB)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-ecwf.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-web.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-services.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-websites.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-registry.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-registry-services.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-registry-websites.gpr $(I_GPR)
 ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
 endif

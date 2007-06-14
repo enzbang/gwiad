@@ -21,8 +21,8 @@
 
 with "../shared";
 with "../gwiad/gwiad";
-with "../services/gwiad-services";
-with "../websites/gwiad-websites";
+with "../registry/services/gwiad-registry-services";
+with "../registry/websites/gwiad-registry-websites";
 
 project Gwiad.Dynamic_Libraries is
 

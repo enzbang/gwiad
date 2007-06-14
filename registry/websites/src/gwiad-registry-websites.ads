@@ -19,33 +19,10 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "aws";
-with "../../../shared";
-with "../../../gwiad/gwiad";
-with "../../../dynamic_libraries/gwiad-dynamic_libraries";
-with "../../../registry/services/gwiad-registry-services";
-with "../../../web/gwiad-web";
+package Gwiad.Registry.Websites is
 
-Project Services_Admin is
+   Website_Error : exception;
 
-   for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Library_Ali_Dir use "lib";
-   for Library_Dir use "../../../lib/websites/";
-   for Library_Name use "gwiad_services_admin";
-   for Library_Interface use ("services_admin");
-   for Library_Kind use "dynamic";
-   for Library_Auto_Init use "false";
+   type Unregister_CB is access procedure (Name : in String);
 
-   case Shared.OS is
-      when "Windows_NT" =>
-         for Library_Options
-           use ("-laws", "-laws_include", "-laws_win32", "-lwsock32");
-      when others =>
-         null;
-   end case;
-
-   package Compiler renames Shared.Compiler;
-   package Ide renames Shared.Ide;
-
-end Services_Admin;
+end Gwiad.Registry.Websites;
