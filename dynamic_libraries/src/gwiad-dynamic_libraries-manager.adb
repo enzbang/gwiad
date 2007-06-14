@@ -30,6 +30,7 @@ with Gwiad.Registry.Websites.Register;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
+   use Ada;
    use Ada.Directories;
    use Ada.Containers;
    use Ada.Exceptions;
@@ -46,7 +47,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
    task body Discover is
    begin
       loop
-         delay 1.0;
+         delay 5.0;
          Manager.Discover_Libraries;
       end loop;
    end Discover;
@@ -68,14 +69,18 @@ package body Gwiad.Dynamic_Libraries.Manager is
          procedure Discover_Libraries
            (From : in String; Lib_Type : in Library_Type);
 
+         ------------------------
+         -- Discover_Libraries --
+         ------------------------
+
          procedure Discover_Libraries
-           (From : in String; Lib_Type : in Library_Type)
-         is
+           (From : in String; Lib_Type : in Library_Type) is
             use Gwiad.Registry;
          begin
             Start_Search
               (S, From, "*." & Get_Library_Extension,
                (Ordinary_File => True, others => False));
+
             while More_Entries (S) loop
                Get_Next_Entry (S, D);
                declare
@@ -83,7 +88,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                   Library : Dynamic_Library_Access := new Dynamic_Library;
                begin
                   if not Loaded_Libraries.Contains (Path) then
-                     Ada.Text_IO.Put_Line (Path);
+                     Text_IO.Put_Line (Path);
 
                      --  Set as read only to prevent file operation on runtine
 
@@ -105,20 +110,21 @@ package body Gwiad.Dynamic_Libraries.Manager is
          end Discover_Libraries;
 
       begin
-
          --  Search for websites libraries
 
-         Discover_Libraries (From     => Websites_Lib_Dir,
-                             Lib_Type => Website_Library);
+         Discover_Libraries
+           (From     => Websites_Lib_Dir,
+            Lib_Type => Website_Library);
 
          --  Search for services libraries
 
-         Discover_Libraries (From     => Services_Lib_Dir,
-                             Lib_Type => Service_Library);
+         Discover_Libraries
+           (From     => Services_Lib_Dir,
+            Lib_Type => Service_Library);
 
       exception
          when E : others =>
-            Ada.Text_IO.Put_Line (Exception_Information (E));
+            Text_IO.Put_Line (Exception_Information (E));
       end Discover_Libraries;
 
       ----------
@@ -156,6 +162,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
             Rename (Path, Path_Disabled);
          end;
       end Unload;
+
    end Manager;
 
 end Gwiad.Dynamic_Libraries.Manager;
