@@ -27,13 +27,14 @@ with AWS.Services.Dispatchers.URI;
 
 with Ada.Directories;
 
-with Gwiad.OS;
+with Morzhol.OS;
 with Gwiad.Config.Settings;
 
 package body Gwiad.Web.Main_Host is
 
    use Ada;
    use AWS;
+   use Morzhol.OS;
 
    Main_Host_Dispatcher : Services.Dispatchers.URI.Handler;
 
@@ -49,7 +50,7 @@ package body Gwiad.Web.Main_Host is
       URI      : constant String := Status.URI (Request);
       Filename : constant String :=
                    Gwiad.Config.Settings.Web_Default_Directory
-                     & Gwiad.OS.Directory_Separator
+                     & Directory_Separator
                      & URI (URI'First + 1 .. URI'Last);
    begin
 
@@ -61,7 +62,7 @@ package body Gwiad.Web.Main_Host is
       end if;
 
       if Exists (Gwiad.Config.Settings.Web_Default_Directory
-                 & Gwiad.OS.Directory_Separator
+                 & Directory_Separator
                  & Gwiad.Config.Settings.Web_Default_Page) then
          return Response.Moved
            (Location => "/" &  Gwiad.Config.Settings.Web_Default_Page);

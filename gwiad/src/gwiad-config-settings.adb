@@ -22,7 +22,7 @@
 with Ada.Text_IO;
 with Ada.Exceptions;
 
-with Gwiad.Iniparser;
+with Morzhol.Iniparser;
 with Gwiad.Config;
 
 package body Gwiad.Config.Settings is
@@ -34,7 +34,7 @@ package body Gwiad.Config.Settings is
    type Attributes is (Auth_Username, Auth_Password,
                        Web_Default_Directory, Web_Default_Page);
 
-   package Conf is new Gwiad.Iniparser (Attributes);
+   package Conf is new Morzhol.Iniparser (Attributes);
 
    -------------------
    -- Auth_Password --

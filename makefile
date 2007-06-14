@@ -52,6 +52,7 @@ check :$(MODULES_CHECK)
 # Install directories
 
 I_BIN	   = $(INSTALL)/bin
+I_MORZ     = $(INSTALL)/include/morzhol
 I_INC	   = $(INSTALL)/include/gwiad
 I_INC_WEB  = $(INSTALL)/include/gwiad/web
 I_INC_DL   = $(INSTALL)/include/gwiad/dl
@@ -59,6 +60,7 @@ I_INC_R    = $(INSTALL)/include/gwiad/registry
 I_INC_RS   = $(INSTALL)/include/gwiad/registry/s
 I_INC_RWS  = $(INSTALL)/include/gwiad/registry/ws
 I_INC_ECWF = $(INSTALL)/include/gwiad/ecwf
+I_LIB_MORZ = $(INSTALL)/lib/morzhol
 I_LIB	   = $(INSTALL)/lib/gwiad
 I_GPR	   = $(INSTALL)/lib/gnat
 
@@ -80,6 +82,7 @@ install_clean:
 
 install_dirs: install_clean
 	$(MKDIR) $(I_BIN)
+	$(MKDIR) $(I_MORZ)
 	$(MKDIR) $(I_INC)
 	$(MKDIR) $(I_INC_ECWF)
 	$(MKDIR) $(I_INC_WEB)
@@ -88,23 +91,27 @@ install_dirs: install_clean
 	$(MKDIR) $(I_INC_RS)
 	$(MKDIR) $(I_INC_RWS)
 	$(MKDIR) $(I_LIB)
+	$(MKDIR) $(I_LIB_MORZ)
 	$(MKDIR) $(I_GPR)
 
 install: install_dirs
+	$(CP) external-libs/morzhol/src/*.ad[sb] $(I_MORZ)
 	$(CP) gwiad/src/*.ad[sb] $(I_INC)
 	$(CP) gwiad/ecwf/*.ad[sb] $(I_INC_ECWF)
 	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
 	$(CP) registry/*.ads $(I_INC_R)
-	$(CP) registry/*.ali $(I_LIB)
 	$(CP) registry/services/src/*.ad[sb] $(I_INC_RS)
 	$(CP) registry/websites/src/*.ad[sb] $(I_INC_RWS)
 	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
+	$(CP) external-libs/morzhol/lib/* $(I_LIB_MORZ)
+	$(CP) registry/*.ali $(I_LIB)
 	$(CP) gwiad/lib/gwiad.ali $(I_INC)
 	$(CP) gwiad/lib/* $(I_LIB)
 	$(CP) dynamic_libraries/lib/* $(I_LIB)
 	$(CP) registry/services/lib/* $(I_LIB)
 	$(CP) registry/websites/lib/* $(I_LIB)
 	$(CP) web/lib/* $(I_LIB)
+	$(CP) config/projects/morzhol.gpr $(I_GPR)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-ecwf.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-web.gpr $(I_GPR)

@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------------
 
 with "../shared";
+with "../external-libs/morzhol/morzhol";
 
 project Gwiad is
 

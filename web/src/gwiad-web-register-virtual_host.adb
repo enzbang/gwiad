@@ -30,12 +30,13 @@ with AWS.Status;
 with AWS.Response;
 with AWS.MIME;
 
-with Gwiad.OS;
+with Morzhol.OS;
 
 package body Gwiad.Web.Register.Virtual_Host is
 
    use Ada;
    use AWS;
+   use Morzhol.OS;
 
    package Config_Maps is new Containers.Indefinite_Hashed_Maps
      (String, Virtual_Host_Directory, Strings.Hash, "=", "=");
@@ -87,7 +88,7 @@ package body Gwiad.Web.Register.Virtual_Host is
                        Configs.Element (Hostname);
             Filename : constant String
               := To_String (VH_Dir.Document_Root)
-              & Gwiad.OS.Directory_Separator
+              & Directory_Separator
               & URI (URI'First + 1 .. URI'Last);
          begin
             if Exists (Filename)
@@ -97,7 +98,7 @@ package body Gwiad.Web.Register.Virtual_Host is
                   Content_Type => MIME.Content_Type (Filename));
             end if;
             if Exists (To_String (VH_Dir.Document_Root)
-                       & Gwiad.OS.Directory_Separator &
+                       & Directory_Separator &
                        To_String (VH_Dir.Default_Page)) then
                return Response.Moved
                  (Location => "/" &  To_String (VH_Dir.Default_Page));

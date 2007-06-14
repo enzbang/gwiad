@@ -37,7 +37,7 @@ with AWS.Templates;
 with AWS.Parameters;
 
 with Gwiad.Config.Settings;
-with Gwiad.Iniparser;
+with Morzhol.Iniparser;
 with Gwiad.Registry.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Register.Virtual_Host;
@@ -53,7 +53,7 @@ package body Websites_Admin is
    use AWS.Templates;
 
    type Attribute is (Document_Root, Default_Page, Secure, Virtual_Host);
-   package Conf is new Gwiad.Iniparser (Attribute);
+   package Conf is new Morzhol.Iniparser (Attribute);
 
    Config_Root : constant String := "config";
 
