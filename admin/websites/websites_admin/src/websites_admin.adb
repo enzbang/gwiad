@@ -36,8 +36,10 @@ with AWS.Services.ECWF.Context;
 with AWS.Templates;
 with AWS.Parameters;
 
-with Gwiad.Config.Settings;
 with Morzhol.Iniparser;
+with Morzhol.Strings;
+
+with Gwiad.Config.Settings;
 with Gwiad.Registry.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Register.Virtual_Host;
@@ -46,6 +48,8 @@ package body Websites_Admin is
 
    use Ada;
    use Ada.Strings.Unbounded;
+
+   use Morzhol.Strings;
 
    use Gwiad;
 
@@ -172,19 +176,25 @@ package body Websites_Admin is
 
                declare
                   use Web.Register.Virtual_Host;
+                  use Gwiad.Registry.Websites.Register;
                   Conf_File_Document_Root : constant String :=
                                               Conf.Get_Value (Document_Root);
                   Conf_File_Default_Page  : constant String :=
                                               Conf.Get_Value (Default_Page);
                   VH_Dir : Virtual_Host_Directory :=
-                             (Document_Root => To_Unbounded_String
-                                (Conf_File_Document_Root),
-                              Default_Page  => To_Unbounded_String
-                                (Conf_File_Default_Page),
+                             (Document_Root => +Conf_File_Document_Root,
+                              Default_Page  => +Conf_File_Default_Page,
                               Secure        => Conf.Get_Value (Secure));
                begin
                   Register (Hostname => Conf.Get_Value (Virtual_Host),
                             VH_Dir   => VH_Dir);
+                  Register (Name         =>
+                              "Virtual Host " & Conf.Get_Value (Virtual_Host),
+                            Description  =>
+                              "Document Root = " & (-VH_Dir.Document_Root),
+                            Unregister   =>
+                              Web.Register.Virtual_Host.Unregister'Access,
+                            Library_Path => "libgwiad_website_admin.so");
                end;
             end if;
          exception
@@ -264,7 +274,7 @@ package body Websites_Admin is
       use Gwiad.Registry.Websites.Register;
 
       P            : constant Parameters.List := Status.Parameters (Request);
-      Service_Name : constant String          := Parameters.Get (P, "service");
+      Service_Name : constant String          := Parameters.Get (P, "website");
 
       Library_Path : Unbounded_String := Null_Unbounded_String;
 
@@ -274,12 +284,15 @@ package body Websites_Admin is
          Position : constant Cursor := Find (Service_Name);
       begin
          if Has_Element (Position) then
-            Library_Path := To_Unbounded_String (Path (Position));
+            Library_Path := +Path (Position);
          end if;
       end;
 
       if Library_Path /= "" then
+         Ada.Text_IO.Put_Line ("Unregister " & Service_Name);
          Unregister (Service_Name);
+      else
+         Ada.Text_IO.Put_Line ("No library path");
       end if;
    end Stop_Website;
 
@@ -395,5 +408,9 @@ begin
 
    Gwiad.Web.Register.Register (Web_Dir  => Websites_Admin_URL,
                                 Action   => Main_Dispatcher);
+
+   --  Discover virtual host directories
+
+   Discover_Virtual_Host_Directories;
 
 end Websites_Admin;

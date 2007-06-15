@@ -19,7 +19,11 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Morzhol.Strings;
+
 package body Gwiad.Registry.Websites.Register is
+
+   use Morzhol.Strings;
 
    Last_Library_Path : Unbounded_String;
    Website_Map       : Register_Maps.Map;
@@ -33,7 +37,7 @@ package body Gwiad.Registry.Websites.Register is
              Register_Maps.Element
                (Position => Register_Maps.Cursor (Position));
    begin
-      return To_String (RW.Description);
+      return -RW.Description;
    end Description;
 
    ----------
@@ -88,7 +92,7 @@ package body Gwiad.Registry.Websites.Register is
       RW : constant Registered_Website :=
              Register_Maps.Element (Register_Maps.Cursor (Position));
    begin
-      return To_String (RW.Path);
+      return -RW.Path;
    end Path;
 
    --------------
@@ -97,7 +101,7 @@ package body Gwiad.Registry.Websites.Register is
 
    procedure Register (Library_Path : in String) is
    begin
-      Last_Library_Path := To_Unbounded_String (Library_Path);
+      Last_Library_Path := +Library_Path;
    end Register;
 
    --------------
@@ -105,21 +109,31 @@ package body Gwiad.Registry.Websites.Register is
    --------------
 
    procedure Register
-     (Name        : in String;
-      Description : in String;
-      Unregister  : in Unregister_CB) is
+     (Name         : in String;
+      Description  : in String;
+      Unregister   : in Unregister_CB;
+      Library_Path : in String := "") is
    begin
-      if Last_Library_Path = Null_Unbounded_String then
+      if Library_Path = "" and then
+        Last_Library_Path = Null_Unbounded_String then
          raise Website_Error;
       end if;
 
-      Register_Maps.Insert
-        (Website_Map,
-         Name,
-         (Unregister_CB => Unregister,
-          Path          => Last_Library_Path,
-          Description   => To_Unbounded_String (Description)));
-
+      if Library_Path = "" then
+         Register_Maps.Insert
+           (Website_Map,
+            Name,
+            (Unregister_CB => Unregister,
+             Path          => Last_Library_Path,
+             Description   => +Description));
+      else
+         Register_Maps.Insert
+           (Website_Map,
+            Name,
+            (Unregister_CB => Unregister,
+             Path          => +Library_Path,
+             Description   => +Description));
+      end if;
    end Register;
 
    ----------------

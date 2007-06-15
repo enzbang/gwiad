@@ -31,9 +31,10 @@ package Gwiad.Registry.Websites.Register is
    --  path before the service registration
 
    procedure Register
-     (Name        : in String;
-      Description : in String;
-      Unregister  : in Unregister_CB);
+     (Name         : in String;
+      Description  : in String;
+      Unregister   : in Unregister_CB;
+      Library_Path : in String := "");
    --  Registers a new website
    --  This is called by a website after that the library path has been
    --  set by the dynamic library manager (as the library has no knowlegde of
