@@ -47,8 +47,8 @@ package body Gwiad.Dynamic_Libraries.Manager is
    task body Discover is
    begin
       loop
-         delay 5.0;
          Manager.Discover_Libraries;
+         delay 5.0;
       end loop;
    end Discover;
 
