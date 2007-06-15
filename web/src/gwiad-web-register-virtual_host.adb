@@ -44,17 +44,14 @@ package body Gwiad.Web.Register.Virtual_Host is
 
    Configs : Map;
 
-   function Default_Callback
-     (Request : in Status.Data) return Response.Data;
+   function Default_Callback (Request : in Status.Data) return Response.Data;
    --  Default and unique callback for this dispatcher
 
    ----------------------
    -- Default_Callback --
    ----------------------
 
-   function Default_Callback
-     (Request : in Status.Data) return Response.Data
-   is
+   function Default_Callback (Request : in Status.Data) return Response.Data is
       use Ada.Directories;
 
       function Get_Hostname (Hostname : String) return String;
