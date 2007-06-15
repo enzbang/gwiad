@@ -181,6 +181,7 @@ package body Websites_Admin is
                                               Conf.Get_Value (Document_Root);
                   Conf_File_Default_Page  : constant String :=
                                               Conf.Get_Value (Default_Page);
+
                   VH_Dir : Virtual_Host_Directory :=
                              (Document_Root => +Conf_File_Document_Root,
                               Default_Page  => +Conf_File_Default_Page,
@@ -189,9 +190,10 @@ package body Websites_Admin is
                   Register (Hostname => Conf.Get_Value (Virtual_Host),
                             VH_Dir   => VH_Dir);
                   Register (Name         =>
-                              "Virtual Host " & Conf.Get_Value (Virtual_Host),
+                              Conf.Get_Value (Virtual_Host),
                             Description  =>
-                              "Document Root = " & (-VH_Dir.Document_Root),
+                              "Virtual Host " & Conf.Get_Value (Virtual_Host) &
+                              " at Document Root = " & (-VH_Dir.Document_Root),
                             Unregister   =>
                               Web.Register.Virtual_Host.Unregister'Access,
                             Library_Path => "libgwiad_website_admin.so");
