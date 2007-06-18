@@ -5,10 +5,21 @@
 SERVER="$1"                       # if port is not 80 server:port
 TYPE="$2"                         # Service or website
 NAME="$3"                      # library full path or service name
+HTTP_USER="$4"
+HTTP_PASSWORD="$5"
 
-WGET="wget -O /dev/null -q"
+if [[ -z $HTTP_USER ]]; then
+    HTTP_USER=admin
+fi
+
+if [[ -z $HTTP_PASSWORD ]]; then
+    HTTP_PASSWORD=admin
+fi
+
+WGET="wget --http-user=$HTTP_USER --http-password=$HTTP_PASSWORD -O /dev/null -q"
 
 if [[ $TYPE == "website" ]]; then
+    echo $WGET http://$SERVER/admin/websites/unload?lib=$NAME
     $WGET http://$SERVER/admin/websites/unload?lib=$NAME
 else
     $WGET http://$SERVER/admin/services/stop?service=$NAME
