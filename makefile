@@ -132,6 +132,7 @@ install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/templates/services_admin
 	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
 	$(MKDIR) $(DEMO_INSTALL)/scripts
+	$(MKDIR) $(DEMO_INSTALL)/uploads
 	$(CP) -r lib/services/*$(SOEXT) $(DEMO_INSTALL)/lib/services/
 	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_INSTALL)/lib/websites/
 	$(CP) templates/*html $(DEMO_INSTALL)/templates/
