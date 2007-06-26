@@ -100,6 +100,8 @@ package body Gwiad.Web is
 
       --  Server configuration
 
+      Configuration := Config.Get_Current;
+
       Config.Set.Session (Configuration, True);
       Config.Set.Upload_Directory (Configuration, Upload_Directory);
       Config.Set.Admin_URI (Configuration, Admin_URI);
