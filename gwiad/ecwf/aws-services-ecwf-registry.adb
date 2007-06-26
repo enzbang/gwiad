@@ -400,7 +400,6 @@ package body AWS.Services.ECWF.Registry is
                Template_Name := Element (Position).Template;
             end if;
 
-
             Templates.Insert
               (Translations,
                Templates.Assoc

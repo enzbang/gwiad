@@ -25,24 +25,28 @@ with AWS.Response;
 with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
+with Gwiad.Registry.Services.Cache;
 with Gwiad.Registry.Services.Register;
 with Gwiad.Registry.Websites.Register;
 with Gwiad.Web.Register;
 
 with Hello_World_Interface;
+with Gwiad.Registry.Websites;
 
 package body Hello_World is
 
    use AWS;
 
    use Gwiad;
-   use Gwiad.Registry.Services;
+   use Gwiad.Registry.Websites;
 
    use Hello_World_Interface;
 
    Hello_Web_Dir : constant String := "/hello/";
 
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
+
+   Path : constant String := Gwiad.Registry.Websites.Register.Library_Path;
 
    function Default_Callback
      (Request : in Status.Data) return Response.Data;
@@ -51,7 +55,7 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data;
    --  Hello world
 
-   procedure Unregister (Name : in String);
+   procedure Unregister (Name : in Website_Name);
    --  Unregister website
 
    ----------------------
@@ -71,21 +75,22 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
 
-      Service_Name : constant String := "hello_world_service";
+      Service_Name : constant Registry.Services.Register.Service_Name :=
+                       "hello_world_service";
 
    begin
 
-      if not Register.Exists (Name => Service_Name) then
+      if not Registry.Services.Register.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
       end if;
 
       declare
-         Hello_World_Service_Access : constant HW_Service_Access :=
-                                       HW_Service_Access
-                                         (Register.Get (Service_Name));
-         Hello_World_Service        : HW_Service'Class :=
-                                       Hello_World_Service_Access.all;
+         Hello_World_Service_Access : constant HW_Service_Access
+           := HW_Service_Access
+             (Gwiad.Registry.Services.Cache.Get (Service_Name));
+         Hello_World_Service        : HW_Service'Class
+           := Hello_World_Service_Access.all;
       begin
          return Response.Build (MIME.Text_HTML, Hello_World_Service.Hello);
       end;
@@ -95,14 +100,13 @@ package body Hello_World is
    -- Unregister --
    ----------------
 
-   procedure Unregister (Name : in String) is
+   procedure Unregister (Name : in Website_Name) is
       pragma Unreferenced (Name);
    begin
       Gwiad.Web.Register.Unregister (Web_Dir => Hello_Web_Dir);
    end Unregister;
 
 begin
-
 
    AWS.Services.Dispatchers.URI.Register
      (Dispatcher => Main_Dispatcher,
@@ -120,6 +124,7 @@ begin
    Gwiad.Registry.Websites.Register.Register
      (Name        => "Hello web site",
       Description => "A test for gwiad using hello world service",
-      Unregister  => Unregister'Access);
+      Unregister  => Unregister'Access,
+     Library_Path => Path);
 
 end Hello_World;

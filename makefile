@@ -150,6 +150,7 @@ demo_distrib:
 	$(MKDIR) $(DEMO_DISTRIB)/bin
 	$(MKDIR) $(DEMO_DISTRIB)/lib/websites
 	$(MKDIR) $(DEMO_DISTRIB)/lib/services
+	$(MKDIR) $(DEMO_DISTRIB)/config
 	$(MKDIR) $(DEMO_DISTRIB)/templates
 	$(MKDIR) $(DEMO_DISTRIB)/templates/services_admin
 	$(MKDIR) $(DEMO_DISTRIB)/templates/websites_admin

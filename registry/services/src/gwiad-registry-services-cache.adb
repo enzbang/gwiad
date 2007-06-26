@@ -88,7 +88,7 @@ package body Gwiad.Registry.Services.Cache is
    function Get (Name : in Service_Name) return Service_Access is
    begin
       return New_Service (Name);
-   end Create;
+   end Get;
 
    ---------
    -- Get --

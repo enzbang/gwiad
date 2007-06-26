@@ -134,7 +134,7 @@ package body Services_Admin is
 
    begin
       while Has_Element (Position) loop
-         Tag_Name        := Tag_Name & Name (Position);
+         Tag_Name        := Tag_Name & String (Name (Position));
          Tag_Description := Tag_Description & Description (Position);
          Next (Position);
       end loop;
@@ -163,14 +163,14 @@ package body Services_Admin is
       use Dynamic_Libraries.Manager;
       use Ada.Strings.Unbounded;
 
-      P            : Parameters.List  := Status.Parameters (Request);
-      Service_Name : constant String  := Parameters.Get (P, "service");
-      Library_Path : Unbounded_String := Null_Unbounded_String;
+      P            : constant Parameters.List := Status.Parameters (Request);
+      Name         : constant String          := Parameters.Get (P, "service");
+      Library_Path : Unbounded_String         := Null_Unbounded_String;
 
    begin
 
       declare
-         Position     : constant Cursor := Find (Service_Name);
+         Position : constant Cursor := Find (Service_Name (Name));
       begin
          if Has_Element (Position) then
             Library_Path := To_Unbounded_String (Path (Position));
@@ -178,13 +178,13 @@ package body Services_Admin is
       end;
 
       if Library_Path /= "" then
-         Unregister (Service_Name);
+         Unregister (Service_Name (Name));
          Manager.Unload (To_String (Library_Path));
       end if;
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("NAME", Service_Name));
+         Templates.Assoc ("NAME", Name));
 
       Templates.Insert
         (Translations,

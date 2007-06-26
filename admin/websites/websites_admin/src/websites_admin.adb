@@ -43,6 +43,7 @@ with Gwiad.Config.Settings;
 with Gwiad.Registry.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Register.Virtual_Host;
+with Gwiad.Registry.Websites; use Gwiad.Registry.Websites;
 
 package body Websites_Admin is
 
@@ -98,6 +99,9 @@ package body Websites_Admin is
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Search for virtual host directories
+
+   procedure Virtual_Host_Unregister (Name : in Website_Name);
+   --  Unregister a virtual host. The website_name is the
 
    ----------------------
    -- Default_Callback --
@@ -175,28 +179,33 @@ package body Websites_Admin is
                Conf.IO.Close;
 
                declare
-                  use Web.Register.Virtual_Host;
                   use Gwiad.Registry.Websites.Register;
                   Conf_File_Document_Root : constant String :=
                                               Conf.Get_Value (Document_Root);
                   Conf_File_Default_Page  : constant String :=
                                               Conf.Get_Value (Default_Page);
+                  Conf_File_Virtual_Host  : constant String :=
+                                              Conf.Get_Value (Virtual_Host);
 
-                  VH_Dir : Virtual_Host_Directory :=
-                             (Document_Root => +Conf_File_Document_Root,
-                              Default_Page  => +Conf_File_Default_Page,
-                              Secure        => Conf.Get_Value (Secure));
+
+                  VH_Dir : Web.Register.Virtual_Host.Virtual_Host_Directory
+                    := (Document_Root => +Conf_File_Document_Root,
+                        Default_Page  => +Conf_File_Default_Page,
+                        Secure        => Conf.Get_Value (Secure));
                begin
-                  Register (Hostname => Conf.Get_Value (Virtual_Host),
-                            VH_Dir   => VH_Dir);
-                  Register (Name         =>
-                              Conf.Get_Value (Virtual_Host),
-                            Description  =>
-                              "Virtual Host " & Conf.Get_Value (Virtual_Host) &
-                              " at Document Root = " & (-VH_Dir.Document_Root),
-                            Unregister   =>
-                              Web.Register.Virtual_Host.Unregister'Access,
-                            Library_Path => "libgwiad_website_admin.so");
+                  Web.Register.Virtual_Host.Register
+                    (Hostname => Conf.Get_Value (Virtual_Host),
+                     VH_Dir   => VH_Dir);
+                  Gwiad.Registry.Websites.Register.Register
+                    (Name         =>
+                       Gwiad.Registry.Websites.Website_Name
+                         (Conf_File_Virtual_Host),
+                     Description  =>
+                       "Virtual Host " & Conf.Get_Value (Virtual_Host) &
+                     " at Document Root = " & (-VH_Dir.Document_Root),
+                     Unregister   =>
+                       Virtual_Host_Unregister'Access,
+                     Library_Path => "libgwiad_website_admin.so");
                end;
             end if;
          exception
@@ -240,7 +249,7 @@ package body Websites_Admin is
 
    begin
       while Has_Element (Position) loop
-         Names        := Names & Name (Position);
+         Names        := Names & String (Name (Position));
          Paths        := Paths & Path (Position);
          Simple_Paths := Simple_Paths
            & Directories.Simple_Name (Path (Position));
@@ -276,14 +285,14 @@ package body Websites_Admin is
       use Gwiad.Registry.Websites.Register;
 
       P            : constant Parameters.List := Status.Parameters (Request);
-      Service_Name : constant String          := Parameters.Get (P, "website");
+      Name         : constant String          := Parameters.Get (P, "website");
 
       Library_Path : Unbounded_String := Null_Unbounded_String;
 
    begin
 
       declare
-         Position : constant Cursor := Find (Service_Name);
+         Position : constant Cursor := Find (Website_Name (Name));
       begin
          if Has_Element (Position) then
             Library_Path := +Path (Position);
@@ -291,8 +300,8 @@ package body Websites_Admin is
       end;
 
       if Library_Path /= "" then
-         Ada.Text_IO.Put_Line ("Unregister " & Service_Name);
-         Unregister (Service_Name);
+         Ada.Text_IO.Put_Line ("Unregister " & Name);
+         Unregister (Website_Name (Name));
       else
          Ada.Text_IO.Put_Line ("No library path");
       end if;
@@ -326,7 +335,7 @@ package body Websites_Admin is
                Next (Position);
             else
                if Dry_Run /= "" then
-                  Tag_Name := Tag_Name & Name (Position);
+                  Tag_Name := Tag_Name & String (Name (Position));
                   Next (Position);
                else
                   declare
@@ -374,6 +383,16 @@ package body Websites_Admin is
       Discover_Virtual_Host_Directories;
       List_Websites (Request, Context, Translations);
    end Virtual_Host_Directories;
+
+   -----------------------------
+   -- Virtual_Host_Unregister --
+   -----------------------------
+
+   procedure Virtual_Host_Unregister (Name : in Website_Name) is
+   begin
+      Web.Register.Virtual_Host.Unregister (String (Name));
+   end Virtual_Host_Unregister;
+
 
 begin
 
