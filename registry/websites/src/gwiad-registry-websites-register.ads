@@ -21,7 +21,6 @@
 
 private with Ada.Strings.Unbounded;
 private with Ada.Containers.Indefinite_Hashed_Maps;
-private with Ada.Strings.Hash;
 
 package Gwiad.Registry.Websites.Register is
 
@@ -30,11 +29,15 @@ package Gwiad.Registry.Websites.Register is
    --  This must be called before registering the service to set the library
    --  path before the service registration
 
+   function Library_Path return String;
+   --  Returns the current library path
+   --  This me be called on library init
+
    procedure Register
-     (Name         : in String;
+     (Name         : in Website_Name;
       Description  : in String;
       Unregister   : in Unregister_CB;
-      Library_Path : in String := "");
+      Library_Path : in String);
    --  Registers a new website
    --  This is called by a website after that the library path has been
    --  set by the dynamic library manager (as the library has no knowlegde of
@@ -42,7 +45,7 @@ package Gwiad.Registry.Websites.Register is
    --  Raise website error if website with the same name is registered or
    --  if no dynamic library is registered
 
-   procedure Unregister (Name : in String);
+   procedure Unregister (Name : in Website_Name);
    --  Unregisters a website
 
    type Cursor is private;
@@ -50,7 +53,7 @@ package Gwiad.Registry.Websites.Register is
    function First return Cursor;
    --  Returns a cursor to the first registered service
 
-   function Find (Key : in String) return Cursor;
+   function Find (Key : in Website_Name) return Cursor;
    --  Returns the cursor pointing to element with the given key
 
    procedure Next (Position : in out Cursor);
@@ -59,7 +62,7 @@ package Gwiad.Registry.Websites.Register is
    function Has_Element (Position : in Cursor) return Boolean;
    --  Returns true if cursor is not No_Element
 
-   function Name (Position : in Cursor) return String;
+   function Name (Position : in Cursor) return Website_Name;
    --  Returns the name of the service
 
    function Description (Position : in Cursor) return String;
@@ -70,6 +73,7 @@ package Gwiad.Registry.Websites.Register is
 
 private
 
+   use Ada;
    use Ada.Strings.Unbounded;
 
    type Registered_Website is record
@@ -78,8 +82,14 @@ private
       Unregister_CB : Gwiad.Registry.Websites.Unregister_CB;
    end record;
 
-   package Register_Maps is new Ada.Containers.Indefinite_Hashed_Maps
-     (String, Registered_Website, Ada.Strings.Hash, "=", "=");
+   function Hash (Key : in Website_Name) return Containers.Hash_Type;
+
+   package Register_Maps is new Containers.Indefinite_Hashed_Maps
+     (Website_Name, Registered_Website, Hash, "=", "=");
+   --  Store each website information : website name, path of the library
+   --  providing the website, website description and unregister callback
+   --  Unregister callback will be called when disabling website or unloading
+   --  the library providing it.
 
    type Cursor is new Register_Maps.Cursor;
 

@@ -23,6 +23,8 @@ package Gwiad.Registry.Websites is
 
    Website_Error : exception;
 
-   type Unregister_CB is access procedure (Name : in String);
+   type Website_Name is new String;
+
+   type Unregister_CB is access procedure (Name : in Website_Name);
 
 end Gwiad.Registry.Websites;
