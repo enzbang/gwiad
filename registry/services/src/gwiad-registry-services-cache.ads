@@ -19,21 +19,34 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Unchecked_Deallocation;
+with AWS.Digest;
 
-package Gwiad.Registry.Services is
+with Gwiad.Registry.Services.Register;
 
-   type Service is interface;
+package Gwiad.Registry.Services.Cache is
 
-   type Service_Access is access all Service'Class;
+   --  This package provides a cache for gwiad services
+   --  A unique service id is generated on cache insertion
+   --  When a service plugin is unloaded, all the services refering to
+   --  it are removed from cache
 
-   type Service_Builder is access function return access Service'Class;
+   use Gwiad.Registry.Services.Register;
 
-   procedure Delete (Service : Service_Access) is null;
+   type Service_Id is new AWS.Digest.Nonce;
+   --  Ensure that service_id is unique by using AWS digest nonce
 
-   procedure Free is new Ada.Unchecked_Deallocation
-     (Object => Service'Class, Name => Service_Access);
+   function Get (Name : in Service_Name) return Service_Access;
+   --  Gets a new service
 
-   Service_Error : exception;
+   function Get (Id : in Service_Id) return Service_Access;
+   --  Returns the service from cache.
+   --  When no service with the given id is found raise Service_Error
 
-end Gwiad.Registry.Services;
+   function Set
+     (Name : in Service_Name; Item : in Service_Access) return Service_Id;
+   --  Adds the service to cache
+
+   procedure Delete (Name : Service_Name);
+   --  Deletes all services in cache having the given name
+
+end Gwiad.Registry.Services.Cache;

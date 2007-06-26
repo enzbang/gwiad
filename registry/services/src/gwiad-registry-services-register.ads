@@ -19,8 +19,9 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Containers;
+
 private with Ada.Containers.Indefinite_Hashed_Maps;
-private with Ada.Strings.Hash;
 private with Ada.Strings.Unbounded;
 
 with Gwiad.Registry.Services;
@@ -29,9 +30,7 @@ package Gwiad.Registry.Services.Register is
 
    use Services;
 
-   type Service_Id is new String (1 .. 11);
-
-   Null_Service_Id : Service_Id := (others => ' ');
+   type Service_Name is new String;
 
    procedure Register (Library_Path : in String);
    --  Registers a new dynamic library
@@ -39,7 +38,7 @@ package Gwiad.Registry.Services.Register is
    --  path before the service registration
 
    procedure Register
-     (Name        : in String;
+     (Name        : in Service_Name;
       Description : in String;
       Builder     : in Service_Builder);
    --  Registers a new service
@@ -49,26 +48,21 @@ package Gwiad.Registry.Services.Register is
    --  Raise service error if service with the same name is registered or
    --  if no dynamic library is registered
 
-   procedure Unregister (Name : in String);
+   procedure Unregister (Name : in Service_Name);
    --  Unregisters a service
 
-   function Exists (Name : in String) return Boolean;
+   function Exists (Name : in Service_Name) return Boolean;
    --  Returns true if a service with the given name is registered
 
-   function Get
-     (Name : in String;
-      Id   : in Service_Id := Null_Service_Id) return Service_Access;
-   --  Returns the service
-
-   function Set (Name : in String; Item : in Service_Access) return Service_Id;
-   --  Adds the service to cache
+   function New_Service (Name : in Service_Name) return Service_Access;
+   --  Returns a new service
 
    type Cursor is private;
 
    function First return Cursor;
    --  Returns a cursor to the first registered service
 
-   function Find (Key : in String) return Cursor;
+   function Find (Key : in Service_Name) return Cursor;
    --  Returns the cursor pointing to element with the given key
 
    procedure Next (Position : in out Cursor);
@@ -77,7 +71,7 @@ package Gwiad.Registry.Services.Register is
    function Has_Element (Position : in Cursor) return Boolean;
    --  Returns true if cursor is not No_Element
 
-   function Name (Position : in Cursor) return String;
+   function Name (Position : in Cursor) return Service_Name;
    --  Returns the name of the service
 
    function Description (Position : in Cursor) return String;
@@ -85,6 +79,9 @@ package Gwiad.Registry.Services.Register is
 
    function Path (Position : in Cursor) return String;
    --  Returns the path of the shared library providing the service
+
+   function Hash (Key : Service_Name) return Ada.Containers.Hash_Type;
+   --  Hash function for service name
 
 private
    use Ada.Strings.Unbounded;
@@ -96,7 +93,7 @@ private
    end record;
 
    package Register_Maps is new Ada.Containers.Indefinite_Hashed_Maps
-     (String, Registered_Service, Ada.Strings.Hash, "=", "=");
+     (Service_Name, Registered_Service, Hash, "=", "=");
 
    type Cursor is new Register_Maps.Cursor;
 
