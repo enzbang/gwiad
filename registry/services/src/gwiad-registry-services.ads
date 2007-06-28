@@ -23,7 +23,7 @@ with Ada.Unchecked_Deallocation;
 
 package Gwiad.Registry.Services is
 
-   type Service is interface;
+   type Service is limited interface;
 
    type Service_Access is access all Service'Class;
 
