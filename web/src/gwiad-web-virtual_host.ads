@@ -19,31 +19,33 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Gwiad.Web.Main_Host;
+with AWS.Dispatchers;
+with Ada.Strings.Unbounded;
 
-package body Gwiad.Web.Register is
+package Gwiad.Web.Virtual_Host is
 
-   --------------
-   -- Register --
-   --------------
+   use Ada.Strings.Unbounded;
+
+   type Virtual_Host_Directory is record
+      Document_Root : Unbounded_String;
+      Default_Page  : Unbounded_String;
+      Secure        : Boolean;
+   end record;
 
    procedure Register
-     (Web_Dir : in String;
-      Action  : in AWS.Dispatchers.Handler'Class)
-   is
-   begin
-      Main_Host.Register (Web_Dir, Action);
-      Gwiad.Web.Reload.Require;
-   end Register;
+     (Hostname : in String; Action : in AWS.Dispatchers.Handler'Class);
+   --  Registers a new virtual host handler
 
-   ----------------
-   -- Unregister --
-   ----------------
+   procedure Register
+     (Host : in String; Redirected_Hostname : in String);
+   --  Registers a new redirection
 
-   procedure Unregister (Web_Dir : in String) is
-   begin
-      Main_Host.Unregister (Web_Dir);
-      Gwiad.Web.Reload.Require;
-   end Unregister;
+   procedure Register
+     (Hostname : in String;
+      VH_Dir   : in Virtual_Host_Directory);
+   --  Registers a new virtual host to serve a document root
 
-end Gwiad.Web.Register;
+   procedure Unregister (Hostname : in String);
+   --  Unregisters a virtual host
+
+end Gwiad.Web.Virtual_Host;

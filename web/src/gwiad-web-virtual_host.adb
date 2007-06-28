@@ -32,7 +32,7 @@ with AWS.MIME;
 
 with Morzhol.OS;
 
-package body Gwiad.Web.Register.Virtual_Host is
+package body Gwiad.Web.Virtual_Host is
 
    use Ada;
    use AWS;
@@ -173,4 +173,4 @@ package body Gwiad.Web.Register.Virtual_Host is
       end if;
    end Unregister;
 
-end Gwiad.Web.Register.Virtual_Host;
+end Gwiad.Web.Virtual_Host;

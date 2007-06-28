@@ -91,6 +91,9 @@ package body Gwiad.Web.Main_Host is
         (Virtual_Hosts_Dispatcher,
          Main_Host_Dispatcher);
 
+      --  Reload the dispatchers
+
+      Gwiad.Web.Reload.Require;
    end Register;
 
    -----------
@@ -123,6 +126,10 @@ package body Gwiad.Web.Main_Host is
       Services.Dispatchers.Virtual_Host.Register_Default_Callback
         (Virtual_Hosts_Dispatcher,
          Main_Host_Dispatcher);
+
+      --  Reload the dispatchers
+
+      Gwiad.Web.Reload.Require;
    end Unregister;
 
 end Gwiad.Web.Main_Host;

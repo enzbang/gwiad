@@ -28,7 +28,7 @@ with AWS.MIME;
 with Gwiad.Registry.Services.Cache;
 with Gwiad.Registry.Services.Register;
 with Gwiad.Registry.Websites.Register;
-with Gwiad.Web.Register;
+with Gwiad.Web.Main_Host;
 
 with Hello_World_Interface;
 with Gwiad.Registry.Websites;
@@ -103,7 +103,7 @@ package body Hello_World is
    procedure Unregister (Name : in Website_Name) is
       pragma Unreferenced (Name);
    begin
-      Gwiad.Web.Register.Unregister (Web_Dir => Hello_Web_Dir);
+      Gwiad.Web.Main_Host.Unregister (Web_Dir => Hello_Web_Dir);
    end Unregister;
 
 begin
@@ -118,8 +118,8 @@ begin
       Dispatchers.Callback.Create (Default_Callback'Access));
 
 
-   Gwiad.Web.Register.Register (Web_Dir => Hello_Web_Dir,
-                                Action  => Main_Dispatcher);
+   Gwiad.Web.Main_Host.Register (Web_Dir => Hello_Web_Dir,
+                                 Action  => Main_Dispatcher);
 
    Gwiad.Registry.Websites.Register.Register
      (Name        => "Hello web site",

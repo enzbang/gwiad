@@ -42,7 +42,8 @@ with Morzhol.Strings;
 with Gwiad.Config.Settings;
 with Gwiad.Registry.Websites.Register;
 with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web.Register.Virtual_Host;
+with Gwiad.Web.Main_Host;
+with Gwiad.Web.Virtual_Host;
 with Gwiad.Registry.Websites; use Gwiad.Registry.Websites;
 
 package body Websites_Admin is
@@ -188,12 +189,12 @@ package body Websites_Admin is
                                               Conf.Get_Value (Virtual_Host);
 
 
-                  VH_Dir : Web.Register.Virtual_Host.Virtual_Host_Directory
+                  VH_Dir : Web.Virtual_Host.Virtual_Host_Directory
                     := (Document_Root => +Conf_File_Document_Root,
                         Default_Page  => +Conf_File_Default_Page,
                         Secure        => Conf.Get_Value (Secure));
                begin
-                  Web.Register.Virtual_Host.Register
+                  Web.Virtual_Host.Register
                     (Hostname => Conf.Get_Value (Virtual_Host),
                      VH_Dir   => VH_Dir);
                   Gwiad.Registry.Websites.Register.Register
@@ -390,7 +391,7 @@ package body Websites_Admin is
 
    procedure Virtual_Host_Unregister (Name : in Website_Name) is
    begin
-      Web.Register.Virtual_Host.Unregister (String (Name));
+      Web.Virtual_Host.Unregister (String (Name));
    end Virtual_Host_Unregister;
 
 
@@ -427,8 +428,8 @@ begin
       Virtual_Host_Directories'Access,
       MIME.Text_HTML);
 
-   Gwiad.Web.Register.Register (Web_Dir  => Websites_Admin_URL,
-                                Action   => Main_Dispatcher);
+   Gwiad.Web.Main_Host.Register (Web_Dir  => Websites_Admin_URL,
+                                 Action   => Main_Dispatcher);
 
    --  Discover virtual host directories
 

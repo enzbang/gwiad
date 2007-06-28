@@ -21,14 +21,16 @@
 
 with AWS.Dispatchers;
 
-private package Gwiad.Web.Main_Host is
+package Gwiad.Web.Main_Host is
 
    procedure Start;
+   --  Register main host dispatcher
 
    procedure Register
      (Web_Dir : in String; Action : in AWS.Dispatchers.Handler'Class);
-   --  Registers a new virtual host handler
+   --  Registers a web directory handler
 
    procedure Unregister (Web_Dir : in String);
+   --  Unregister a web directory
 
 end Gwiad.Web.Main_Host;

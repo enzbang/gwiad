@@ -33,10 +33,10 @@ with AWS.Services.ECWF.Context;
 with AWS.Templates;
 with AWS.Parameters;
 
+with Gwiad.Web.Main_Host;
 with Gwiad.Config.Settings;
 with Gwiad.Registry.Services.Register;
 with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web.Register;
 
 package body Services_Admin is
 
@@ -213,7 +213,7 @@ begin
       Stop_Service'Access,
       MIME.Text_HTML);
 
-   Gwiad.Web.Register.Register (Web_Dir => Services_Admin_URL,
-                                Action  => Main_Dispatcher);
+   Gwiad.Web.Main_Host.Register (Web_Dir => Services_Admin_URL,
+                                 Action  => Main_Dispatcher);
 
 end Services_Admin;
