@@ -23,7 +23,7 @@ with Ada.Strings.Hash;
 
 with Morzhol.Strings;
 
-package body Gwiad.Plugins.Websites.Register is
+package body Gwiad.Plugins.Websites.Registry is
 
    use Morzhol.Strings;
 
@@ -165,4 +165,4 @@ package body Gwiad.Plugins.Websites.Register is
       Website_Map.Delete (Position);
    end Unregister;
 
-end Gwiad.Plugins.Websites.Register;
+end Gwiad.Plugins.Websites.Registry;

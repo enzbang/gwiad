@@ -25,8 +25,8 @@ with Ada.Exceptions;
 
 with GNAT.OS_Lib;
 
-with Gwiad.Plugins.Services.Register;
-with Gwiad.Plugins.Websites.Register;
+with Gwiad.Plugins.Services.Registry;
+with Gwiad.Plugins.Websites.Registry;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
@@ -98,9 +98,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
                      Library := Dynamic_Libraries.Load (Path);
 
                      if Lib_Type = Service_Library then
-                        Services.Register.Register (Library_Path => Path);
+                        Services.Registry.Register (Library_Path => Path);
                      else
-                        Websites.Register.Register (Library_Path => Path);
+                        Websites.Registry.Register (Library_Path => Path);
                      end if;
 
                      Init (Library.all, Path);

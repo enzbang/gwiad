@@ -21,7 +21,7 @@
 
 with AWS.Digest;
 
-with Gwiad.Plugins.Services.Register;
+with Gwiad.Plugins.Services.Registry;
 
 package Gwiad.Plugins.Services.Cache is
 
@@ -30,7 +30,7 @@ package Gwiad.Plugins.Services.Cache is
    --  When a service plugin is unloaded, all the services refering to
    --  it are removed from cache
 
-   use Gwiad.Plugins.Services.Register;
+   use Gwiad.Plugins.Services.Registry;
 
    type Service_Id is new AWS.Digest.Nonce;
    --  Ensure that service_id is unique by using AWS digest nonce

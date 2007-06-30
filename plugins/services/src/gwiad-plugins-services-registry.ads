@@ -26,7 +26,7 @@ private with Ada.Strings.Unbounded;
 
 with Gwiad.Plugins.Services;
 
-package Gwiad.Plugins.Services.Register is
+package Gwiad.Plugins.Services.Registry is
 
    use Services;
 
@@ -97,4 +97,4 @@ private
 
    type Cursor is new Register_Maps.Cursor;
 
-end Gwiad.Plugins.Services.Register;
+end Gwiad.Plugins.Services.Registry;

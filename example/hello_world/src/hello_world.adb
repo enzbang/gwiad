@@ -26,9 +26,9 @@ with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
 with Gwiad.Plugins.Services.Cache;
-with Gwiad.Plugins.Services.Register;
+with Gwiad.Plugins.Services.Registry;
 with Gwiad.Plugins.Websites;
-with Gwiad.Plugins.Websites.Register;
+with Gwiad.Plugins.Websites.Registry;
 
 with Gwiad.Web.Main_Host;
 
@@ -48,7 +48,7 @@ package body Hello_World is
 
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
-   Path : constant String := Gwiad.Plugins.Websites.Register.Library_Path;
+   Path : constant String := Gwiad.Plugins.Websites.Registry.Library_Path;
 
    function Default_Callback
      (Request : in Status.Data) return Response.Data;
@@ -77,12 +77,12 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
 
-      Service_Name : constant Plugins.Services.Register.Service_Name :=
+      Service_Name : constant Plugins.Services.Registry.Service_Name :=
                        "hello_world_service";
 
    begin
 
-      if not Plugins.Services.Register.Exists (Name => Service_Name) then
+      if not Plugins.Services.Registry.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
       end if;
@@ -123,7 +123,7 @@ begin
    Gwiad.Web.Main_Host.Register (Web_Dir => Hello_Web_Dir,
                                  Action  => Main_Dispatcher);
 
-   Gwiad.Plugins.Websites.Register.Register
+   Gwiad.Plugins.Websites.Registry.Register
      (Name        => "Hello web site",
       Description => "A test for gwiad using hello world service",
       Unregister  => Unregister'Access,

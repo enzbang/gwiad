@@ -43,7 +43,7 @@ package body Gwiad.Plugins.Services.Cache is
 
    package Running_Services_Map is new Containers.Indefinite_Hashed_Maps
      (Service_Name, Ids_Vectors.Vector,
-      Gwiad.Plugins.Services.Register.Hash, "=", Ids_Vectors."=");
+      Gwiad.Plugins.Services.Registry.Hash, "=", Ids_Vectors."=");
    --  Store all service_id index by service_name
 
    procedure Insert (Name : in Service_Name; Id : in Service_Id);

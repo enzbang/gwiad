@@ -40,7 +40,7 @@ with Morzhol.Iniparser;
 with Morzhol.Strings;
 
 with Gwiad.Config.Settings;
-with Gwiad.Plugins.Websites.Register;
+with Gwiad.Plugins.Websites.Registry;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Main_Host;
 with Gwiad.Web.Virtual_Host;
@@ -180,7 +180,7 @@ package body Websites_Admin is
                Conf.IO.Close;
 
                declare
-                  use Gwiad.Plugins.Websites.Register;
+                  use Gwiad.Plugins.Websites.Registry;
                   Conf_File_Document_Root : constant String :=
                                               Conf.Get_Value (Document_Root);
                   Conf_File_Default_Page  : constant String :=
@@ -197,7 +197,7 @@ package body Websites_Admin is
                   Web.Virtual_Host.Register
                     (Hostname => Conf.Get_Value (Virtual_Host),
                      VH_Dir   => VH_Dir);
-                  Gwiad.Plugins.Websites.Register.Register
+                  Gwiad.Plugins.Websites.Registry.Register
                     (Name         =>
                        Gwiad.Plugins.Websites.Website_Name
                          (Conf_File_Virtual_Host),
@@ -239,7 +239,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Plugins.Websites.Register;
+      use Gwiad.Plugins.Websites.Registry;
 
       Position     : Cursor := First;
 
@@ -283,7 +283,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context, Translations);
-      use Gwiad.Plugins.Websites.Register;
+      use Gwiad.Plugins.Websites.Registry;
 
       P            : constant Parameters.List := Status.Parameters (Request);
       Name         : constant String          := Parameters.Get (P, "website");
@@ -318,7 +318,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
-      use Gwiad.Plugins.Websites.Register;
+      use Gwiad.Plugins.Websites.Registry;
       use Dynamic_Libraries.Manager;
 
       P            : Parameters.List  := Status.Parameters (Request);

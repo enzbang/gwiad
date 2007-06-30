@@ -23,7 +23,7 @@ with Ada.Strings.Hash;
 
 with Gwiad.Plugins.Services.Cache;
 
-package body Gwiad.Plugins.Services.Register is
+package body Gwiad.Plugins.Services.Registry is
 
    use Ada;
 
@@ -171,4 +171,4 @@ package body Gwiad.Plugins.Services.Register is
          when others => raise Service_Error;
    end Unregister;
 
-end Gwiad.Plugins.Services.Register;
+end Gwiad.Plugins.Services.Registry;

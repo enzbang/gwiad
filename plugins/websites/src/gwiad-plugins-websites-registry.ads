@@ -22,7 +22,7 @@
 private with Ada.Strings.Unbounded;
 private with Ada.Containers.Indefinite_Hashed_Maps;
 
-package Gwiad.Plugins.Websites.Register is
+package Gwiad.Plugins.Websites.Registry is
 
    procedure Register (Library_Path : in String);
    --  Registers a new website
@@ -93,4 +93,4 @@ private
 
    type Cursor is new Register_Maps.Cursor;
 
-end Gwiad.Plugins.Websites.Register;
+end Gwiad.Plugins.Websites.Registry;
