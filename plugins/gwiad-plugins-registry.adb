@@ -1,3 +1,24 @@
+------------------------------------------------------------------------------
+--                                  Gwiad                                   --
+--                                                                          --
+--                           Copyright (C) 2007                             --
+--                            Olivier Ramonat                               --
+--                                                                          --
+--  This library is free software; you can redistribute it and/or modify    --
+--  it under the terms of the GNU General Public License as published by    --
+--  the Free Software Foundation; either version 2 of the License, or (at   --
+--  your option) any later version.                                         --
+--                                                                          --
+--  This library is distributed in the hope that it will be useful, but     --
+--  WITHOUT ANY WARRANTY; without even the implied warranty of              --
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU       --
+--  General Public License for more details.                                --
+--                                                                          --
+--  You should have received a copy of the GNU General Public License       --
+--  along with this library; if not, write to the Free Software Foundation, --
+--  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
+------------------------------------------------------------------------------
+
 package body Gwiad.Plugins.Registry is
 
    Plugin_Map : Register_Maps.Map;
@@ -8,7 +29,7 @@ package body Gwiad.Plugins.Registry is
 
    procedure Delete (Name : in Plugin_Name) is
    begin
-      Plugin_Map.Delete (Name);
+      Register_Maps.Delete (Plugin_Map, Name);
    end Delete;
 
    ------------
@@ -17,8 +38,9 @@ package body Gwiad.Plugins.Registry is
 
    procedure Delete (Position : in out Cursor) is
    begin
-      Register_Maps.Delete (Container => Plugin_Map,
-                            Position  => Register_Maps.Cursor (Position));
+      Register_Maps.Delete
+        (Container => Plugin_Map,
+         Position  => Register_Maps.Cursor (Position));
    end Delete;
 
    -------------
@@ -54,7 +76,7 @@ package body Gwiad.Plugins.Registry is
 
    function First return Cursor is
    begin
-      return Cursor (Plugin_Map.First);
+      return Cursor (Register_Maps.First (Plugin_Map));
    end First;
 
    ----------
@@ -70,7 +92,7 @@ package body Gwiad.Plugins.Registry is
    -- Insert --
    ------------
 
-   procedure Insert (Name : in Plugin_Name; Plugin : Registered_Plugin) is
+   procedure Insert (Name : in Plugin_Name; Plugin : in Registered_Plugin) is
    begin
       Register_Maps.Insert (Plugin_Map, Name, Plugin);
    end Insert;
