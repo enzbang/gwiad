@@ -29,7 +29,7 @@ package body Gwiad.Plugins.Registry is
 
    procedure Delete (Name : in Plugin_Name) is
    begin
-      Register_Maps.Delete (Plugin_Map, Name);
+      Plugin_Map.Delete (Name);
    end Delete;
 
    ------------
@@ -38,10 +38,20 @@ package body Gwiad.Plugins.Registry is
 
    procedure Delete (Position : in out Cursor) is
    begin
-      Register_Maps.Delete
-        (Container => Plugin_Map,
-         Position  => Register_Maps.Cursor (Position));
+      Plugin_Map.Delete (Position  => Register_Maps.Cursor (Position));
    end Delete;
+
+   -----------------
+   -- Description --
+   -----------------
+
+   function Description (Position : in Cursor) return String is
+      RS : constant Registered_Plugin :=
+             Register_Maps.Element
+               (Position => Register_Maps.Cursor (Position));
+   begin
+      return To_String (RS.Description);
+   end Description;
 
    -------------
    -- Element --
@@ -49,7 +59,7 @@ package body Gwiad.Plugins.Registry is
 
    function Element (Name : in Plugin_Name) return Registered_Plugin is
    begin
-      return Register_Maps.Element (Plugin_Map, Name);
+      return Plugin_Map.Element (Name);
    end Element;
 
    -------------
@@ -67,17 +77,8 @@ package body Gwiad.Plugins.Registry is
 
    function Exists (Name : in Plugin_Name) return Boolean is
    begin
-      return Register_Maps.Contains (Plugin_Map, Name);
+      return Plugin_Map.Contains (Name);
    end Exists;
-
-   -----------
-   -- First --
-   -----------
-
-   function First return Cursor is
-   begin
-      return Cursor (Register_Maps.First (Plugin_Map));
-   end First;
 
    ----------
    -- Find --
@@ -85,26 +86,17 @@ package body Gwiad.Plugins.Registry is
 
    function Find (Key : in Plugin_Name) return Cursor is
    begin
-      return Cursor (Register_Maps.Find (Plugin_Map, Key));
+      return Cursor (Plugin_Map.Find (Key));
    end Find;
 
-   ------------
-   -- Insert --
-   ------------
+   -----------
+   -- First --
+   -----------
 
-   procedure Insert (Name : in Plugin_Name; Plugin : in Registered_Plugin) is
+   function First return Cursor is
    begin
-      Register_Maps.Insert (Plugin_Map, Name, Plugin);
-   end Insert;
-
-   ----------
-   -- Next --
-   ----------
-
-   procedure Next (Position : in out Cursor) is
-   begin
-      Register_Maps.Next (Register_Maps.Cursor (Position));
-   end Next;
+      return Cursor (Plugin_Map.First);
+   end First;
 
    -----------------
    -- Has_Element --
@@ -115,6 +107,15 @@ package body Gwiad.Plugins.Registry is
       return Register_Maps.Has_Element (Register_Maps.Cursor (Position));
    end Has_Element;
 
+   ------------
+   -- Insert --
+   ------------
+
+   procedure Insert (Name : in Plugin_Name; Plugin : in Registered_Plugin) is
+   begin
+      Plugin_Map.Insert (Name, Plugin);
+   end Insert;
+
    ----------
    -- Name --
    ----------
@@ -124,17 +125,14 @@ package body Gwiad.Plugins.Registry is
       return Register_Maps.Key (Position => Register_Maps.Cursor (Position));
    end Name;
 
-   -----------------
-   -- Description --
-   -----------------
+   ----------
+   -- Next --
+   ----------
 
-   function Description (Position : in Cursor) return String is
-      RS : constant Registered_Plugin :=
-             Register_Maps.Element
-               (Position => Register_Maps.Cursor (Position));
+   procedure Next (Position : in out Cursor) is
    begin
-      return To_String (RS.Description);
-   end Description;
+      Register_Maps.Next (Register_Maps.Cursor (Position));
+   end Next;
 
    ----------
    -- Path --
