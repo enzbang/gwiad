@@ -239,7 +239,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Plugins.Websites.Registry;
+      use Gwiad.Plugins.Websites.Registry.Map;
 
       Position     : Cursor := First;
 
@@ -293,10 +293,10 @@ package body Websites_Admin is
    begin
 
       declare
-         Position : constant Cursor := Find (Website_Name (Name));
+         Position : constant Map.Cursor := Map.Find (Website_Name (Name));
       begin
-         if Has_Element (Position) then
-            Library_Path := +Path (Position);
+         if Map.Has_Element (Position) then
+            Library_Path := +Map.Path (Position);
          end if;
       end;
 
@@ -329,21 +329,21 @@ package body Websites_Admin is
    begin
 
       declare
-         Position : Cursor := First;
+         Position : Map.Cursor := Map.First;
       begin
-         while Has_Element (Position) loop
-            if Path (Position) /= Library_Path then
-               Next (Position);
+         while Map.Has_Element (Position) loop
+            if Map.Path (Position) /= Library_Path then
+               Map.Next (Position);
             else
                if Dry_Run /= "" then
-                  Tag_Name := Tag_Name & String (Name (Position));
-                  Next (Position);
+                  Tag_Name := Tag_Name & String (Map.Name (Position));
+                  Map.Next (Position);
                else
                   declare
-                     Last_Position : constant Cursor := Position;
+                     Last_Position : constant Map.Cursor := Position;
                   begin
-                     Next (Position);
-                     Unregister (Name (Last_Position));
+                     Map.Next (Position);
+                     Unregister (Map.Name (Last_Position));
                   end;
                end if;
             end if;

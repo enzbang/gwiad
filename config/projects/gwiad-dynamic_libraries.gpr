@@ -20,8 +20,8 @@
 ------------------------------------------------------------------------------
 
 with "gwiad";
-with "gwiad-registry-services";
-with "gwiad-registry-websites";
+with "gwiad-plugins-services";
+with "gwiad-plugins-websites";
 
 project Gwiad.Dynamic_Libraries is
 

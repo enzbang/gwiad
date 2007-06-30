@@ -19,8 +19,15 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Strings.Unbounded;
+
 package Gwiad.Plugins is
 
-   pragma Pure;
+   use Ada.Strings.Unbounded;
+
+   type Plugin is tagged record
+      Description : Unbounded_String;
+      Path        : Unbounded_String;
+   end record;
 
 end Gwiad.Plugins;

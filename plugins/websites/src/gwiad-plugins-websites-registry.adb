@@ -28,45 +28,6 @@ package body Gwiad.Plugins.Websites.Registry is
    use Morzhol.Strings;
 
    Last_Library_Path : Unbounded_String;
-   Website_Map       : Register_Maps.Map;
-
-   -----------------
-   -- Description --
-   -----------------
-
-   function Description (Position : in Cursor) return String is
-      RW : constant Registered_Website :=
-             Register_Maps.Element
-               (Position => Register_Maps.Cursor (Position));
-   begin
-      return -RW.Description;
-   end Description;
-
-   ----------
-   -- Find --
-   ----------
-
-   function Find (Key : in Website_Name) return Cursor is
-   begin
-      return Cursor (Register_Maps.Find (Website_Map, Key));
-   end Find;
-
-   -----------
-   -- First --
-   -----------
-
-   function First return Cursor is
-   begin
-      return Cursor (Website_Map.First);
-   end First;
-   -----------------
-   -- Has_Element --
-   -----------------
-
-   function Has_Element (Position : in Cursor) return Boolean is
-   begin
-      return Register_Maps.Has_Element (Register_Maps.Cursor (Position));
-   end Has_Element;
 
    ----------
    -- Hash --
@@ -85,35 +46,6 @@ package body Gwiad.Plugins.Websites.Registry is
    begin
       return To_String (Last_Library_Path);
    end Library_Path;
-
-   ----------
-   -- Name --
-   ----------
-
-   function Name (Position : in Cursor) return Website_Name is
-   begin
-      return Register_Maps.Key (Position => Register_Maps.Cursor (Position));
-   end Name;
-
-   ----------
-   -- Next --
-   ----------
-
-   procedure Next (Position : in out Cursor) is
-   begin
-      Register_Maps.Next (Register_Maps.Cursor (Position));
-   end Next;
-
-   ----------
-   -- Path --
-   ----------
-
-   function Path (Position : in Cursor) return String is
-      RW : constant Registered_Website :=
-             Register_Maps.Element (Register_Maps.Cursor (Position));
-   begin
-      return -RW.Path;
-   end Path;
 
    --------------
    -- Register --
@@ -135,9 +67,8 @@ package body Gwiad.Plugins.Websites.Registry is
       Library_Path : in String)
    is
    begin
-      Register_Maps.Insert
-        (Website_Map,
-         Name,
+      Map.Insert
+        (Name,
          (Unregister_CB => Unregister,
           Path          => +Library_Path,
           Description   => +Description));
@@ -148,9 +79,9 @@ package body Gwiad.Plugins.Websites.Registry is
    ----------------
 
    procedure Unregister (Name : in Website_Name) is
-      use Register_Maps;
+      use Map;
 
-      Position : Register_Maps.Cursor := Website_Map.Find (Name);
+      Position : Cursor := Find (Name);
    begin
       if Position = No_Element then
          raise Website_Error;
@@ -162,7 +93,7 @@ package body Gwiad.Plugins.Websites.Registry is
          RW.Unregister_CB.all (Name);
       end;
 
-      Website_Map.Delete (Position);
+      Map.Delete (Position);
    end Unregister;
 
 end Gwiad.Plugins.Websites.Registry;

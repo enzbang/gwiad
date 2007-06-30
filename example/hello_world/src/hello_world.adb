@@ -82,7 +82,7 @@ package body Hello_World is
 
    begin
 
-      if not Plugins.Services.Registry.Exists (Name => Service_Name) then
+      if not Plugins.Services.Registry.Map.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
       end if;

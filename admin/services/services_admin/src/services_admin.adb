@@ -125,7 +125,7 @@ package body Services_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Plugins.Services.Registry;
+      use Gwiad.Plugins.Services.Registry.Map;
 
       Position : Cursor := First;
 
@@ -170,10 +170,10 @@ package body Services_Admin is
    begin
 
       declare
-         Position : constant Cursor := Find (Service_Name (Name));
+         Position : constant Map.Cursor := Map.Find (Service_Name (Name));
       begin
-         if Has_Element (Position) then
-            Library_Path := To_Unbounded_String (Path (Position));
+         if Map.Has_Element (Position) then
+            Library_Path := To_Unbounded_String (Map.Path (Position));
          end if;
       end;
 
