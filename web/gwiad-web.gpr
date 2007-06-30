@@ -40,8 +40,22 @@ project Gwiad.Web is
          null;
    end case;
 
+   -------------
+   -- Builder --
+   -------------
+
    package Builder renames Shared.Builder;
+
+   --------------
+   -- Compiler --
+   --------------
+
    package Compiler renames Shared.Compiler;
+
+   ---------
+   -- Ide --
+   ---------
+
    package Ide renames Shared.Ide;
 
 end Gwiad.Web;
