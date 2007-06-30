@@ -20,14 +20,10 @@
 ------------------------------------------------------------------------------
 
 with "gwiad";
-with "gwiad-registry";
 
-Project Gwiad.Registry.Services is
+Project Gwiad.Registry is
 
-   for Source_Dirs use ("../../include/gwiad/registry/s");
-   for Library_Dir use "../../lib/gwiad";
-   for Library_Name use "gwiad_registry_services";
-   for Library_Kind use "dynamic";
+   for Source_Dirs use ("../../include/gwiad/plugins/");
    for Externally_Built use "true";
 
-end Gwiad.Registry.Services;
+end Gwiad.Registry;
