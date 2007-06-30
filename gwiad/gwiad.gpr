@@ -50,5 +50,3 @@ project Gwiad is
    package Ide renames Shared.Ide;
 
 end Gwiad;
-
-
