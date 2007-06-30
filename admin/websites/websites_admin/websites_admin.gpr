@@ -22,7 +22,7 @@
 with "aws";
 with "../../../shared";
 with "../../../gwiad/gwiad";
-with "../../../registry/websites/gwiad-registry-websites";
+with "../../../plugins/websites/gwiad-plugins-websites";
 with "../../../dynamic_libraries/gwiad-dynamic_libraries";
 with "../../../web/gwiad-web";
 

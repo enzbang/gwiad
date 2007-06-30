@@ -19,21 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Unchecked_Deallocation;
+package Gwiad.Plugins is
 
-package Gwiad.Registry.Services is
+   pragma Pure;
 
-   type Service is limited interface;
-
-   type Service_Access is access all Service'Class;
-
-   type Service_Builder is access function return access Service'Class;
-
-   procedure Delete (Service : Service_Access) is null;
-
-   procedure Free is new Ada.Unchecked_Deallocation
-     (Object => Service'Class, Name => Service_Access);
-
-   Service_Error : exception;
-
-end Gwiad.Registry.Services;
+end Gwiad.Plugins;

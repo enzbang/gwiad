@@ -26,7 +26,7 @@ with Ada.Strings.Hash;
 with Ada.Containers.Vectors;
 with Ada.Containers.Indefinite_Hashed_Maps;
 
-package body Gwiad.Registry.Services.Cache is
+package body Gwiad.Plugins.Services.Cache is
 
    use Ada;
    use Ada.Exceptions;
@@ -43,7 +43,7 @@ package body Gwiad.Registry.Services.Cache is
 
    package Running_Services_Map is new Containers.Indefinite_Hashed_Maps
      (Service_Name, Ids_Vectors.Vector,
-      Gwiad.Registry.Services.Register.Hash, "=", Ids_Vectors."=");
+      Gwiad.Plugins.Services.Register.Hash, "=", Ids_Vectors."=");
    --  Store all service_id index by service_name
 
    procedure Insert (Name : in Service_Name; Id : in Service_Id);
@@ -154,4 +154,4 @@ package body Gwiad.Registry.Services.Cache is
          raise Service_Error;
    end Set;
 
-end Gwiad.Registry.Services.Cache;
+end Gwiad.Plugins.Services.Cache;

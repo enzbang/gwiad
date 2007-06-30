@@ -24,9 +24,9 @@ with Ada.Containers;
 private with Ada.Containers.Indefinite_Hashed_Maps;
 private with Ada.Strings.Unbounded;
 
-with Gwiad.Registry.Services;
+with Gwiad.Plugins.Services;
 
-package Gwiad.Registry.Services.Register is
+package Gwiad.Plugins.Services.Register is
 
    use Services;
 
@@ -97,4 +97,4 @@ private
 
    type Cursor is new Register_Maps.Cursor;
 
-end Gwiad.Registry.Services.Register;
+end Gwiad.Plugins.Services.Register;

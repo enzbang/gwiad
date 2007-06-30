@@ -19,12 +19,34 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-package Gwiad.Registry.Websites is
+with AWS.Digest;
 
-   Website_Error : exception;
+with Gwiad.Plugins.Services.Register;
 
-   type Website_Name is new String;
+package Gwiad.Plugins.Services.Cache is
 
-   type Unregister_CB is access procedure (Name : in Website_Name);
+   --  This package provides a cache for gwiad services
+   --  A unique service id is generated on cache insertion
+   --  When a service plugin is unloaded, all the services refering to
+   --  it are removed from cache
 
-end Gwiad.Registry.Websites;
+   use Gwiad.Plugins.Services.Register;
+
+   type Service_Id is new AWS.Digest.Nonce;
+   --  Ensure that service_id is unique by using AWS digest nonce
+
+   function Get (Name : in Service_Name) return Service_Access;
+   --  Gets a new service
+
+   function Get (Id : in Service_Id) return Service_Access;
+   --  Returns the service from cache.
+   --  When no service with the given id is found raise Service_Error
+
+   function Set
+     (Name : in Service_Name; Item : in Service_Access) return Service_Id;
+   --  Adds the service to cache
+
+   procedure Delete (Name : Service_Name);
+   --  Deletes all services in cache having the given name
+
+end Gwiad.Plugins.Services.Cache;

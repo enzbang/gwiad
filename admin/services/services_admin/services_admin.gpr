@@ -23,7 +23,7 @@ with "aws";
 with "../../../shared";
 with "../../../gwiad/gwiad";
 with "../../../dynamic_libraries/gwiad-dynamic_libraries";
-with "../../../registry/services/gwiad-registry-services";
+with "../../../plugins/services/gwiad-plugins-services";
 with "../../../web/gwiad-web";
 
 Project Services_Admin is

@@ -19,34 +19,28 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with AWS.Digest;
+with "aws";
+with "../../shared";
+with "../../gwiad/gwiad";
+with "../gwiad-plugins";
 
-with Gwiad.Registry.Services.Register;
+Project Gwiad.Plugins.Services is
 
-package Gwiad.Registry.Services.Cache is
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+   for Library_Name use "gwiad_plugins_services";
+   for Library_Kind use "dynamic";
 
-   --  This package provides a cache for gwiad services
-   --  A unique service id is generated on cache insertion
-   --  When a service plugin is unloaded, all the services refering to
-   --  it are removed from cache
+   case Shared.OS is
+      when "Windows_NT" =>
+         for Library_Options use ("-laws", "-laws_include", "-lwsock32");
+      when others =>
+         null;
+   end case;
 
-   use Gwiad.Registry.Services.Register;
+   package Compiler renames Shared.Compiler;
 
-   type Service_Id is new AWS.Digest.Nonce;
-   --  Ensure that service_id is unique by using AWS digest nonce
+   package Ide renames Shared.Ide;
 
-   function Get (Name : in Service_Name) return Service_Access;
-   --  Gets a new service
-
-   function Get (Id : in Service_Id) return Service_Access;
-   --  Returns the service from cache.
-   --  When no service with the given id is found raise Service_Error
-
-   function Set
-     (Name : in Service_Name; Item : in Service_Access) return Service_Id;
-   --  Adds the service to cache
-
-   procedure Delete (Name : Service_Name);
-   --  Deletes all services in cache having the given name
-
-end Gwiad.Registry.Services.Cache;
+end Gwiad.Plugins.Services;

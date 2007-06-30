@@ -25,8 +25,8 @@ with Ada.Exceptions;
 
 with GNAT.OS_Lib;
 
-with Gwiad.Registry.Services.Register;
-with Gwiad.Registry.Websites.Register;
+with Gwiad.Plugins.Services.Register;
+with Gwiad.Plugins.Websites.Register;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
@@ -75,12 +75,13 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
          procedure Discover_Libraries
            (From : in String; Lib_Type : in Library_Type) is
-            use Gwiad.Registry;
+            use Gwiad.Plugins;
          begin
             Start_Search
               (S, From, "*." & Get_Library_Extension,
                (Ordinary_File => True, others => False));
 
+            Load_Libraries_Loop :
             while More_Entries (S) loop
                Get_Next_Entry (S, D);
                declare
@@ -106,7 +107,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                      Loaded_Libraries.Insert (Path, Library);
                   end if;
                end;
-            end loop;
+            end loop Load_Libraries_Loop;
          end Discover_Libraries;
 
       begin

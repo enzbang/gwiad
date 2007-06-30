@@ -35,13 +35,13 @@ with AWS.Parameters;
 
 with Gwiad.Web.Main_Host;
 with Gwiad.Config.Settings;
-with Gwiad.Registry.Services.Register;
+with Gwiad.Plugins.Services.Register;
 with Gwiad.Dynamic_Libraries.Manager;
 
 package body Services_Admin is
 
    use Gwiad;
-   use Gwiad.Registry.Services;
+   use Gwiad.Plugins.Services;
 
    use AWS;
    use AWS.Templates;
@@ -125,7 +125,7 @@ package body Services_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Registry.Services.Register;
+      use Gwiad.Plugins.Services.Register;
 
       Position : Cursor := First;
 
@@ -159,7 +159,7 @@ package body Services_Admin is
    is
       pragma Unreferenced (Context);
 
-      use Gwiad.Registry.Services.Register;
+      use Gwiad.Plugins.Services.Register;
       use Dynamic_Libraries.Manager;
       use Ada.Strings.Unbounded;
 

@@ -25,20 +25,22 @@ with AWS.Response;
 with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
-with Gwiad.Registry.Services.Cache;
-with Gwiad.Registry.Services.Register;
-with Gwiad.Registry.Websites.Register;
+with Gwiad.Plugins.Services.Cache;
+with Gwiad.Plugins.Services.Register;
+with Gwiad.Plugins.Websites;
+with Gwiad.Plugins.Websites.Register;
+
 with Gwiad.Web.Main_Host;
 
 with Hello_World_Interface;
-with Gwiad.Registry.Websites;
+
 
 package body Hello_World is
 
    use AWS;
 
    use Gwiad;
-   use Gwiad.Registry.Websites;
+   use Gwiad.Plugins.Websites;
 
    use Hello_World_Interface;
 
@@ -46,7 +48,7 @@ package body Hello_World is
 
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
-   Path : constant String := Gwiad.Registry.Websites.Register.Library_Path;
+   Path : constant String := Gwiad.Plugins.Websites.Register.Library_Path;
 
    function Default_Callback
      (Request : in Status.Data) return Response.Data;
@@ -75,12 +77,12 @@ package body Hello_World is
    function Hello_World (Request : in Status.Data) return Response.Data is
       pragma Unreferenced (Request);
 
-      Service_Name : constant Registry.Services.Register.Service_Name :=
+      Service_Name : constant Plugins.Services.Register.Service_Name :=
                        "hello_world_service";
 
    begin
 
-      if not Registry.Services.Register.Exists (Name => Service_Name) then
+      if not Plugins.Services.Register.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
       end if;
@@ -88,7 +90,7 @@ package body Hello_World is
       declare
          Hello_World_Service_Access : constant HW_Service_Access
            := HW_Service_Access
-             (Gwiad.Registry.Services.Cache.Get (Service_Name));
+             (Gwiad.Plugins.Services.Cache.Get (Service_Name));
          Hello_World_Service        : HW_Service'Class
            := Hello_World_Service_Access.all;
       begin
@@ -121,7 +123,7 @@ begin
    Gwiad.Web.Main_Host.Register (Web_Dir => Hello_Web_Dir,
                                  Action  => Main_Dispatcher);
 
-   Gwiad.Registry.Websites.Register.Register
+   Gwiad.Plugins.Websites.Register.Register
      (Name        => "Hello web site",
       Description => "A test for gwiad using hello world service",
       Unregister  => Unregister'Access,

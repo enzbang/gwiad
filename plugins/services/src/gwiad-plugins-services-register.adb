@@ -21,34 +21,43 @@
 
 with Ada.Strings.Hash;
 
-with Morzhol.Strings;
+with Gwiad.Plugins.Services.Cache;
 
-package body Gwiad.Registry.Websites.Register is
+package body Gwiad.Plugins.Services.Register is
 
-   use Morzhol.Strings;
+   use Ada;
 
    Last_Library_Path : Unbounded_String;
-   Website_Map       : Register_Maps.Map;
+   Service_Map       : Register_Maps.Map;
 
    -----------------
    -- Description --
    -----------------
 
    function Description (Position : in Cursor) return String is
-      RW : constant Registered_Website :=
+      RS : constant Registered_Service :=
              Register_Maps.Element
                (Position => Register_Maps.Cursor (Position));
    begin
-      return -RW.Description;
+      return To_String (RS.Description);
    end Description;
+
+   ------------
+   -- Exists --
+   ------------
+
+   function Exists (Name : in Service_Name) return Boolean is
+   begin
+      return Register_Maps.Contains (Service_Map, Name);
+   end Exists;
 
    ----------
    -- Find --
    ----------
 
-   function Find (Key : in Website_Name) return Cursor is
+   function Find (Key : in Service_Name) return Cursor is
    begin
-      return Cursor (Register_Maps.Find (Website_Map, Key));
+      return Cursor (Register_Maps.Find (Service_Map, Key));
    end Find;
 
    -----------
@@ -57,8 +66,9 @@ package body Gwiad.Registry.Websites.Register is
 
    function First return Cursor is
    begin
-      return Cursor (Website_Map.First);
+      return Cursor (Service_Map.First);
    end First;
+
    -----------------
    -- Has_Element --
    -----------------
@@ -72,28 +82,28 @@ package body Gwiad.Registry.Websites.Register is
    -- Hash --
    ----------
 
-   function Hash (Key : in Website_Name) return Containers.Hash_Type is
+   function Hash (Key : in Service_Name) return Ada.Containers.Hash_Type is
    begin
       return Strings.Hash (String (Key));
    end Hash;
-
-   ------------------
-   -- Library_Path --
-   ------------------
-
-   function Library_Path return String is
-   begin
-      return To_String (Last_Library_Path);
-   end Library_Path;
 
    ----------
    -- Name --
    ----------
 
-   function Name (Position : in Cursor) return Website_Name is
+   function Name (Position : in Cursor) return Service_Name is
    begin
-      return Register_Maps.Key (Position => Register_Maps.Cursor (Position));
+      return  Register_Maps.Key (Position => Register_Maps.Cursor (Position));
    end Name;
+
+   -----------------
+   -- New_Service --
+   -----------------
+
+   function New_Service (Name : Service_Name) return Service_Access is
+   begin
+      return Service_Access (Service_Map.Element (Name).Builder.all);
+   end New_Service;
 
    ----------
    -- Next --
@@ -109,10 +119,10 @@ package body Gwiad.Registry.Websites.Register is
    ----------
 
    function Path (Position : in Cursor) return String is
-      RW : constant Registered_Website :=
+      RS : constant Registered_Service :=
              Register_Maps.Element (Register_Maps.Cursor (Position));
    begin
-      return -RW.Path;
+      return To_String (RS.Path);
    end Path;
 
    --------------
@@ -121,7 +131,7 @@ package body Gwiad.Registry.Websites.Register is
 
    procedure Register (Library_Path : in String) is
    begin
-      Last_Library_Path := +Library_Path;
+      Last_Library_Path := To_Unbounded_String (Library_Path);
    end Register;
 
    --------------
@@ -129,40 +139,36 @@ package body Gwiad.Registry.Websites.Register is
    --------------
 
    procedure Register
-     (Name         : in Website_Name;
-      Description  : in String;
-      Unregister   : in Unregister_CB;
-      Library_Path : in String)
-   is
+     (Name        : in Service_Name;
+      Description : in String;
+      Builder     : in Service_Builder) is
    begin
+      if Last_Library_Path = Null_Unbounded_String then
+         raise Service_Error;
+      end if;
+
       Register_Maps.Insert
-        (Website_Map,
+        (Service_Map,
          Name,
-         (Unregister_CB => Unregister,
-          Path          => +Library_Path,
-          Description   => +Description));
+         (Builder     => Builder,
+          Path        => Last_Library_Path,
+          Description => To_Unbounded_String (Description)));
+
+      Last_Library_Path := Null_Unbounded_String;
    end Register;
 
    ----------------
    -- Unregister --
    ----------------
 
-   procedure Unregister (Name : in Website_Name) is
+   procedure Unregister (Name : in Service_Name) is
       use Register_Maps;
-
-      Position : Register_Maps.Cursor := Website_Map.Find (Name);
+      use Gwiad.Plugins.Services;
    begin
-      if Position = No_Element then
-         raise Website_Error;
-      end if;
-
-      declare
-         RW : Registered_Website := Element (Position);
-      begin
-         RW.Unregister_CB.all (Name);
-      end;
-
-      Website_Map.Delete (Position);
+      Cache.Delete (Name);
+      Service_Map.Delete (Name);
+   exception
+         when others => raise Service_Error;
    end Unregister;
 
-end Gwiad.Registry.Websites.Register;
+end Gwiad.Plugins.Services.Register;

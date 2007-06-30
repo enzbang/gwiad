@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------------
 
 with "../../shared";
-with "../../registry/services/gwiad-registry-services";
+with "../../plugins/services/gwiad-plugins-services";
 
 Project Hello_World_Interface is
 

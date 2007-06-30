@@ -56,9 +56,9 @@ I_MORZ     = $(INSTALL)/include/morzhol
 I_INC	   = $(INSTALL)/include/gwiad
 I_INC_WEB  = $(INSTALL)/include/gwiad/web
 I_INC_DL   = $(INSTALL)/include/gwiad/dl
-I_INC_R    = $(INSTALL)/include/gwiad/registry
-I_INC_RS   = $(INSTALL)/include/gwiad/registry/s
-I_INC_RWS  = $(INSTALL)/include/gwiad/registry/ws
+I_INC_R    = $(INSTALL)/include/gwiad/plugins
+I_INC_RS   = $(INSTALL)/include/gwiad/plugins/s
+I_INC_RWS  = $(INSTALL)/include/gwiad/plugins/ws
 I_INC_ECWF = $(INSTALL)/include/gwiad/ecwf
 I_LIB_MORZ = $(INSTALL)/lib/morzhol
 I_LIB	   = $(INSTALL)/lib/gwiad
@@ -99,26 +99,26 @@ install: install_dirs
 	$(CP) gwiad/src/*.ad[sb] $(I_INC)
 	$(CP) gwiad/ecwf/*.ad[sb] $(I_INC_ECWF)
 	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
-	$(CP) registry/*.ads $(I_INC_R)
-	$(CP) registry/services/src/*.ad[sb] $(I_INC_RS)
-	$(CP) registry/websites/src/*.ad[sb] $(I_INC_RWS)
+	$(CP) plugins/*.ads $(I_INC_R)
+	$(CP) plugins/services/src/*.ad[sb] $(I_INC_RS)
+	$(CP) plugins/websites/src/*.ad[sb] $(I_INC_RWS)
 	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
 	$(CP) external-libs/morzhol/lib/* $(I_LIB_MORZ)
-	$(CP) registry/*.ali $(I_LIB)
+	$(CP) plugins/*.ali $(I_LIB)
 	$(CP) gwiad/lib/gwiad.ali $(I_INC)
 	$(CP) gwiad/lib/* $(I_LIB)
 	$(CP) dynamic_libraries/lib/* $(I_LIB)
-	$(CP) registry/services/lib/* $(I_LIB)
-	$(CP) registry/websites/lib/* $(I_LIB)
+	$(CP) plugins/services/lib/* $(I_LIB)
+	$(CP) plugins/websites/lib/* $(I_LIB)
 	$(CP) web/lib/* $(I_LIB)
 	$(CP) config/projects/morzhol.gpr $(I_GPR)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-ecwf.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-web.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-registry.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-registry-services.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-registry-websites.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
 ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
 endif
