@@ -189,7 +189,7 @@ package body Websites_Admin is
                                               Conf.Get_Value (Virtual_Host);
 
 
-                  VH_Dir : Web.Virtual_Host.Virtual_Host_Directory
+                  VH_Dir : constant Web.Virtual_Host.Virtual_Host_Directory
                     := (Document_Root => +Conf_File_Document_Root,
                         Default_Page  => +Conf_File_Default_Page,
                         Secure        => Conf.Get_Value (Secure));
@@ -321,9 +321,9 @@ package body Websites_Admin is
       use Gwiad.Plugins.Websites.Registry;
       use Dynamic_Libraries.Manager;
 
-      P            : Parameters.List  := Status.Parameters (Request);
-      Library_Path : constant String  := Parameters.Get (P, "lib");
-      Dry_Run      : constant String  := Parameters.Get (P, "dry_run");
+      P            : constant Parameters.List := Status.Parameters (Request);
+      Library_Path : constant String := Parameters.Get (P, "lib");
+      Dry_Run      : constant String := Parameters.Get (P, "dry_run");
 
       Tag_Name : Templates.Tag;
    begin
