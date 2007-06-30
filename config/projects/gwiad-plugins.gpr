@@ -21,9 +21,9 @@
 
 with "gwiad";
 
-Project Gwiad.Registry is
+project Gwiad.Plugins is
 
    for Source_Dirs use ("../../include/gwiad/plugins/");
    for Externally_Built use "true";
 
-end Gwiad.Registry;
+end Gwiad.Plugins;
