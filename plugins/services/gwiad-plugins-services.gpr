@@ -39,7 +39,15 @@ Project Gwiad.Plugins.Services is
          null;
    end case;
 
+   --------------
+   -- Compiler --
+   --------------
+
    package Compiler renames Shared.Compiler;
+
+   ---------
+   -- Ide --
+   ---------
 
    package Ide renames Shared.Ide;
 

@@ -31,7 +31,15 @@ Project Gwiad.Plugins.Websites is
    for Library_Name use "gwiad_plugins_websites";
    for Library_Kind use "dynamic";
 
+   --------------
+   -- Compiler --
+   --------------
+
    package Compiler renames Shared.Compiler;
+
+   ---------
+   -- Ide --
+   ---------
 
    package Ide renames Shared.Ide;
 
