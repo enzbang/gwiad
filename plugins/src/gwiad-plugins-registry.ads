@@ -28,7 +28,7 @@ generic
    type Plugin_Name is new String;
    type Registered_Plugin is new Plugin with private;
 
-   with function Hash (Key : Plugin_Name) return Containers.Hash_Type;
+   with function Hash (Key : in Plugin_Name) return Containers.Hash_Type;
 
 package Gwiad.Plugins.Registry is
 

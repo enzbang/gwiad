@@ -29,7 +29,7 @@ package Gwiad.Plugins.Services is
 
    type Service_Builder is access function return access Service'Class;
 
-   procedure Delete (Service : Service_Access) is null;
+   procedure Delete (Service : in Service_Access) is null;
 
    procedure Free is new Ada.Unchecked_Deallocation
      (Object => Service'Class, Name => Service_Access);

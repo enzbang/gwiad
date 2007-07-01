@@ -25,8 +25,8 @@ with Gwiad.Plugins.Registry;
 
 package Gwiad.Plugins.Services.Registry is
 
-   use Services;
    use Ada;
+   use Services;
 
    type Service_Name is new String;
 
@@ -40,9 +40,9 @@ package Gwiad.Plugins.Services.Registry is
       Description : in String;
       Builder     : in Service_Builder);
    --  Registers a new service
-   --  This is called by a service library after that the library path has been
-   --  set by the dynamic library manager (as the library has no knowlegde of
-   --  its path)
+   --  This is called by a service library after that the library path
+   --  has been set by the dynamic library manager (as the library has
+   --  no knowlegde of its path)
    --  Raise service error if service with the same name is registered or
    --  if no dynamic library is registered
 
@@ -53,17 +53,17 @@ package Gwiad.Plugins.Services.Registry is
    --  Returns a new service
 
    type Registered_Service is new Plugin with record
-      Builder     : Service_Builder;
+      Builder : Service_Builder;
    end record;
 
-   function Hash (Key : Service_Name) return Containers.Hash_Type;
+   function Hash (Key : in Service_Name) return Containers.Hash_Type;
 
    package Map is new Gwiad.Plugins.Registry
      (Plugin_Name       => Service_Name,
       Registered_Plugin => Registered_Service,
       Hash              => Hash);
 
-   function Exists (Name : Service_Name) return Boolean
+   function Exists (Name : in Service_Name) return Boolean
      renames Map.Exists;
 
 end Gwiad.Plugins.Services.Registry;
