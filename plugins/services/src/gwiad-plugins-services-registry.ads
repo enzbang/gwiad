@@ -49,7 +49,8 @@ package Gwiad.Plugins.Services.Registry is
    procedure Unregister (Name : in Service_Name);
    --  Unregisters a service
 
-   function New_Service (Name : in Service_Name) return Service_Access;
+   function New_Service
+     (Name : in Service_Name) return not null Service_Access;
    --  Returns a new service
 
    type Registered_Service is new Plugin with record

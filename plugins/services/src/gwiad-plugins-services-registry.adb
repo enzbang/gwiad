@@ -40,7 +40,7 @@ package body Gwiad.Plugins.Services.Registry is
    -- New_Service --
    -----------------
 
-   function New_Service (Name : Service_Name) return Service_Access is
+   function New_Service (Name : Service_Name) return not null Service_Access is
    begin
       return Service_Access (Map.Element (Name).Builder.all);
    end New_Service;

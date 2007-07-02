@@ -31,7 +31,7 @@ package body Gwiad.Plugins.Services.Cache is
    use Ada;
    use Ada.Exceptions;
 
-   function Hash (Key : Service_Id) return Containers.Hash_Type;
+   function Hash (Key : in Service_Id) return Containers.Hash_Type;
    --  Hash function for Service_Id (using Strings.Hash)
 
    package Services_Cache_Map is new Containers.Indefinite_Hashed_Maps
@@ -56,7 +56,7 @@ package body Gwiad.Plugins.Services.Cache is
    -- Delete --
    ------------
 
-   procedure Delete (Name : Service_Name) is
+   procedure Delete (Name : in Service_Name) is
       Service_Ids : Ids_Vectors.Vector :=
                       Running_Services_Map.Element (Running_Services, Name);
       Id          : Service_Id;
@@ -85,7 +85,7 @@ package body Gwiad.Plugins.Services.Cache is
    -- Get --
    ---------
 
-   function Get (Name : in Service_Name) return Service_Access is
+   function Get (Name : in Service_Name) return not null Service_Access is
    begin
       return New_Service (Name);
    end Get;
@@ -94,7 +94,7 @@ package body Gwiad.Plugins.Services.Cache is
    -- Get --
    ---------
 
-   function Get (Id : in Service_Id) return Service_Access is
+   function Get (Id : in Service_Id) return not null Service_Access is
    begin
       return Services_Cache.Element (Key => Id);
    exception
@@ -136,7 +136,8 @@ package body Gwiad.Plugins.Services.Cache is
    ---------
 
    function Set
-     (Name : Service_Name; Item : Service_Access) return Service_Id
+     (Name : in Service_Name; Item : in not null Service_Access)
+      return Service_Id
    is
 
       SID     : constant Service_Id := Service_Id (AWS.Digest.Create_Nonce);

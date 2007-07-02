@@ -35,18 +35,19 @@ package Gwiad.Plugins.Services.Cache is
    type Service_Id is new AWS.Digest.Nonce;
    --  Ensure that service_id is unique by using AWS digest nonce
 
-   function Get (Name : in Service_Name) return Service_Access;
+   function Get (Name : in Service_Name) return not null Service_Access;
    --  Gets a new service
 
-   function Get (Id : in Service_Id) return Service_Access;
+   function Get (Id : in Service_Id) return not null Service_Access;
    --  Returns the service from cache.
    --  When no service with the given id is found raise Service_Error
 
    function Set
-     (Name : in Service_Name; Item : in Service_Access) return Service_Id;
+     (Name : in Service_Name; Item : in not null Service_Access)
+      return Service_Id;
    --  Adds the service to cache
 
-   procedure Delete (Name : Service_Name);
+   procedure Delete (Name : in Service_Name);
    --  Deletes all services in cache having the given name
 
 end Gwiad.Plugins.Services.Cache;

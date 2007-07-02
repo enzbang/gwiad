@@ -27,7 +27,8 @@ package Gwiad.Plugins.Services is
 
    type Service_Access is access all Service'Class;
 
-   type Service_Builder is access function return access Service'Class;
+   type Service_Builder is not null access
+     function return access Service'Class;
 
    procedure Delete (Service : in Service_Access) is null;
 
