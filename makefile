@@ -114,6 +114,7 @@ install: install_dirs
 	$(CP) web/lib/* $(I_LIB)
 	$(CP) config/projects/morzhol.gpr $(I_GPR)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-shared.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-ecwf.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-web.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
