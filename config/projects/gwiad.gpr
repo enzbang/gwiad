@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------------
 
 project Gwiad is
+
    for Source_Dirs use ("../../include/gwiad");
    for Library_Dir use "../../lib/gwiad";
    for Externally_Built use "true";
@@ -27,4 +28,3 @@ project Gwiad is
    for Library_Kind use "static";
 
 end Gwiad;
-
