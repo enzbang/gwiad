@@ -19,13 +19,15 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with AWS.Server;
 private with AWS.Services.Dispatchers.Virtual_Host;
 
 package Gwiad.Web is
 
    procedure Start;
 
-   procedure Wait;
+   procedure Wait
+     (Mode : in AWS.Server.Termination := AWS.Server.Q_Key_Pressed);
 
    procedure Stop;
 

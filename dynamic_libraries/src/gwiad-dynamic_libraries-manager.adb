@@ -48,7 +48,12 @@ package body Gwiad.Dynamic_Libraries.Manager is
    begin
       loop
          Manager.Discover_Libraries;
-         delay 5.0;
+         select
+            accept Stop;
+            exit;
+         or
+            delay 5.0;
+         end select;
       end loop;
    end Discover;
 

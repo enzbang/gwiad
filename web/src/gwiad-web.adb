@@ -31,9 +31,12 @@ package body Gwiad.Web is
    Configuration : Config.Object;
    HTTP          : Server.HTTP;
 
-   Exit_Request : Boolean := False;
+   task Reload_Dispatcher is
 
-   task Reload_Dispatcher;
+      entry Stop;
+      --  Exit reload dispatcher
+
+   end Reload_Dispatcher;
 
    ------------
    -- Reload --
@@ -77,12 +80,16 @@ package body Gwiad.Web is
    task body Reload_Dispatcher is
    begin
       loop
-         exit when Exit_Request;
-         delay 1.0;
-         if Reload.Is_Required then
-            Server.Set (HTTP, Virtual_Hosts_Dispatcher);
-            Reload.Done;
-         end if;
+         select
+            accept Stop;
+            exit;
+         else
+            delay 1.0;
+            if Reload.Is_Required then
+               Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+               Reload.Done;
+            end if;
+         end select;
       end loop;
    end Reload_Dispatcher;
 
@@ -119,17 +126,16 @@ package body Gwiad.Web is
    procedure Stop is
    begin
       Server.Shutdown (HTTP);
-      Exit_Request := True;
+      Reload_Dispatcher.Stop;
    end Stop;
 
    ----------
    -- Wait --
    ----------
 
-   procedure Wait is
+   procedure Wait (Mode : in Server.Termination := Server.Q_Key_Pressed) is
    begin
-      --      Server.Wait (Server.Forever);
-      Server.Wait;
+      Server.Wait (Mode);
    end Wait;
 
 end Gwiad.Web;

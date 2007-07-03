@@ -24,7 +24,14 @@ with Ada.Strings.Hash;
 
 package Gwiad.Dynamic_Libraries.Manager is
 
-   task type Discover;
+   task type Discover is
+
+      entry Stop;
+      --  Stop discover task
+
+   end Discover;
+
+
    --  Active task used to check for new services/websites plugins
 
    package Hashed_Strings is new Ada.Containers.Indefinite_Hashed_Maps

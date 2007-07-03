@@ -34,7 +34,13 @@ procedure Argwiad is
 begin
 
    Web.Start;
+
    Web.Wait;
+
+   --  Then exit
+
+   Web.Stop;
+   Discover_Library.Stop;
 
 exception
    when E : others =>
