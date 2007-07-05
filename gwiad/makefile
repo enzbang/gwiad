@@ -30,3 +30,5 @@ clean:
 	-gnat clean -r -Pgwiad-ecwf
 
 check:
+	gnat check -dd -Pgwiad -rules -from=../gwiad.check
+	gnat check -dd -Pgwiad-ecwf -rules -from=../gwiad.check
