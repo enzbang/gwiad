@@ -30,6 +30,8 @@ project Shared is
    type OS_Type is ("UNIX", "Windows_NT");
    OS : OS_Type := external ("OS", "UNIX");
 
+   AdaCtrl_Rules_File := External ("PWD", "");
+
    -------------
    -- Builder --
    -------------
@@ -96,6 +98,14 @@ project Shared is
 
    package Ide is
       for Vcs_Kind use "Subversion";
+      case OS is
+         when "UNIX" =>
+            for Default_Switches ("adacontrol")
+              use ("-f", AdaCtrl_Rules_File & "/gwiad.aru", "-d", "-x");
+         when "Windows_NT" =>
+            for Default_Switches ("adacontrol")
+              use ("-f", AdaCtrl_Rules_File & "\gwiad.aru", "-d", "-x");
+      end case;
    end Ide;
 
 end Shared;

@@ -43,4 +43,10 @@ Project Gwiad.Plugins is
 
    package Compiler renames Shared.Compiler;
 
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide renames Shared.Ide;
+
 end Gwiad.Plugins;
