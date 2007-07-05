@@ -47,10 +47,9 @@ package body Gwiad.Dynamic_Libraries is
    -- Call --
    ----------
 
-   procedure Call
-     (Library       : in     Dynamic_Library;
-      Function_Name : in     String;
-      Call_Function :    out Call_Function_Access)
+   function Call
+     (Library       : in Dynamic_Library;
+      Function_Name : in String) return Call_Function_Access
    is
 
       function GetProcAddress
@@ -78,7 +77,7 @@ package body Gwiad.Dynamic_Libraries is
            with "Call returned code " & DWORD'Image (GetLastError);
       end if;
 
-      Call_Function := Address_To_Access (Addr);
+      return Address_To_Access (Addr);
    end Call;
 
    ---------------------------
@@ -94,7 +93,7 @@ package body Gwiad.Dynamic_Libraries is
    -- Init --
    ----------
 
-   procedure Init (Library : Dynamic_Library; Path : String) is
+   procedure Init (Library : in Dynamic_Library; Path : in String) is
       use Interfaces;
       use Ada.Directories;
 
@@ -103,13 +102,10 @@ package body Gwiad.Dynamic_Libraries is
                     Lib_Name (Lib_Name'First .. Lib_Name'Last) & "init";
 
       type Library_Register is access procedure;
-      procedure Register_Call is new Call (Library_Register);
-
-      Access_Function : Library_Register;
+      function Register_Call is new Call (Library_Register);
 
    begin
-      Register_Call (Library, Init_Name, Access_Function);
-      Access_Function.all;
+      Register_Call (Library, Init_Name).all;
    end Init;
 
    ----------
