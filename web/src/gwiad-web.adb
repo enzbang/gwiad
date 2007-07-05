@@ -28,7 +28,6 @@ package body Gwiad.Web is
 
    use AWS;
 
-   Configuration : Config.Object;
    HTTP          : Server.HTTP;
 
    task Reload_Dispatcher is
@@ -99,6 +98,7 @@ package body Gwiad.Web is
    -----------
 
    procedure Start is
+      Configuration : Config.Object;
    begin
       --  Log control
 
