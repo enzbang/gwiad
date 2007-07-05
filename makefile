@@ -47,7 +47,20 @@ all: $(MODULES_BUILD)
 
 clean: $(MODULES_CLEAN)
 
-check :$(MODULES_CHECK)
+check :	check_message $(MODULES_CHECK)
+	@echo
+	@echo "#####################################"
+	@echo "### Check style with style_checker ##"
+	@echo "#####################################"
+	@echo
+	-find . -not -name "b~*" -a \( -name "*.adb" -o -name "*.ads" \) | xargs style_checker -lang Ada -cp -cy -sp -gnat05
+
+check_message:
+	@echo
+	@echo "############################################"
+	@echo "### Verifying Properties Using gnatcheck ###"
+	@echo "############################################"
+	@echo
 
 # Install directories
 

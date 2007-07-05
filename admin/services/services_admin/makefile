@@ -30,3 +30,4 @@ clean:
 	-gnat clean -r -Pservices_admin
 
 check:
+	gnat check -dd -Pservices_admin -rules -from=../../../gwiad.check

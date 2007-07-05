@@ -27,3 +27,4 @@ clean:
 	-gnat clean -r -Pgwiad-dynamic_libraries
 
 check:
+	gnat check -dd -Pgwiad-dynamic_libraries -rules -from=../gwiad.check

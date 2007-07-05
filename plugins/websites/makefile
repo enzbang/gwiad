@@ -27,3 +27,4 @@ clean:
 	-gnat clean -r -Pgwiad-plugins-websites
 
 check:
+	gnat check -dd -Pgwiad-plugins-websites -rules -from=../../gwiad.check
