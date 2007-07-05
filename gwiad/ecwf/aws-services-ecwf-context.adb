@@ -73,7 +73,9 @@ package body AWS.Services.ECWF.Context is
          pragma Unreferenced (N, Quit);
       begin
          Append
-           (Data, (To_Unbounded_String (Key), To_Unbounded_String (Value)));
+           (Container => Data,
+            New_Item  => Context_Data'(Key   => To_Unbounded_String (Key),
+                                       Value => To_Unbounded_String (Value)));
       end Insert;
 
       ------------------

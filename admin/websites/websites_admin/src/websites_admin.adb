@@ -134,24 +134,26 @@ package body Websites_Admin is
 
             if Response.Status_Code (Web_Page) = Messages.S404 then
                --  Page not found
-               return Response.Build
+               Web_Page := Response.Build
                  (Content_Type  => MIME.Text_HTML,
                   Message_Body  => "<p>Website admin error</p>");
-            else
-               return Web_Page;
             end if;
          else
             --  Nonce is stale
 
-            return AWS.Response.Authenticate
-              ("Gwiad restricted usage", Response.Digest, Stale => True);
+            Web_Page := AWS.Response.Authenticate
+              (Realm => "Gwiad restricted usage",
+               Mode  => Response.Digest,
+               Stale => True);
          end if;
+      else
+
+         --  Unauthorized
+
+         Web_Page := Response.Authenticate
+           (Realm => "Gwiad restricted usage", Mode => Response.Digest);
       end if;
-
-      --  Unauthorized
-
-      return Response.Authenticate ("Gwiad restricted usage", Response.Digest);
-
+      return Web_Page;
    end Default_Callback;
 
    ---------------------------------------
@@ -166,7 +168,9 @@ package body Websites_Admin is
       Start_Search (Search    => S,
                     Directory => Config_Root,
                     Pattern   => "*.ini",
-                    Filter    => (Ordinary_File => True, others => False));
+                    Filter    => Filter_Type'(Ordinary_File => True,
+                                              Special_File  => False,
+                                              Directory     => False));
 
       while More_Entries (S) loop
          Get_Next_Entry (S, D);
@@ -188,11 +192,11 @@ package body Websites_Admin is
                   Conf_File_Virtual_Host  : constant String :=
                                               Conf.Get_Value (Virtual_Host);
 
-
                   VH_Dir : constant Web.Virtual_Host.Virtual_Host_Directory
-                    := (Document_Root => +Conf_File_Document_Root,
-                        Default_Page  => +Conf_File_Default_Page,
-                        Secure        => Conf.Get_Value (Secure));
+                    := Web.Virtual_Host.Virtual_Host_Directory'
+                      (Document_Root => +Conf_File_Document_Root,
+                       Default_Page  => +Conf_File_Default_Page,
+                       Secure        => Conf.Get_Value (Secure));
                begin
                   Web.Virtual_Host.Register
                     (Hostname => Conf.Get_Value (Virtual_Host),
@@ -227,7 +231,6 @@ package body Websites_Admin is
       when E : others =>
          Text_IO.Put_Line (Exceptions.Exception_Information (E));
    end Discover_Virtual_Host_Directories;
-
 
    -------------------
    -- List_Websites --
@@ -361,7 +364,6 @@ package body Websites_Admin is
         (Translations,
          Templates.Assoc ("WEBSITES_ADMIN_URL", Websites_Admin_URL));
 
-
       if Dry_Run /= "" then
          Templates.Insert (Translations, Templates.Assoc ("DRY_RUN", "yes"));
          Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
@@ -394,8 +396,7 @@ package body Websites_Admin is
       Web.Virtual_Host.Unregister (String (Name));
    end Virtual_Host_Unregister;
 
-
-begin
+begin  --  Websites_Admin : register admin website pages
 
    AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
@@ -405,28 +406,28 @@ begin
    --  Register ECWF pages
 
    AWS.Services.ECWF.Registry.Register
-     (Websites_Admin_URL & "list",
-      "templates/websites_admin/list.thtml",
-      List_Websites'Access,
-      MIME.Text_HTML);
+     (Key          => Websites_Admin_URL & "list",
+      Template     => "templates/websites_admin/list.thtml",
+      Data_CB      => List_Websites'Access,
+      Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
-     (Websites_Admin_URL & "stop",
-      "templates/websites_admin/stop.thtml",
-      Stop_Website'Access,
-      MIME.Text_HTML);
+     (Key          => Websites_Admin_URL & "stop",
+      Template     => "templates/websites_admin/stop.thtml",
+      Data_CB      => Stop_Website'Access,
+      Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
-     (Websites_Admin_URL & "unload",
-      "templates/websites_admin/unload.thtml",
-      Unload_Websites'Access,
-      MIME.Text_HTML);
+     (Key          => Websites_Admin_URL & "unload",
+      Template     => "templates/websites_admin/unload.thtml",
+      Data_CB      => Unload_Websites'Access,
+      Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
-     (Websites_Admin_URL & "find_vhd",
-      "templates/websites_admin/list.thtml",
-      Virtual_Host_Directories'Access,
-      MIME.Text_HTML);
+     (Key          => Websites_Admin_URL & "find_vhd",
+      Template     => "templates/websites_admin/list.thtml",
+      Data_CB      => Virtual_Host_Directories'Access,
+      Content_Type => MIME.Text_HTML);
 
    Gwiad.Web.Main_Host.Register (Web_Dir  => Websites_Admin_URL,
                                  Action   => Main_Dispatcher);

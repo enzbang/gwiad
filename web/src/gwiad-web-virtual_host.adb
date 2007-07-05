@@ -39,7 +39,11 @@ package body Gwiad.Web.Virtual_Host is
    use Morzhol.OS;
 
    package Config_Maps is new Containers.Indefinite_Hashed_Maps
-     (String, Virtual_Host_Directory, Strings.Hash, "=", "=");
+     (Key_Type        => String,
+      Element_Type    => Virtual_Host_Directory,
+      Hash            => Strings.Hash,
+      Equivalent_Keys => "=",
+      "="             => "=");
    use Config_Maps;
 
    Configs : Map;
@@ -54,14 +58,14 @@ package body Gwiad.Web.Virtual_Host is
    function Default_Callback (Request : in Status.Data) return Response.Data is
       use Ada.Directories;
 
-      function Get_Hostname (Hostname : String) return String;
+      function Get_Hostname (Hostname : in String) return String;
       --  Get hostname
 
       ------------------
       -- Get_Hostname --
       ------------------
 
-      function Get_Hostname (Hostname : String) return String is
+      function Get_Hostname (Hostname : in String) return String is
          K : Natural;
       begin
          K := Strings.Fixed.Index (Hostname, ":");
@@ -74,9 +78,10 @@ package body Gwiad.Web.Virtual_Host is
          return Hostname (Hostname'First .. K);
       end Get_Hostname;
 
-
       URI      : constant String := Status.URI (Request);
       Hostname : constant String := Get_Hostname (AWS.Status.Host (Request));
+
+      Data     : Response.Data;
    begin
 
       if Configs.Contains (Hostname) then
@@ -90,20 +95,21 @@ package body Gwiad.Web.Virtual_Host is
          begin
             if Exists (Filename)
               and then Kind (Filename) = Ordinary_File then
-               return Response.File
+               Data := Response.File
                  (Filename     => Filename,
                   Content_Type => MIME.Content_Type (Filename));
-            end if;
-            if Exists (To_String (VH_Dir.Document_Root)
-                       & Directory_Separator &
-                       To_String (VH_Dir.Default_Page)) then
-               return Response.Moved
+            elsif Exists (To_String (VH_Dir.Document_Root)
+                          & Directory_Separator &
+                          To_String (VH_Dir.Default_Page)) then
+               Data := Response.Moved
                  (Location => "/" &  To_String (VH_Dir.Default_Page));
             end if;
          end;
+      else
+         Data := Response.Build (Content_Type  => MIME.Text_HTML,
+                                 Message_Body  => "<h1>Coming soon...</h1>");
       end if;
-      return Response.Build (Content_Type  => MIME.Text_HTML,
-                             Message_Body  => "<h1>Coming soon...</h1>");
+      return Data;
    end Default_Callback;
 
    --------------

@@ -41,10 +41,10 @@ package Gwiad.Dynamic_Libraries is
 
    generic
       type Call_Function_Access is private;
-   procedure Call
-     (Library       : in     Dynamic_Library;
-      Function_Name : in     String;
-      Call_Function :    out Call_Function_Access);
+   function Call
+     (Library       : in Dynamic_Library;
+      Function_Name : in String)
+      return Call_Function_Access;
    --  Returns an access to the function Function_Name within the
    --  given dynamic library.
    --  Raise Dynamic_Library_Error if no such function is present.

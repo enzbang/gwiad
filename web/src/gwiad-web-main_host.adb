@@ -52,24 +52,25 @@ package body Gwiad.Web.Main_Host is
                    Gwiad.Config.Settings.Web_Default_Directory
                      & Directory_Separator
                      & URI (URI'First + 1 .. URI'Last);
+      Data     : Response.Data;
    begin
 
       if Exists (Filename)
         and then Kind (Filename) = Ordinary_File then
-         return Response.File
+         Data := Response.File
            (Filename     => Filename,
             Content_Type => MIME.Content_Type (Filename));
-      end if;
-
-      if Exists (Gwiad.Config.Settings.Web_Default_Directory
-                 & Directory_Separator
-                 & Gwiad.Config.Settings.Web_Default_Page) then
-         return Response.Moved
+      elsif Exists (Gwiad.Config.Settings.Web_Default_Directory
+                    & Directory_Separator
+                    & Gwiad.Config.Settings.Web_Default_Page) then
+         Data := Response.Moved
            (Location => "/" &  Gwiad.Config.Settings.Web_Default_Page);
       else
-         return Response.Build (Content_Type  => MIME.Text_HTML,
-                                Message_Body  => "<h1>Welcome to gwiad</h1>");
+         Data := Response.Build
+           (Content_Type  => MIME.Text_HTML,
+            Message_Body  => "<h1>Welcome to gwiad</h1>");
       end if;
+      return Data;
    end Default_Callback;
 
    --------------

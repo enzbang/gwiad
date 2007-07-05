@@ -66,7 +66,7 @@ package body Gwiad.Plugins.Registry is
    -- Element --
    -------------
 
-   function Element (Position : Cursor) return Registered_Plugin is
+   function Element (Position : in Cursor) return Registered_Plugin is
    begin
       return Register_Maps.Element (Register_Maps.Cursor (Position));
    end Element;

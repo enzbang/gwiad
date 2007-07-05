@@ -34,7 +34,7 @@ package body Gwiad.Config.Settings is
    type Attributes is (Auth_Username, Auth_Password,
                        Web_Default_Directory, Web_Default_Page);
 
-   package Conf is new Morzhol.Iniparser (Attributes);
+   package Conf is new Morzhol.Iniparser (Parameter_Name => Attributes);
 
    -------------------
    -- Auth_Password --
@@ -72,8 +72,8 @@ package body Gwiad.Config.Settings is
       return Conf.Get_Value (Web_Default_Page);
    end Web_Default_Page;
 
-begin
-   --  Set default values
+begin --  Gwiad.Config.Settings
+      --  Sets default option and reads configuration file
 
    Conf.Set_Value (Auth_Username, Gwiad.Config.Auth_Username);
    Conf.Set_Value (Auth_Password, Gwiad.Config.Auth_Password);

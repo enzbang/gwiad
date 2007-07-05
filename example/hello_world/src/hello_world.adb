@@ -34,7 +34,6 @@ with Gwiad.Web.Main_Host;
 
 with Hello_World_Interface;
 
-
 package body Hello_World is
 
    use AWS;
@@ -118,7 +117,6 @@ begin
    AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
       Dispatchers.Callback.Create (Default_Callback'Access));
-
 
    Gwiad.Web.Main_Host.Register (Web_Dir => Hello_Web_Dir,
                                  Action  => Main_Dispatcher);

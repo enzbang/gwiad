@@ -78,7 +78,11 @@ package Gwiad.Plugins.Registry is
 private
 
    package Register_Maps is new Ada.Containers.Indefinite_Hashed_Maps
-     (Plugin_Name, Registered_Plugin, Hash, "=", "=");
+     (Key_Type        => Plugin_Name,
+      Element_Type    => Registered_Plugin,
+      Hash            => Hash,
+      Equivalent_Keys => "=",
+      "="             => "=");
 
    type Cursor is new Register_Maps.Cursor;
 

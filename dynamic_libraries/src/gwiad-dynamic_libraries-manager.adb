@@ -37,8 +37,16 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
    type Library_Type is (Website_Library, Service_Library);
 
-   Websites_Lib_Dir : constant String := Compose ("lib", "websites");
-   Services_Lib_Dir : constant String := Compose ("lib", "services");
+   Websites_Lib_Dir : constant String :=
+                        Compose (Containing_Directory => "lib",
+                                 Name                 => "websites");
+
+   Services_Lib_Dir : constant String :=
+                        Compose (Containing_Directory => "lib",
+                                 Name                 => "services");
+
+   procedure Rename_Library (Path : in String);
+   --  Renames a library to path.disabled
 
    --------------
    -- Discover --
@@ -50,6 +58,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Manager.Discover_Libraries;
          select
             accept Stop;
+            Manager.Unload_All;
             exit;
          or
             delay 5.0;
@@ -83,8 +92,12 @@ package body Gwiad.Dynamic_Libraries.Manager is
             use Gwiad.Plugins;
          begin
             Start_Search
-              (S, From, "*." & Get_Library_Extension,
-               (Ordinary_File => True, others => False));
+              (Search    => S,
+               Directory => From,
+               Pattern   => "*." & Get_Library_Extension,
+               Filter    => Filter_Type'(Ordinary_File => True,
+                                         Directory     => False,
+                                         Special_File  => False));
 
             Load_Libraries_Loop :
             while More_Entries (S) loop
@@ -159,16 +172,47 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Loaded_Libraries.Delete (Path);
          Dynamic_Libraries.Unload (Library);
 
-         declare
-            Path_Disabled : constant String := Path & ".disabled";
-         begin
-            if Exists (Path_Disabled) then
-               Delete_File (Path_Disabled);
-            end if;
-            Rename (Path, Path_Disabled);
-         end;
+         Rename_Library (Path);
       end Unload;
 
+      procedure Unload_All is
+         Position : Cursor := Loaded_Libraries.First;
+
+      begin
+         while Has_Element (Position) loop
+            declare
+               Path : constant String := Key (Position);
+               Library : Dynamic_Library_Access := Element (Position);
+            begin
+               Ada.Text_IO.Put_Line ("Delete " & Path);
+               Loaded_Libraries.Delete (Path);
+               Dynamic_Libraries.Unload (Library);
+               Ada.Text_IO.Put_Line ("Rename begin " & Path);
+               Rename_Library (Path);
+               Ada.Text_IO.Put_Line ("Rename end " & Path);
+
+            end;
+            Ada.Text_IO.Put_Line ("Next");
+            Position := Loaded_Libraries.First;
+            Ada.Text_IO.Put_Line ("Next done");
+         end loop;
+         Ada.Text_IO.Put_Line ("Exit");
+      end Unload_All;
+
    end Manager;
+
+   --------------------
+   -- Rename_Library --
+   --------------------
+
+   procedure Rename_Library (Path : in String) is
+      Path_Disabled : constant String := Path & ".disabled";
+   begin
+      if Exists (Path_Disabled) then
+         Delete_File (Path_Disabled);
+      end if;
+      Rename (Path, Path_Disabled);
+   end Rename_Library;
+
 
 end Gwiad.Dynamic_Libraries.Manager;

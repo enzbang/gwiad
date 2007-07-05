@@ -79,7 +79,6 @@ package body Services_Admin is
       Username    : constant String := AWS.Status.Authorization_Name (Request);
       Client_Mode : constant AWS.Status.Authorization_Type
         := AWS.Status.Authorization_Mode (Request);
-
    begin
 
       if Client_Mode = Status.Digest
@@ -95,23 +94,27 @@ package body Services_Admin is
 
             if Response.Status_Code (Web_Page) = Messages.S404 then
                --  Page not found
-               return Response.Build
+               Web_Page := Response.Build
                  (Content_Type  => MIME.Text_HTML,
                   Message_Body  => "<p>Service admin error</p>");
-            else
-               return Web_Page;
             end if;
          else
             --  Nonce is stale
 
-            return AWS.Response.Authenticate
-              ("Gwiad restricted usage", Response.Digest, Stale => True);
+            Web_Page := AWS.Response.Authenticate
+              (Realm => "Gwiad restricted usage",
+               Mode  => Response.Digest,
+               Stale => True);
          end if;
+      else
+
+         --  Unauthorized
+
+         Web_Page := Response.Authenticate
+           (Realm => "Gwiad restricted usage", Mode => Response.Digest);
       end if;
 
-      --  Unauthorized
-
-      return Response.Authenticate ("Gwiad restricted usage", Response.Digest);
+      return Web_Page;
 
    end Default_Callback;
 
@@ -192,7 +195,7 @@ package body Services_Admin is
 
    end Stop_Service;
 
-begin
+begin --  Services_Admin : register admin webpages
 
    AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
@@ -202,16 +205,16 @@ begin
    --  Register ECWF pages
 
    AWS.Services.ECWF.Registry.Register
-     (Services_Admin_URL & "list",
-      "templates/services_admin/list.thtml",
-      List_Services'Access,
-      MIME.Text_HTML);
+     (Key          => Services_Admin_URL & "list",
+      Template     => "templates/services_admin/list.thtml",
+      Data_CB      => List_Services'Access,
+      Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
-     (Services_Admin_URL & "stop",
-      "templates/services_admin/stop.thtml",
-      Stop_Service'Access,
-      MIME.Text_HTML);
+     (Key          => Services_Admin_URL & "stop",
+      Template     => "templates/services_admin/stop.thtml",
+      Data_CB      => Stop_Service'Access,
+      Content_Type => MIME.Text_HTML);
 
    Gwiad.Web.Main_Host.Register (Web_Dir => Services_Admin_URL,
                                  Action  => Main_Dispatcher);

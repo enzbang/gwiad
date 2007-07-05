@@ -66,7 +66,7 @@ package AWS.Services.ECWF.Registry is
    procedure Register
      (Key          : in String;
       Template_CB  :  not null access function
-        (Request : Status.Data) return String;
+        (Request : in Status.Data) return String;
       Data_CB      : access procedure
         (Request      : in     Status.Data;
          Context      : access ECWF.Context.Object;
@@ -94,8 +94,8 @@ package AWS.Services.ECWF.Registry is
 private
 
    No_Page : constant Page :=
-               (Null_Unbounded_String,
-                Null_Unbounded_String,
-                Templates.Null_Set);
+               Page'(Content      => Null_Unbounded_String,
+                     Content_Type => Null_Unbounded_String,
+                     Set          => Templates.Null_Set);
 
 end AWS.Services.ECWF.Registry;

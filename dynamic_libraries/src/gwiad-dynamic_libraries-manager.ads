@@ -31,11 +31,14 @@ package Gwiad.Dynamic_Libraries.Manager is
 
    end Discover;
 
-
    --  Active task used to check for new services/websites plugins
 
    package Hashed_Strings is new Ada.Containers.Indefinite_Hashed_Maps
-     (String, Dynamic_Library_Access, Ada.Strings.Hash, "=", "=");
+     (Key_Type        => String,
+      Element_Type    => Dynamic_Library_Access,
+      Hash            => Ada.Strings.Hash,
+      Equivalent_Keys => "=",
+      "="             => "=");
    use Hashed_Strings;
 
    protected Manager is
@@ -48,6 +51,9 @@ package Gwiad.Dynamic_Libraries.Manager is
 
       entry Unload (Path : in String);
       --  Unload a library
+
+      procedure Unload_All;
+      --  Unload all libraries
 
    private
       Loaded_Libraries : Hashed_Strings.Map := Hashed_Strings.Empty_Map;

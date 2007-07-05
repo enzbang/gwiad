@@ -52,10 +52,10 @@ package body Gwiad.Dynamic_Libraries is
    -- Call --
    ----------
 
-   procedure Call
-     (Library       : in     Dynamic_Library;
-      Function_Name : in     String;
-      Call_Function :    out Call_Function_Access)
+   function Call
+     (Library       : in Dynamic_Library;
+      Function_Name : in String)
+      return Call_Function_Access
    is
 
       function dlsym
@@ -71,6 +71,7 @@ package body Gwiad.Dynamic_Libraries is
       C_Function_Name : chars_ptr := New_String (Function_Name);
 
    begin
+
       --  Get a pointer to the function within the dynamic library
 
       Addr := dlsym (System.Address (Library.Ref.all), C_Function_Name);
@@ -81,7 +82,7 @@ package body Gwiad.Dynamic_Libraries is
          raise Dynamic_Library_Error with Value (dlerror);
       end if;
 
-      Call_Function := Address_To_Access (Addr);
+      return Address_To_Access (Addr);
    end Call;
 
    ---------------------------
@@ -97,7 +98,7 @@ package body Gwiad.Dynamic_Libraries is
    -- Init --
    ----------
 
-   procedure Init (Library : Dynamic_Library; Path : String) is
+   procedure Init (Library : in Dynamic_Library; Path : in String) is
       use Ada.Directories;
       use Interfaces;
 
@@ -106,12 +107,12 @@ package body Gwiad.Dynamic_Libraries is
                     Lib_Name (Lib_Name'First + 3 .. Lib_Name'Last) & "init";
 
       type Library_Register is access procedure;
-      procedure Register_Call is new Call (Library_Register);
+      function Register_Call is new Call (Library_Register);
 
-      Access_Function : Library_Register;
+      Access_Function : constant Library_Register
+        := Register_Call (Library, Init_Name);
 
    begin
-      Register_Call (Library, Init_Name, Access_Function);
       Access_Function.all;
    end Init;
 
@@ -119,7 +120,7 @@ package body Gwiad.Dynamic_Libraries is
    -- Load --
    ----------
 
-   function Load (Path : String) return Dynamic_Library_Access is
+   function Load (Path : in String) return Dynamic_Library_Access is
 
       function Dlopen
         (Lib_Name : in chars_ptr; Mode : in int) return System.Address;

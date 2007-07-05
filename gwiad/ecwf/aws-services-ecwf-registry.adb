@@ -96,19 +96,22 @@ package body AWS.Services.ECWF.Registry is
       Cache_Control : in Messages.Cache_Option := Messages.Unspecified)
       return Response.Data
    is
-      P : constant Page := Parse (Key, Request, Translations);
+      P    : constant Page := Parse (Key, Request, Translations);
+      Data : Response.Data;
    begin
       if P = No_Page then
-         return Response.Build
+         Data := Response.Build
            (MIME.Text_HTML, "", Status_Code => Messages.S404);
 
       else
-         return Response.Build
+         Data := Response.Build
            (To_String (P.Content_Type),
             To_String (P.Content),
             Status_Code   => Status_Code,
             Cache_Control => Cache_Control);
       end if;
+
+      return Data;
    end Build;
 
    --------------------
@@ -135,6 +138,8 @@ package body AWS.Services.ECWF.Registry is
          return C;
       end Create_New_Context;
 
+      CID : Context.Id;
+
    begin
       if Parameters.Get
         (Status.Parameters (Lazy_Tag.Request), Internal_Context_Var) = ""
@@ -147,7 +152,7 @@ package body AWS.Services.ECWF.Registry is
             --  No context sent with the request, create a new context for
             --  this request.
 
-            return Create_New_Context;
+            CID := Create_New_Context;
 
          else
             --  A context has been sent with this request
@@ -157,10 +162,11 @@ package body AWS.Services.ECWF.Registry is
                          Parameters.Get
                            (Status.Parameters
                               (Lazy_Tag.Request), Context_Var);
-               CID   : Context.Id := Context.Value (C_Str);
             begin
                --  First check that it is a know context (i.e. still a valid
                --  context recorded in the context database).
+
+               CID := Context.Value (C_Str);
 
                if Context.Exist (CID) then
                   --  This context is known, record it as the current
@@ -181,22 +187,22 @@ package body AWS.Services.ECWF.Registry is
                        (Lazy_Tag.Request, Internal_Context_Var, C_Str);
                   end if;
 
-                  return CID;
-
                else
                   --  Unknown or expired context, create a new one
 
-                  return Create_New_Context;
+                  CID := Create_New_Context;
                end if;
             end;
          end if;
 
       else
          --  Context already recorded, just retrieve it
-         return Context.Value
+         CID := Context.Value
            (Parameters.Get
               (Status.Parameters (Lazy_Tag.Request), Internal_Context_Var));
       end if;
+
+      return CID;
    end Get_Context_Id;
 
    -----------
@@ -209,17 +215,19 @@ package body AWS.Services.ECWF.Registry is
       Translations : in Templates.Translate_Set) return Page
    is
       LT       : aliased Lazy_Handler :=
-                   (Templates.Dynamic.Lazy_Tag with Request, Translations);
+                   Lazy_Handler'(Templates.Dynamic.Lazy_Tag
+                                 with Request => Request,
+                                      Translations => Translations);
       Position : Web_Object_Maps.Cursor;
 
-      function Get_Matching_Key (Search_Key : String) return String;
+      function Get_Matching_Key (Search_Key : in String) return String;
       --  Get the Prefix Key matching Search_Key in Prefix_URI_Vector
 
       ----------------------
       -- Get_Matching_Key --
       ----------------------
 
-      function Get_Matching_Key (Search_Key : String) return String
+      function Get_Matching_Key (Search_Key : in String) return String
       is
          use Prefix_URI;
          Cursor : Prefix_URI.Cursor := Prefix_URI.First (Prefix_URI_Vector);
@@ -239,6 +247,8 @@ package body AWS.Services.ECWF.Registry is
          return "";
       end Get_Matching_Key;
 
+      Parsed_Page : Page := No_Page;
+
    begin
       --  Get Web Object
 
@@ -257,10 +267,7 @@ package body AWS.Services.ECWF.Registry is
          end;
       end if;
 
-      if Position = No_Element then
-         return No_Page;
-
-      else
+      if Position /= No_Element then
          declare
             Context       : aliased ECWF.Context.Object :=
                               ECWF.Context.Get (Get_Context_Id (LT'Access));
@@ -283,13 +290,15 @@ package body AWS.Services.ECWF.Registry is
                Template_Name := Element (Position).Template;
             end if;
 
-            return (Content_Type => Element (Position).Content_Type,
+            Parsed_Page :=
+              Page'(Content_Type => Element (Position).Content_Type,
                     Content      => Templates.Parse
                       (To_String (Template_Name), T,
                        Lazy_Tag => LT'Unchecked_Access),
                     Set          => Templates.Null_Set);
          end;
       end if;
+      return Parsed_Page;
    end Parse;
 
    --------------
@@ -331,7 +340,7 @@ package body AWS.Services.ECWF.Registry is
    procedure Register
      (Key          : in String;
       Template_CB  :  not null access function
-        (Request : Status.Data) return String;
+        (Request : in Status.Data) return String;
       Data_CB      : access procedure
         (Request      : in Status.Data;
          Context      : access ECWF.Context.Object;
@@ -368,47 +377,46 @@ package body AWS.Services.ECWF.Registry is
            (Translations,
             Templates.Assoc
               (Context_Var,  Context.Image (Get_Context_Id (Lazy_Tag))));
-         return;
-      end if;
+      else
 
-      --  Get Web Object
+         --  Get Web Object
 
-      Position := WO_Map.Find (Var_Name);
+         Position := WO_Map.Find (Var_Name);
 
-      if Position /= No_Element then
-         declare
-            Context : aliased ECWF.Context.Object :=
-                        ECWF.Context.Get (Get_Context_Id (Lazy_Tag));
-            T       : Templates.Translate_Set;
-            Template_Name : Unbounded_String;
-         begin
-            --  Get translation set for this tag
+         if Position /= No_Element then
+            declare
+               Context       : aliased ECWF.Context.Object :=
+                                 ECWF.Context.Get (Get_Context_Id (Lazy_Tag));
+               T             : Templates.Translate_Set;
+               Template_Name : Unbounded_String;
+            begin
+               --  Get translation set for this tag
 
-            if Element (Position).Data_CB /= null then
-               Element (Position).Data_CB
-                 (Lazy_Tag.Request, Context'Access, T);
-            end if;
+               if Element (Position).Data_CB /= null then
+                  Element (Position).Data_CB
+                    (Lazy_Tag.Request, Context'Access, T);
+               end if;
 
-            Templates.Insert (T, Translations);
-            Templates.Insert (T, Lazy_Tag.Translations);
+               Templates.Insert (T, Translations);
+               Templates.Insert (T, Lazy_Tag.Translations);
 
+               if Element (Position).Callback_Template then
+                  Template_Name := To_Unbounded_String
+                    (Element (Position).Template_CB (Lazy_Tag.Request));
+               else
+                  Template_Name := Element (Position).Template;
+               end if;
 
-            if Element (Position).Callback_Template then
-               Template_Name := To_Unbounded_String
-                 (Element (Position).Template_CB (Lazy_Tag.Request));
-            else
-               Template_Name := Element (Position).Template;
-            end if;
-
-            Templates.Insert
-              (Translations,
-               Templates.Assoc
-                 (Var_Name,
-                  Unbounded_String'(Templates.Parse
-                    (To_String (Template_Name), T,
-                       Lazy_Tag =>
-                         Templates.Dynamic.Lazy_Tag_Access (Lazy_Tag)))));
-         end;
+               Templates.Insert
+                 (Translations,
+                  Templates.Assoc
+                    (Var_Name,
+                     Unbounded_String'(Templates.Parse
+                       (To_String (Template_Name), T,
+                          Lazy_Tag =>
+                            Templates.Dynamic.Lazy_Tag_Access (Lazy_Tag)))));
+            end;
+         end if;
       end if;
    end Value;
 

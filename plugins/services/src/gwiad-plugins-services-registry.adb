@@ -40,7 +40,8 @@ package body Gwiad.Plugins.Services.Registry is
    -- New_Service --
    -----------------
 
-   function New_Service (Name : Service_Name) return not null Service_Access is
+   function New_Service
+     (Name : in Service_Name) return not null Service_Access is
    begin
       return Service_Access (Map.Element (Name).Builder.all);
    end New_Service;
@@ -67,11 +68,14 @@ package body Gwiad.Plugins.Services.Registry is
          raise Service_Error;
       end if;
 
-      Map.Insert
-        (Name,
-         (Builder     => Builder,
-          Path        => Last_Library_Path,
-          Description => To_Unbounded_String (Description)));
+      declare
+         New_Service : Registered_Service :=
+                         (Builder     => Builder,
+                          Path        => Last_Library_Path,
+                          Description => To_Unbounded_String (Description));
+      begin
+         Map.Insert (Name, New_Service);
+      end;
 
       Last_Library_Path := Null_Unbounded_String;
    end Register;

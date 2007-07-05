@@ -86,7 +86,8 @@ package body Gwiad.Web is
          else
             delay 1.0;
             if Reload.Is_Required then
-               Server.Set (HTTP, Virtual_Hosts_Dispatcher);
+               Server.Set (Web_Server => HTTP,
+                           Dispatcher => Virtual_Hosts_Dispatcher);
                Reload.Done;
             end if;
          end select;
@@ -101,8 +102,8 @@ package body Gwiad.Web is
    begin
       --  Log control
 
-      Server.Log.Start (HTTP, Auto_Flush => True);
-      Server.Log.Start_Error (HTTP);
+      Server.Log.Start (Web_Server => HTTP, Auto_Flush => True);
+      Server.Log.Start_Error (Web_Server => HTTP);
 
       --  Main host start
 
@@ -112,7 +113,7 @@ package body Gwiad.Web is
 
       Configuration := Config.Get_Current;
 
-      Config.Set.Session (Configuration, True);
+      Config.Set.Session (O => Configuration, Value => True);
       Config.Set.Upload_Directory (Configuration, Upload_Directory);
       Config.Set.Admin_URI (Configuration, Admin_URI);
 
@@ -135,7 +136,7 @@ package body Gwiad.Web is
 
    procedure Wait (Mode : in Server.Termination := Server.Q_Key_Pressed) is
    begin
-      Server.Wait (Mode);
+      Server.Wait (Mode => Mode);
    end Wait;
 
 end Gwiad.Web;

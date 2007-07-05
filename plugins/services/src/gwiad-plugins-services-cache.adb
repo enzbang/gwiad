@@ -35,15 +35,23 @@ package body Gwiad.Plugins.Services.Cache is
    --  Hash function for Service_Id (using Strings.Hash)
 
    package Services_Cache_Map is new Containers.Indefinite_Hashed_Maps
-     (Service_Id, Service_Access, Hash, "=", "=");
+     (Key_Type        => Service_Id,
+      Element_Type    => Service_Access,
+      Hash            => Hash,
+      Equivalent_Keys => "=",
+      "="             => "=");
    --  Store all services index by service_id
 
    package Ids_Vectors is new Containers.Vectors
-     (Index_Type => Positive, Element_Type => Service_Id);
+     (Index_Type   => Positive,
+      Element_Type => Service_Id);
 
    package Running_Services_Map is new Containers.Indefinite_Hashed_Maps
-     (Service_Name, Ids_Vectors.Vector,
-      Gwiad.Plugins.Services.Registry.Hash, "=", Ids_Vectors."=");
+     (Key_Type        => Service_Name,
+      Element_Type    => Ids_Vectors.Vector,
+      Hash            => Gwiad.Plugins.Services.Registry.Hash,
+      Equivalent_Keys => "=",
+      "="             => Ids_Vectors."=");
    --  Store all service_id index by service_name
 
    procedure Insert (Name : in Service_Name; Id : in Service_Id);
@@ -107,7 +115,7 @@ package body Gwiad.Plugins.Services.Cache is
    -- Hash --
    ----------
 
-   function Hash (Key : Service_Id) return Containers.Hash_Type is
+   function Hash (Key : in Service_Id) return Containers.Hash_Type is
    begin
       return Strings.Hash (String (Key));
    end Hash;
