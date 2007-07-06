@@ -65,28 +65,34 @@ package body Gwiad.Plugins.Services.Cache is
    ------------
 
    procedure Delete (Name : in Service_Name) is
-      Service_Ids : Ids_Vectors.Vector :=
-                      Running_Services_Map.Element (Running_Services, Name);
-      Id          : Service_Id;
    begin
-      for K in Service_Ids.First_Index .. Service_Ids.Last_Index loop
-         Id := Service_Ids.First_Element;
-
-         --  Delete service_access
-
+      if Running_Services_Map.Contains (Running_Services, Name) then
          declare
-            Position : Services_Cache_Map.Cursor :=
-                         Services_Cache.Find (Id);
-            Service  : Service_Access            :=
-                         Services_Cache_Map.Element (Position);
+            Service_Ids : Ids_Vectors.Vector :=
+                            Running_Services_Map.Element
+                              (Running_Services, Name);
+            Id          : Service_Id;
          begin
-            Delete (Service);
-            Free (Service);
-            Services_Cache.Delete (Position);
-         end;
+            for K in Service_Ids.First_Index .. Service_Ids.Last_Index loop
+               Id := Service_Ids.First_Element;
 
-         Service_Ids.Delete_First;
-      end loop;
+               --  Delete service_access
+
+               declare
+                  Position : Services_Cache_Map.Cursor :=
+                               Services_Cache.Find (Id);
+                  Service  : Service_Access            :=
+                               Services_Cache_Map.Element (Position);
+               begin
+                  Delete (Service);
+                  Free (Service);
+                  Services_Cache.Delete (Position);
+               end;
+
+               Service_Ids.Delete_First;
+            end loop;
+         end;
+      end if;
    end Delete;
 
    ---------
