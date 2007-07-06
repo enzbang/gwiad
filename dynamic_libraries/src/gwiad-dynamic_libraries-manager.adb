@@ -175,7 +175,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Rename_Library (Path);
       end Unload;
 
-      procedure Unload_All is
+      procedure Unload_All (Rename : in Boolean := True) is
          Position : Cursor := Loaded_Libraries.First;
 
       begin
@@ -187,16 +187,12 @@ package body Gwiad.Dynamic_Libraries.Manager is
                Ada.Text_IO.Put_Line ("Delete " & Path);
                Loaded_Libraries.Delete (Path);
                Dynamic_Libraries.Unload (Library);
-               Ada.Text_IO.Put_Line ("Rename begin " & Path);
-               Rename_Library (Path);
-               Ada.Text_IO.Put_Line ("Rename end " & Path);
-
+               if Rename then
+                  Rename_Library (Path);
+               end if;
             end;
-            Ada.Text_IO.Put_Line ("Next");
             Position := Loaded_Libraries.First;
-            Ada.Text_IO.Put_Line ("Next done");
          end loop;
-         Ada.Text_IO.Put_Line ("Exit");
       end Unload_All;
 
    end Manager;
