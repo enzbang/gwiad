@@ -104,7 +104,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                Get_Next_Entry (S, D);
                declare
                   Path    : constant String        := Full_Name (D);
-                  Library : Dynamic_Library_Access := new Dynamic_Library;
+                  Library : Dynamic_Library_Access;
                begin
                   if not Loaded_Libraries.Contains (Path) then
                      Text_IO.Put_Line (Path);
