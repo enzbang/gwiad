@@ -52,7 +52,7 @@ package Gwiad.Dynamic_Libraries.Manager is
       entry Unload (Path : in String);
       --  Unload a library
 
-      procedure Unload_All;
+      procedure Unload_All (Rename : in Boolean := True);
       --  Unload all libraries
 
    private
