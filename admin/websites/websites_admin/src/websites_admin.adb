@@ -165,6 +165,11 @@ package body Websites_Admin is
       S : Search_Type;
       D : Directory_Entry_Type;
    begin
+
+      if not Directories.Exists (Name => Config_Root) then
+         Directories.Create_Directory (New_Directory => Config_Root);
+      end if;
+
       Start_Search (Search    => S,
                     Directory => Config_Root,
                     Pattern   => "*.ini",
