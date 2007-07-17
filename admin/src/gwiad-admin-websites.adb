@@ -142,7 +142,7 @@ package body Gwiad.Admin.Websites is
 
    procedure List_Websites
      (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
@@ -192,7 +192,7 @@ package body Gwiad.Admin.Websites is
 
    procedure Stop_Website
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context, Translations);
@@ -228,7 +228,7 @@ package body Gwiad.Admin.Websites is
 
    procedure Unload_Websites
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
@@ -298,7 +298,7 @@ package body Gwiad.Admin.Websites is
 
    procedure Virtual_Host_Directories
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
    begin

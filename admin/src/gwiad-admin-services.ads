@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------------
 
 with AWS.Status;
-with AWS.Services.ECWF.Context;
+with AWS.Services.Web_Block.Context;
 with AWS.Templates;
 
 package Gwiad.Admin.Services is
@@ -31,13 +31,13 @@ package Gwiad.Admin.Services is
 
    procedure List_Services
      (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Lists all services
 
    procedure Stop_Service
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Stop a gwiad service
 

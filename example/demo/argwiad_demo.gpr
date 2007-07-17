@@ -22,7 +22,6 @@
 with "aws";
 with "../../shared";
 with "../../gwiad/gwiad";
-with "../../gwiad/gwiad-ecwf";
 with "../../web/gwiad-web";
 with "../../dynamic_libraries/gwiad-dynamic_libraries";
 

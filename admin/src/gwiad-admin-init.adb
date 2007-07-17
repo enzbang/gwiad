@@ -20,8 +20,8 @@
 ------------------------------------------------------------------------------
 
 with AWS.Services.Dispatchers.URI;
-with AWS.Services.ECWF.Registry;
-with AWS.Services.ECWF.Context;
+with AWS.Services.Web_Block.Registry;
+with AWS.Services.Web_Block.Context;
 with AWS.Dispatchers.Callback;
 with AWS.Status;
 with AWS.Response;
@@ -55,7 +55,7 @@ package body Gwiad.Admin.Init is
 
    procedure Menu
      (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Displays Gwiad admin menu
 
@@ -82,7 +82,7 @@ package body Gwiad.Admin.Init is
          if Digest.Check_Nonce
            (Digest.Nonce (AWS.Status.Authorization_Nonce (Request)))
          then
-            Web_Page := AWS.Services.ECWF.Registry.Build
+            Web_Page := AWS.Services.Web_Block.Registry.Build
               (URI, Request, Translations,
                Cache_Control => Messages.Prevent_Cache);
 
@@ -113,7 +113,7 @@ package body Gwiad.Admin.Init is
 
    procedure Menu
      (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
@@ -137,52 +137,52 @@ begin --  Gwiad.Admin : Register pages
    AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
       Dispatchers.Callback.Create (Default_Callback'Access));
-   --  This default callback will handle all ECWF callbacks
+   --  This default callback will handle all Web_Block callbacks
 
-   --  Register ECWF Pages
+   --  Register Web_Block Pages
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL,
       Template     => Gwiad.Admin.Template_Defs.Admin.Template,
       Data_CB      => Menu'Access,
       Content_Type => MIME.Text_HTML);
 
 
-   --  Register ECWF pages (Services Admin)
+   --  Register Web_Block pages (Services Admin)
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Services.Services_URL & "list",
       Template     => Services_List.Template,
       Data_CB      => Admin.Services.List_Services'Access,
       Content_Type => MIME.Text_HTML);
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Services.Services_URL & "stop",
       Template     => Services_Stop.Template,
       Data_CB      => Admin.Services.Stop_Service'Access,
       Content_Type => MIME.Text_HTML);
 
-   --  Register ECWF pages (Websites Admin)
+   --  Register Web_Block pages (Websites Admin)
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "list",
       Template     => Websites_List.Template,
       Data_CB      => Admin.Websites.List_Websites'Access,
       Content_Type => MIME.Text_HTML);
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "stop",
       Template     => Websites_Stop.Template,
       Data_CB      => Admin.Websites.Stop_Website'Access,
       Content_Type => MIME.Text_HTML);
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "unload",
       Template     => Websites_Unload.Template,
       Data_CB      => Admin.Websites.Unload_Websites'Access,
       Content_Type => MIME.Text_HTML);
 
-   AWS.Services.ECWF.Registry.Register
+   AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "find_vhd",
       Template     => Websites_List.Template,
       Data_CB      => Admin.Websites.Virtual_Host_Directories'Access,

@@ -39,7 +39,7 @@ package body Gwiad.Admin.Services is
 
    procedure List_Services
      (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
@@ -76,7 +76,7 @@ package body Gwiad.Admin.Services is
 
    procedure Stop_Service
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);

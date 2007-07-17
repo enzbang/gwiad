@@ -21,7 +21,7 @@
 
 with AWS.Status;
 with AWS.Templates;
-with AWS.Services.ECWF.Context;
+with AWS.Services.Web_Block.Context;
 
 with Gwiad.Plugins.Websites;
 
@@ -36,19 +36,19 @@ package Gwiad.Admin.Websites is
 
    procedure List_Websites
      (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Lists all websites
 
    procedure Stop_Website
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Stop a website
 
    procedure Unload_Websites
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Unload a library and all associated websites
 
@@ -58,7 +58,7 @@ package Gwiad.Admin.Websites is
 
    procedure Virtual_Host_Directories
      (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
+      Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Search for virtual host directories
 
