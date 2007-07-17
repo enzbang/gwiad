@@ -19,8 +19,51 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-package Websites_Admin is
+with AWS.Status;
+with AWS.Templates;
+with AWS.Services.ECWF.Context;
 
-   pragma Elaborate_Body;
+with Gwiad.Plugins.Websites;
 
-end Websites_Admin;
+package Gwiad.Admin.Websites is
+
+   use AWS;
+
+   Websites_URL : constant String := "websites/";
+
+   procedure Discover_Virtual_Host_Directories;
+   --  Search wiki website on plugin root path
+
+   procedure List_Websites
+     (Request      : in     Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Lists all websites
+
+   procedure Stop_Website
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Stop a website
+
+   procedure Unload_Websites
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Unload a library and all associated websites
+
+   ------------------------------
+   -- Virtual_Host_Directories --
+   ------------------------------
+
+   procedure Virtual_Host_Directories
+     (Request      : in Status.Data;
+      Context      : access AWS.Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Search for virtual host directories
+
+   procedure Virtual_Host_Unregister
+     (Name : in Gwiad.Plugins.Websites.Website_Name);
+   --  Unregister a virtual host. The website_name is the
+
+end Gwiad.Admin.Websites;

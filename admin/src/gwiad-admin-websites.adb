@@ -24,29 +24,17 @@ with Ada.Text_IO;
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;
 
-with AWS.Status;
-with AWS.Digest;
-with AWS.Dispatchers.Callback;
-with AWS.Messages;
-with AWS.Response;
-with AWS.MIME;
-with AWS.Services.Dispatchers.URI;
-with AWS.Services.ECWF.Registry;
-with AWS.Services.ECWF.Context;
-with AWS.Templates;
 with AWS.Parameters;
 
 with Morzhol.Iniparser;
 with Morzhol.Strings;
 
-with Gwiad.Config.Settings;
 with Gwiad.Plugins.Websites.Registry;
 with Gwiad.Dynamic_Libraries.Manager;
-with Gwiad.Web.Main_Host;
 with Gwiad.Web.Virtual_Host;
 with Gwiad.Plugins.Websites; use Gwiad.Plugins.Websites;
 
-package body Websites_Admin is
+package body Gwiad.Admin.Websites is
 
    use Ada;
    use Ada.Strings.Unbounded;
@@ -55,106 +43,11 @@ package body Websites_Admin is
 
    use Gwiad;
 
-   use AWS;
-   use AWS.Templates;
 
    type Attribute is (Document_Root, Default_Page, Secure, Virtual_Host);
    package Conf is new Morzhol.Iniparser (Attribute);
 
    Config_Root : constant String := "config";
-
-   Websites_Admin_URL : constant String := "/admin/websites/";
-
-   Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
-
-   procedure Discover_Virtual_Host_Directories;
-   --  Search wiki website on plugin root path
-
-   function Default_Callback (Request : in Status.Data) return Response.Data;
-   --  Registers default callback
-
-   procedure List_Websites
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set);
-   --  Lists all websites
-
-   procedure Stop_Website
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set);
-   --  Stop a website
-
-   procedure Unload_Websites
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set);
-   --  Unload a library and all associated websites
-
-   ------------------------------
-   -- Virtual_Host_Directories --
-   ------------------------------
-
-   procedure Virtual_Host_Directories
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set);
-   --  Search for virtual host directories
-
-   procedure Virtual_Host_Unregister (Name : in Website_Name);
-   --  Unregister a virtual host. The website_name is the
-
-   ----------------------
-   -- Default_Callback --
-   ----------------------
-
-   function Default_Callback (Request : in Status.Data) return Response.Data is
-      use type Messages.Status_Code;
-      use type AWS.Status.Authorization_Type;
-      URI          : constant String := Status.URI (Request);
-      Translations : Templates.Translate_Set;
-      Web_Page     : Response.Data;
-
-      Username    : constant String := AWS.Status.Authorization_Name (Request);
-      Client_Mode : constant AWS.Status.Authorization_Type
-        := AWS.Status.Authorization_Mode (Request);
-
-   begin
-
-      if Client_Mode = Status.Digest
-        and then Username = Config.Settings.Auth_Username
-        and then Status.Check_Digest (Request, Config.Settings.Auth_Password)
-      then
-         if Digest.Check_Nonce
-           (Digest.Nonce (AWS.Status.Authorization_Nonce (Request)))
-         then
-            Web_Page := Services.ECWF.Registry.Build
-              (URI, Request, Translations,
-               Cache_Control => Messages.Prevent_Cache);
-
-            if Response.Status_Code (Web_Page) = Messages.S404 then
-               --  Page not found
-               Web_Page := Response.Build
-                 (Content_Type  => MIME.Text_HTML,
-                  Message_Body  => "<p>Website admin error</p>");
-            end if;
-         else
-            --  Nonce is stale
-
-            Web_Page := AWS.Response.Authenticate
-              (Realm => "Gwiad restricted usage",
-               Mode  => Response.Digest,
-               Stale => True);
-         end if;
-      else
-
-         --  Unauthorized
-
-         Web_Page := Response.Authenticate
-           (Realm => "Gwiad restricted usage", Mode => Response.Digest);
-      end if;
-      return Web_Page;
-   end Default_Callback;
 
    ---------------------------------------
    -- Discover_Virtual_Host_Directories --
@@ -247,6 +140,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
+      use AWS.Templates;
       use Gwiad.Plugins.Websites.Registry.Map;
 
       Position     : Cursor := First;
@@ -278,7 +172,7 @@ package body Websites_Admin is
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("WEBSITES_ADMIN_URL", Websites_Admin_URL));
+         Templates.Assoc ("WEBSITES_ADMIN_URL", Admin_URL & Websites_URL));
    end List_Websites;
 
    ------------------
@@ -326,6 +220,7 @@ package body Websites_Admin is
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
+      use AWS.Templates;
       use Gwiad.Plugins.Websites.Registry;
       use Dynamic_Libraries.Manager;
 
@@ -367,7 +262,7 @@ package body Websites_Admin is
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("WEBSITES_ADMIN_URL", Websites_Admin_URL));
+         Templates.Assoc ("WEBSITES_ADMIN_URL", Admin_URL & Websites_URL));
 
       if Dry_Run /= "" then
          Templates.Insert (Translations, Templates.Assoc ("DRY_RUN", "yes"));
@@ -401,44 +296,4 @@ package body Websites_Admin is
       Web.Virtual_Host.Unregister (String (Name));
    end Virtual_Host_Unregister;
 
-begin  --  Websites_Admin : register admin website pages
-
-   AWS.Services.Dispatchers.URI.Register_Default_Callback
-     (Main_Dispatcher,
-      Dispatchers.Callback.Create (Default_Callback'Access));
-   --  This default callback will handle all ECWF callbacks
-
-   --  Register ECWF pages
-
-   AWS.Services.ECWF.Registry.Register
-     (Key          => Websites_Admin_URL & "list",
-      Template     => "templates/websites_admin/list.thtml",
-      Data_CB      => List_Websites'Access,
-      Content_Type => MIME.Text_HTML);
-
-   AWS.Services.ECWF.Registry.Register
-     (Key          => Websites_Admin_URL & "stop",
-      Template     => "templates/websites_admin/stop.thtml",
-      Data_CB      => Stop_Website'Access,
-      Content_Type => MIME.Text_HTML);
-
-   AWS.Services.ECWF.Registry.Register
-     (Key          => Websites_Admin_URL & "unload",
-      Template     => "templates/websites_admin/unload.thtml",
-      Data_CB      => Unload_Websites'Access,
-      Content_Type => MIME.Text_HTML);
-
-   AWS.Services.ECWF.Registry.Register
-     (Key          => Websites_Admin_URL & "find_vhd",
-      Template     => "templates/websites_admin/list.thtml",
-      Data_CB      => Virtual_Host_Directories'Access,
-      Content_Type => MIME.Text_HTML);
-
-   Gwiad.Web.Main_Host.Register (Web_Dir  => Websites_Admin_URL,
-                                 Action   => Main_Dispatcher);
-
-   --  Discover virtual host directories
-
-   Discover_Virtual_Host_Directories;
-
-end Websites_Admin;
+end Gwiad.Admin.Websites;

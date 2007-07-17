@@ -19,51 +19,37 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Strings.Unbounded;
-
-with AWS.Status;
-with AWS.Digest;
-with AWS.Dispatchers.Callback;
-with AWS.Messages;
-with AWS.Response;
-with AWS.MIME;
 with AWS.Services.Dispatchers.URI;
 with AWS.Services.ECWF.Registry;
 with AWS.Services.ECWF.Context;
+with AWS.Dispatchers.Callback;
+with AWS.Status;
+with AWS.Response;
+with AWS.Messages;
 with AWS.Templates;
-with AWS.Parameters;
+with AWS.Digest;
+with AWS.MIME;
 
-with Gwiad.Web.Main_Host;
 with Gwiad.Config.Settings;
-with Gwiad.Plugins.Services.Registry;
-with Gwiad.Dynamic_Libraries.Manager;
+with Gwiad.Web.Main_Host;
+with Gwiad.Admin.Services;
+with Gwiad.Admin.Websites;
 
-package body Services_Admin is
-
-   use Gwiad;
-   use Gwiad.Plugins.Services;
+package body Gwiad.Admin.Init is
 
    use AWS;
-   use AWS.Templates;
-
-   Services_Admin_URL : constant String := "/admin/services/";
+   use Gwiad;
 
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
    function Default_Callback (Request : in Status.Data) return Response.Data;
    --  Registers default callback
 
-   procedure List_Services
+   procedure Menu
      (Request      : in     Status.Data;
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
-   --  Lists all services
-
-   procedure Stop_Service
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set);
-   --  Stop a gwiad service
+   --  Displays Gwiad admin menu
 
    ----------------------
    -- Default_Callback --
@@ -94,9 +80,8 @@ package body Services_Admin is
 
             if Response.Status_Code (Web_Page) = Messages.S404 then
                --  Page not found
-               Web_Page := Response.Build
-                 (Content_Type  => MIME.Text_HTML,
-                  Message_Body  => "<p>Service admin error</p>");
+               --  Redirect to gwiad admin page
+               Web_Page := Response.URL (Location => Admin_URL);
             end if;
          else
             --  Nonce is stale
@@ -118,105 +103,87 @@ package body Services_Admin is
 
    end Default_Callback;
 
-   -------------------
-   -- List_Services --
-   -------------------
-
-   procedure List_Services
+   procedure Menu
      (Request      : in     Status.Data;
       Context      : access AWS.Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
-      use Gwiad.Plugins.Services.Registry.Map;
-
-      Position : Cursor := First;
-
-      Tag_Name : Templates.Tag;
-      Tag_Description : Templates.Tag;
 
    begin
-      while Has_Element (Position) loop
-         Tag_Name        := Tag_Name & String (Name (Position));
-         Tag_Description := Tag_Description & Description (Position);
-         Next (Position);
-      end loop;
-
-      Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
-      Templates.Insert (Translations,
-                        Templates.Assoc ("DESCRIPTION", Tag_Description));
       Templates.Insert
         (Translations,
-         Templates.Assoc ("SERVICES_ADMIN_URL", Services_Admin_URL));
-
-   end List_Services;
-
-   ------------------
-   -- Stop_Service --
-   ------------------
-
-   procedure Stop_Service
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set)
-   is
-      pragma Unreferenced (Context);
-
-      use Gwiad.Plugins.Services.Registry;
-      use Dynamic_Libraries.Manager;
-      use Ada.Strings.Unbounded;
-
-      P            : constant Parameters.List := Status.Parameters (Request);
-      Name         : constant String          := Parameters.Get (P, "service");
-      Library_Path : Unbounded_String         := Null_Unbounded_String;
-
-   begin
-
-      declare
-         Position : constant Map.Cursor := Map.Find (Service_Name (Name));
-      begin
-         if Map.Has_Element (Position) then
-            Library_Path := To_Unbounded_String (Map.Path (Position));
-         end if;
-      end;
-
-      if Library_Path /= "" then
-         Unregister (Service_Name (Name));
-         Manager.Unload (To_String (Library_Path));
-      end if;
+         Templates.Assoc ("SERVICES_ADMIN_URL_LIST",
+           Admin_URL & Admin.Services.Services_URL & "list"));
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("NAME", Name));
+         Templates.Assoc ("WEBSITES_ADMIN_URL_LIST",
+           Admin_URL & Admin.Websites.Websites_URL & "list"));
+   end Menu;
 
-      Templates.Insert
-        (Translations,
-         Templates.Assoc ("SERVICES_ADMIN_URL", Services_Admin_URL));
-
-   end Stop_Service;
-
-begin --  Services_Admin : register admin webpages
+begin --  Gwiad.Admin : Register pages
 
    AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
       Dispatchers.Callback.Create (Default_Callback'Access));
    --  This default callback will handle all ECWF callbacks
 
-   --  Register ECWF pages
+   --  Register ECWF Pages
 
    AWS.Services.ECWF.Registry.Register
-     (Key          => Services_Admin_URL & "list",
+     (Key          => Admin_URL,
+      Template     => "templates/admin.thtml",
+      Data_CB      => Menu'Access,
+      Content_Type => MIME.Text_HTML);
+
+
+   --  Register ECWF pages (Services Admin)
+
+   AWS.Services.ECWF.Registry.Register
+     (Key          => Admin_URL & Admin.Services.Services_URL & "list",
       Template     => "templates/services_admin/list.thtml",
-      Data_CB      => List_Services'Access,
+      Data_CB      => Admin.Services.List_Services'Access,
       Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
-     (Key          => Services_Admin_URL & "stop",
+     (Key          => Admin_URL & Admin.Services.Services_URL & "stop",
       Template     => "templates/services_admin/stop.thtml",
-      Data_CB      => Stop_Service'Access,
+      Data_CB      => Admin.Services.Stop_Service'Access,
       Content_Type => MIME.Text_HTML);
 
-   Gwiad.Web.Main_Host.Register (Web_Dir => Services_Admin_URL,
+   --  Register ECWF pages (Websites Admin)
+
+   AWS.Services.ECWF.Registry.Register
+     (Key          => Admin_URL & Admin.Websites.Websites_URL & "list",
+      Template     => "templates/websites_admin/list.thtml",
+      Data_CB      => Admin.Websites.List_Websites'Access,
+      Content_Type => MIME.Text_HTML);
+
+   AWS.Services.ECWF.Registry.Register
+     (Key          => Admin_URL & Admin.Websites.Websites_URL & "stop",
+      Template     => "templates/websites_admin/stop.thtml",
+      Data_CB      => Admin.Websites.Stop_Website'Access,
+      Content_Type => MIME.Text_HTML);
+
+   AWS.Services.ECWF.Registry.Register
+     (Key          => Admin_URL & Admin.Websites.Websites_URL & "unload",
+      Template     => "templates/websites_admin/unload.thtml",
+      Data_CB      => Admin.Websites.Unload_Websites'Access,
+      Content_Type => MIME.Text_HTML);
+
+   AWS.Services.ECWF.Registry.Register
+     (Key          => Admin_URL & Admin.Websites.Websites_URL & "find_vhd",
+      Template     => "templates/websites_admin/list.thtml",
+      Data_CB      => Admin.Websites.Virtual_Host_Directories'Access,
+      Content_Type => MIME.Text_HTML);
+
+
+   Gwiad.Web.Main_Host.Register (Web_Dir => Admin_URL,
                                  Action  => Main_Dispatcher);
 
-end Services_Admin;
+   --  Discover virtual host directories
+
+   Admin.Websites.Discover_Virtual_Host_Directories;
+
+end Gwiad.Admin.Init;

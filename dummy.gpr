@@ -21,8 +21,7 @@
 
 with "shared";
 with "web/gwiad-web";
-with "admin/services/services_admin/services_admin";
-with "admin/websites/websites_admin/websites_admin";
+with "admin/gwiad-admin";
 
 project Dummy is
 
