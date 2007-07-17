@@ -21,7 +21,6 @@
 
 with "gwiad";
 with "aws";
-with "gwiad-ecwf";
 with "gwiad-dynamic_libraries";
 
 project Gwiad.Web is

@@ -76,7 +76,6 @@ I_INC_DL   = $(INSTALL)/include/gwiad/dl
 I_INC_R    = $(INSTALL)/include/gwiad/plugins
 I_INC_RS   = $(INSTALL)/include/gwiad/plugins/s
 I_INC_RWS  = $(INSTALL)/include/gwiad/plugins/ws
-I_INC_ECWF = $(INSTALL)/include/gwiad/ecwf
 I_LIB_MORZ = $(INSTALL)/lib/morzhol
 I_LIB	   = $(INSTALL)/lib/gwiad
 I_GPR	   = $(INSTALL)/lib/gnat
@@ -105,7 +104,6 @@ install_dirs: install_clean
 	$(MKDIR) $(I_BIN)
 	$(MKDIR) $(I_MORZ)
 	$(MKDIR) $(I_INC)
-	$(MKDIR) $(I_INC_ECWF)
 	$(MKDIR) $(I_INC_WEB)
 	$(MKDIR) $(I_INC_DL)
 	$(MKDIR) $(I_INC_R)
@@ -118,7 +116,6 @@ install_dirs: install_clean
 install: install_dirs
 	$(CP) external-libs/morzhol/src/*.ad[sb] $(I_MORZ)
 	$(CP) gwiad/src/*.ad[sb] $(I_INC)
-	$(CP) gwiad/ecwf/*.ad[sb] $(I_INC_ECWF)
 	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
 	$(CP) plugins/src/*.ad[sb] $(I_INC_R)
 	$(CP) plugins/services/src/*.ad[sb] $(I_INC_RS)
@@ -136,7 +133,6 @@ install: install_dirs
 	$(CP) config/projects/morzhol.gpr $(I_GPR)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-shared.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-ecwf.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-web.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
