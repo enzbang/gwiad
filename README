@@ -15,18 +15,13 @@ There are several subdirectories:
 'example'           holds the demo server and the hello world plugin
 
 'gwiad'             holds an AWS.Services.ECWF developpement branch
-                    (until next AWS version), gwiad kernel package
+                    (until next AWS version) and gwiad kernel package
 
-'services'          holds the services manager used by all gwiad
-                    services plugins
+'registry'          holds the services and websitse manager used by all
+                    gwiad plugins
 
 'web'               holds the dispatchers (virtual hosts,
                     prefix urls, ...)
-
-'websites'          holds the websites manager used by all gwiad
-                    websites plugins
-
-
 
 Gwiad is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
