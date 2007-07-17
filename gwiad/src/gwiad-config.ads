@@ -21,6 +21,8 @@
 
 package Gwiad.Config is
 
+   pragma Pure;
+
 private
 
    --  Default parameters
