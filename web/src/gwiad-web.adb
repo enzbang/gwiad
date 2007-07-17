@@ -28,7 +28,8 @@ package body Gwiad.Web is
 
    use AWS;
 
-   HTTP          : Server.HTTP;
+   HTTP : AWS.Server.HTTP;
+   --  Gwiad HTTP server
 
    task Reload_Dispatcher is
 

@@ -25,11 +25,14 @@ private with AWS.Services.Dispatchers.Virtual_Host;
 package Gwiad.Web is
 
    procedure Start;
+   --  Starts the logger, Gwiad main host and web server
 
    procedure Wait
      (Mode : in AWS.Server.Termination := AWS.Server.Q_Key_Pressed);
+   --  Controls the main procedure termination. See AWS.Server.Wait
 
    procedure Stop;
+   --  Stops Gwiad web server
 
    Admin_URI        : constant String := "/admin/status";
    Upload_Directory : constant String := "./uploads/";
@@ -53,5 +56,6 @@ private
    end Reload;
 
    Virtual_Hosts_Dispatcher : AWS.Services.Dispatchers.Virtual_Host.Handler;
+   --  The virtual hosts dispatcher control all virtual hosts
 
 end Gwiad.Web;
