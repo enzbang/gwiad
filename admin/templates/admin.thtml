@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+<body>
+<ol>
+  <li>
+    <a href="@_WEBSITES_ADMIN_URL_LIST_@"
+       title="Websites admin">Websites admin</a>
+  </li>
+  <li>
+    <a href="@_SERVICES_ADMIN_URL_LIST_@"
+       title="Services admin">Services admin</a>
+  </li>
+</ol>
+</body>
+</html>

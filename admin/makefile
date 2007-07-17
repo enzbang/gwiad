@@ -23,6 +23,14 @@ all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
 
+setup:
+	-$(MKDIR) gen
+	templates2ada -d templates/ -o gen/templates.cds \
+		-t templates/templates.tads
+	gnat chop -wpq gen/templates.cds tsrc/
+	$(RM) gen/templates.cds
+	$(RM) -r gen
+
 clean:
 	-gnat clean -r -Pgwiad-admin
 

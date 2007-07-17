@@ -26,7 +26,12 @@ with AWS.Parameters;
 with Gwiad.Plugins.Services.Registry;
 with Gwiad.Dynamic_Libraries.Manager;
 
+with Gwiad.Admin.Template_Defs.Services_List;
+with Gwiad.Admin.Template_Defs.Services_Stop;
+
 package body Gwiad.Admin.Services is
+
+   use Gwiad.Admin.Template_Defs;
 
    -------------------
    -- List_Services --
@@ -53,12 +58,16 @@ package body Gwiad.Admin.Services is
          Next (Position);
       end loop;
 
-      Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
       Templates.Insert (Translations,
-                        Templates.Assoc ("DESCRIPTION", Tag_Description));
+                        Templates.Assoc (Services_List.NAME, Tag_Name));
+      Templates.Insert (Translations,
+                        Templates.Assoc
+                          (Services_List.DESCRIPTION, Tag_Description));
       Templates.Insert
         (Translations,
-         Templates.Assoc ("SERVICES_ADMIN_URL", Admin_URL & Services_URL));
+         Templates.Assoc
+           (Template_Defs.Services_List.SERVICES_ADMIN_URL,
+            Admin_URL & Services_URL));
    end List_Services;
 
    ------------------
@@ -77,7 +86,8 @@ package body Gwiad.Admin.Services is
       use Ada.Strings.Unbounded;
 
       P            : constant Parameters.List := Status.Parameters (Request);
-      Name         : constant String          := Parameters.Get (P, "service");
+      Name         : constant String          :=
+                       Parameters.Get (P, Services_Stop.HTTP.service);
       Library_Path : Unbounded_String         := Null_Unbounded_String;
 
    begin
@@ -97,11 +107,12 @@ package body Gwiad.Admin.Services is
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("NAME", Name));
+         Templates.Assoc (Services_Stop.NAME, Name));
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("SERVICES_ADMIN_URL", Admin_URL & Services_URL));
+         Templates.Assoc
+           (Services_Stop.SERVICES_ADMIN_URL, Admin_URL & Services_URL));
    end Stop_Service;
 
 end Gwiad.Admin.Services;

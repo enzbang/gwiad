@@ -32,7 +32,11 @@ with Morzhol.Strings;
 with Gwiad.Plugins.Websites.Registry;
 with Gwiad.Dynamic_Libraries.Manager;
 with Gwiad.Web.Virtual_Host;
-with Gwiad.Plugins.Websites; use Gwiad.Plugins.Websites;
+
+with Gwiad.Admin.Template_Defs.Websites_List;
+with Gwiad.Admin.Template_Defs.Websites_Stop;
+with Gwiad.Admin.Template_Defs.Websites_Unload;
+
 
 package body Gwiad.Admin.Websites is
 
@@ -42,6 +46,8 @@ package body Gwiad.Admin.Websites is
    use Morzhol.Strings;
 
    use Gwiad;
+   use Gwiad.Plugins.Websites;
+   use Gwiad.Admin.Template_Defs;
 
 
    type Attribute is (Document_Root, Default_Page, Secure, Virtual_Host);
@@ -160,19 +166,24 @@ package body Gwiad.Admin.Websites is
          Next (Position);
       end loop;
 
-      Templates.Insert (Translations, Templates.Assoc ("NAME", Names));
-
-      Templates.Insert (Translations, Templates.Assoc ("PATH", Paths));
+      Templates.Insert (Translations,
+                        Templates.Assoc (Websites_List.NAME, Names));
 
       Templates.Insert (Translations,
-                        Templates.Assoc ("DESCRIPTION", Descriptions));
+                        Templates.Assoc (Websites_List.PATH, Paths));
 
-      Templates.Insert
-        (Translations, Templates.Assoc ("SIMPLE_PATH", Simple_Paths));
+      Templates.Insert (Translations,
+                        Templates.Assoc
+                          (Websites_List.DESCRIPTION, Descriptions));
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("WEBSITES_ADMIN_URL", Admin_URL & Websites_URL));
+         Templates.Assoc (Websites_List.SIMPLE_PATH, Simple_Paths));
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc
+           (Websites_List.WEBSITES_ADMIN_URL, Admin_URL & Websites_URL));
    end List_Websites;
 
    ------------------
@@ -188,7 +199,8 @@ package body Gwiad.Admin.Websites is
       use Gwiad.Plugins.Websites.Registry;
 
       P            : constant Parameters.List := Status.Parameters (Request);
-      Name         : constant String          := Parameters.Get (P, "website");
+      Name         : constant String          :=
+                       Parameters.Get (P, Websites_Stop.HTTP.website);
 
       Library_Path : Unbounded_String := Null_Unbounded_String;
 
@@ -225,8 +237,10 @@ package body Gwiad.Admin.Websites is
       use Dynamic_Libraries.Manager;
 
       P            : constant Parameters.List := Status.Parameters (Request);
-      Library_Path : constant String := Parameters.Get (P, "lib");
-      Dry_Run      : constant String := Parameters.Get (P, "dry_run");
+      Library_Path : constant String :=
+                       Parameters.Get (P, Websites_Unload.HTTP.lib);
+      Dry_Run      : constant String :=
+                       Parameters.Get (P, Websites_Unload.HTTP.dry_run);
 
       Tag_Name : Templates.Tag;
    begin
@@ -253,20 +267,25 @@ package body Gwiad.Admin.Websites is
          end loop;
       end;
 
-      Templates.Insert (Translations, Templates.Assoc ("PATH", Library_Path));
+      Templates.Insert (Translations,
+                        Templates.Assoc (Websites_Unload.PATH, Library_Path));
 
       Templates.Insert
         (Translations,
          Templates.Assoc
-           ("SIMPLE_PATH", Directories.Simple_Name (Library_Path)));
+           (Websites_Unload.SIMPLE_PATH,
+            Directories.Simple_Name (Library_Path)));
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("WEBSITES_ADMIN_URL", Admin_URL & Websites_URL));
+         Templates.Assoc
+           (Websites_Unload.WEBSITES_ADMIN_URL, Admin_URL & Websites_URL));
 
       if Dry_Run /= "" then
-         Templates.Insert (Translations, Templates.Assoc ("DRY_RUN", "yes"));
-         Templates.Insert (Translations, Templates.Assoc ("NAME", Tag_Name));
+         Templates.Insert (Translations,
+                           Templates.Assoc (Websites_Unload.DRY_RUN, "yes"));
+         Templates.Insert (Translations,
+                           Templates.Assoc (Websites_Unload.NAME, Tag_Name));
       else
          Manager.Unload (Library_Path);
       end if;

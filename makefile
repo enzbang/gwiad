@@ -41,11 +41,15 @@ MODULES_CLEAN = ${MODULES:%=%_clean}
 
 MODULES_CHECK = ${MODULES:%=%_check}
 
+MODULES_SETUP = ${MODULES:%=%_setup}
+
 # Targets
 
 all: $(MODULES_BUILD)
 
 clean: $(MODULES_CLEAN)
+
+setup: $(MODULES_SETUP)
 
 check :	check_message $(MODULES_CHECK)
 	@echo
@@ -87,6 +91,10 @@ ${MODULES_CLEAN}:
 
 ${MODULES_CHECK}:
 	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
+
+${MODULES_SETUP}:
+	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
+
 
 install_clean:
 	$(RM) -fr $(I_INC)
@@ -146,18 +154,15 @@ install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/lib/websites
 	$(MKDIR) $(DEMO_INSTALL)/lib/services
 	$(MKDIR) $(DEMO_INSTALL)/templates
-	$(MKDIR) $(DEMO_INSTALL)/templates/services_admin
-	$(MKDIR) $(DEMO_INSTALL)/templates/websites_admin
+	$(MKDIR) $(DEMO_INSTALL)/templates/admin
 	$(MKDIR) $(DEMO_INSTALL)/scripts
 	$(MKDIR) $(DEMO_INSTALL)/uploads
 	$(CP) -r lib/services/*$(SOEXT) $(DEMO_INSTALL)/lib/services/
 	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_INSTALL)/lib/websites/
 	$(CP) templates/*html $(DEMO_INSTALL)/templates/
 	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts
-	$(CP) -r templates/websites_admin/*.thtml \
-		$(DEMO_INSTALL)/templates/websites_admin
-	$(CP) -r templates/services_admin/*.thtml \
-		$(DEMO_INSTALL)/templates/services_admin
+	$(CP) -r admin/templates/*.thtml \
+		$(DEMO_INSTALL)/templates/admin
 	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(DEMO_INSTALL)/bin
 	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_INSTALL)/bin
 

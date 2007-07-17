@@ -1,3 +1,5 @@
+@@-- HTTP_GET(lib): Library name
+@@-- HTTP_GET(dry_run): Dry run
 <?xml version="1.0" encoding="utf-8"?>
 <html>
 <body>

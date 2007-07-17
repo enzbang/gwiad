@@ -39,6 +39,9 @@ clean: $(MODULES_CLEAN)
 
 check :$(MODULES_CHECK)
 
+setup:
+
+
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
 

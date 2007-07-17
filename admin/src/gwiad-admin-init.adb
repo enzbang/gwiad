@@ -35,10 +35,18 @@ with Gwiad.Web.Main_Host;
 with Gwiad.Admin.Services;
 with Gwiad.Admin.Websites;
 
+with Gwiad.Admin.Template_Defs.Admin;
+with Gwiad.Admin.Template_Defs.Services_List;
+with Gwiad.Admin.Template_Defs.Services_Stop;
+with Gwiad.Admin.Template_Defs.Websites_List;
+with Gwiad.Admin.Template_Defs.Websites_Stop;
+with Gwiad.Admin.Template_Defs.Websites_Unload;
+
 package body Gwiad.Admin.Init is
 
    use AWS;
    use Gwiad;
+   use Gwiad.Admin.Template_Defs;
 
    Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
 
@@ -113,12 +121,14 @@ package body Gwiad.Admin.Init is
    begin
       Templates.Insert
         (Translations,
-         Templates.Assoc ("SERVICES_ADMIN_URL_LIST",
+         Templates.Assoc
+           (Gwiad.Admin.Template_Defs.Admin.SERVICES_ADMIN_URL_LIST,
            Admin_URL & Admin.Services.Services_URL & "list"));
 
       Templates.Insert
         (Translations,
-         Templates.Assoc ("WEBSITES_ADMIN_URL_LIST",
+         Templates.Assoc
+           (Gwiad.Admin.Template_Defs.Admin.WEBSITES_ADMIN_URL_LIST,
            Admin_URL & Admin.Websites.Websites_URL & "list"));
    end Menu;
 
@@ -133,7 +143,7 @@ begin --  Gwiad.Admin : Register pages
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL,
-      Template     => "templates/admin.thtml",
+      Template     => Gwiad.Admin.Template_Defs.Admin.Template,
       Data_CB      => Menu'Access,
       Content_Type => MIME.Text_HTML);
 
@@ -142,13 +152,13 @@ begin --  Gwiad.Admin : Register pages
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL & Admin.Services.Services_URL & "list",
-      Template     => "templates/services_admin/list.thtml",
+      Template     => Services_List.Template,
       Data_CB      => Admin.Services.List_Services'Access,
       Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL & Admin.Services.Services_URL & "stop",
-      Template     => "templates/services_admin/stop.thtml",
+      Template     => Services_Stop.Template,
       Data_CB      => Admin.Services.Stop_Service'Access,
       Content_Type => MIME.Text_HTML);
 
@@ -156,25 +166,25 @@ begin --  Gwiad.Admin : Register pages
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "list",
-      Template     => "templates/websites_admin/list.thtml",
+      Template     => Websites_List.Template,
       Data_CB      => Admin.Websites.List_Websites'Access,
       Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "stop",
-      Template     => "templates/websites_admin/stop.thtml",
+      Template     => Websites_Stop.Template,
       Data_CB      => Admin.Websites.Stop_Website'Access,
       Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "unload",
-      Template     => "templates/websites_admin/unload.thtml",
+      Template     => Websites_Unload.Template,
       Data_CB      => Admin.Websites.Unload_Websites'Access,
       Content_Type => MIME.Text_HTML);
 
    AWS.Services.ECWF.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "find_vhd",
-      Template     => "templates/websites_admin/list.thtml",
+      Template     => Websites_List.Template,
       Data_CB      => Admin.Websites.Virtual_Host_Directories'Access,
       Content_Type => MIME.Text_HTML);
 
