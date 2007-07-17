@@ -45,8 +45,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
                         Compose (Containing_Directory => "lib",
                                  Name                 => "services");
 
-   procedure Rename_Library (Path : in String);
-   --  Renames a library to path.disabled
+   procedure Rename_Library
+     (Path : in String; Suffix : in String := ".disabled");
+   --  Renames a library by adding the given suffix (or .disabled)
 
    --------------
    -- Discover --
@@ -113,7 +114,16 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
                      GNAT.OS_Lib.Set_Read_Only (Path);
 
-                     Library := Dynamic_Libraries.Load (Path);
+                     Initialization :
+                     begin
+                        Library := Dynamic_Libraries.Load (Path);
+                     exception
+                        when Dynamic_Library_Error =>
+                           Text_IO.Put_Line ("Error when loading " & Path);
+                           Rename_Library (Path => Path, Suffix => ".error");
+                           exit Load_Libraries_Loop;
+                     end Initialization;
+
 
                      if Lib_Type = Service_Library then
                         Services.Registry.Register (Library_Path => Path);
@@ -122,6 +132,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                      end if;
 
                      Init (Library.all, Path);
+
                      Loaded_Libraries.Insert (Path, Library);
                   end if;
                end;
@@ -201,8 +212,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
    -- Rename_Library --
    --------------------
 
-   procedure Rename_Library (Path : in String) is
-      Path_Disabled : constant String := Path & ".disabled";
+   procedure Rename_Library
+     (Path : in String; Suffix : in String := ".disabled") is
+      Path_Disabled : constant String := Path & Suffix;
    begin
       if Exists (Path_Disabled) then
          Delete_File (Path_Disabled);
