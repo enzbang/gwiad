@@ -142,6 +142,7 @@ endif
 install_demo:
 	$(MKDIR) $(DEMO_INSTALL)/data
 	$(MKDIR) $(DEMO_INSTALL)/bin
+	$(RM) -r $(DEMO_INSTALL)/lib/
 	$(MKDIR) $(DEMO_INSTALL)/lib/websites
 	$(MKDIR) $(DEMO_INSTALL)/lib/services
 	$(MKDIR) $(DEMO_INSTALL)/templates
