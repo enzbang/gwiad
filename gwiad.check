@@ -13,3 +13,10 @@
 +RRaising_External_Exceptions
 +RUnassigned_OUT_Parameters
 +RUncommented_BEGIN_In_Package_Bodies
++RFunction_Style_Procedures
++RNumeric_Literals
++ROverly_Nested_Control_Structures:3
++RUniversal_Ranges
++ROTHERS_In_Aggregates
++RParameters_Out_Of_Order
++RUnnamed_Blocks_And_Loops

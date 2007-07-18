@@ -77,6 +77,7 @@ package body Gwiad.Admin.Websites is
 
       while More_Entries (S) loop
          Get_Next_Entry (S, D);
+         Virtual_Host_Configuration :
          declare
             Name : constant String := Simple_Name (D);
          begin
@@ -86,6 +87,7 @@ package body Gwiad.Admin.Websites is
                Conf.IO.Open (Full_Name (D));
                Conf.IO.Close;
 
+               Virtual_Host_Registration :
                declare
                   use Gwiad.Plugins.Websites.Registry;
                   Conf_File_Document_Root : constant String :=
@@ -114,7 +116,7 @@ package body Gwiad.Admin.Websites is
                      Unregister   =>
                        Virtual_Host_Unregister'Access,
                      Library_Path => "libgwiad_website_admin.so");
-               end;
+               end Virtual_Host_Registration;
             end if;
          exception
             when Conf.IO.Uncomplete_Config =>
@@ -127,7 +129,7 @@ package body Gwiad.Admin.Websites is
             when Text_IO.Name_Error =>
                Ada.Text_IO.Put_Line ("Does not exit");
                null;
-         end;
+         end Virtual_Host_Configuration;
       end loop;
 
    exception
@@ -205,13 +207,14 @@ package body Gwiad.Admin.Websites is
 
    begin
 
+      Get_Library_Path :
       declare
          Position : constant Map.Cursor := Map.Find (Website_Name (Name));
       begin
          if Map.Has_Element (Position) then
             Library_Path := +Map.Path (Position);
          end if;
-      end;
+      end Get_Library_Path;
 
       if Library_Path /= "" then
          Ada.Text_IO.Put_Line ("Unregister " & Name);
@@ -244,6 +247,7 @@ package body Gwiad.Admin.Websites is
       Tag_Name : Templates.Tag;
    begin
 
+      Map_Search :
       declare
          Position : Map.Cursor := Map.First;
       begin
@@ -255,16 +259,17 @@ package body Gwiad.Admin.Websites is
                   Tag_Name := Tag_Name & String (Map.Name (Position));
                   Map.Next (Position);
                else
+                  Unregister_Website :
                   declare
                      Last_Position : constant Map.Cursor := Position;
                   begin
                      Map.Next (Position);
                      Unregister (Map.Name (Last_Position));
-                  end;
+                  end Unregister_Website;
                end if;
             end if;
          end loop;
-      end;
+      end Map_Search;
 
       Templates.Insert (Translations,
                         Templates.Assoc (Websites_Unload.PATH, Library_Path));

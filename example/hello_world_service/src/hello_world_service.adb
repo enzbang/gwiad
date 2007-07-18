@@ -43,13 +43,13 @@ package body Hello_World_Service is
    -- Hello_World --
    -----------------
 
-   overriding function Hello (S : Hello_World_Service) return String is
+   overriding function Hello (S : in Hello_World_Service) return String is
       pragma Unreferenced (S);
    begin
       return "hello_world_service says Hello World";
    end Hello;
 
-begin
+begin  --  Hello_World_Service : Register service
    Gwiad.Plugins.Services.Registry.Register
      (Name        => "hello_world_service",
       Description => "A simple hello world service for gwiad",

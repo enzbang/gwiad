@@ -92,13 +92,14 @@ package body Gwiad.Admin.Services is
 
    begin
 
+      Get_Library_Path :
       declare
          Position : constant Map.Cursor := Map.Find (Service_Name (Name));
       begin
          if Map.Has_Element (Position) then
             Library_Path := To_Unbounded_String (Map.Path (Position));
          end if;
-      end;
+      end Get_Library_Path;
 
       if Library_Path /= "" then
          Unregister (Service_Name (Name));

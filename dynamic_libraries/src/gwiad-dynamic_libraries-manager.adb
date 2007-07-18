@@ -54,6 +54,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
    --------------
 
    task body Discover is
+      Discover_Delay : constant Duration := 5.0;
    begin
       Discover_Libraries :
       loop
@@ -63,7 +64,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
             Manager.Unload_All;
             exit Discover_Libraries;
          or
-            delay 5.0;
+            delay Discover_Delay;
          end select;
       end loop Discover_Libraries;
    end Discover;
@@ -104,8 +105,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
             Load_Libraries_Loop :
             while More_Entries (S) loop
                Get_Next_Entry (S, D);
+               Load_Library :
                declare
-                  Path    : constant String        := Full_Name (D);
+                  Path    : constant String := Full_Name (D);
                   Library : Dynamic_Library_Access;
                begin
                   if not Loaded_Libraries.Contains (Path) then
@@ -135,7 +137,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
                      Loaded_Libraries.Insert (Path, Library);
                   end if;
-               end;
+               end Load_Library;
             end loop Load_Libraries_Loop;
          end Discover_Libraries;
 
@@ -191,6 +193,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
       begin
          while Has_Element (Position) loop
+            Unload_Library :
             declare
                Path : constant String := Key (Position);
                Library : Dynamic_Library_Access := Element (Position);
@@ -201,7 +204,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                if Rename then
                   Rename_Library (Path);
                end if;
-            end;
+            end Unload_Library;
             Position := Loaded_Libraries.First;
          end loop;
       end Unload_All;

@@ -30,3 +30,4 @@ clean:
 	-gnat clean -r -Phello_world_service
 
 check:
+	gnat check -dd -Phello_world_service -rules -from=../../gwiad.check

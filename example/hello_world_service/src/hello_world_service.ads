@@ -29,7 +29,7 @@ package Hello_World_Service is
 
    type Hello_World_Service_Access is access all Hello_World_Service;
 
-   overriding function Hello (S : Hello_World_Service) return String;
+   overriding function Hello (S : in Hello_World_Service) return String;
    --  Hello world
 
 end Hello_World_Service;

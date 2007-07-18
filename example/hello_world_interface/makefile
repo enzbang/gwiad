@@ -27,3 +27,4 @@ clean:
 	-gnat clean -r -Phello_world_interface
 
 check:
+	gnat check -dd -Phello_world_interface -rules -from=../../gwiad.check

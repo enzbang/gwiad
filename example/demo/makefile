@@ -27,3 +27,4 @@ clean:
 	-gnat clean -r -Pargwiad_demo
 
 check:
+	gnat check -dd -Pargwiad_demo -rules -from=../../gwiad.check

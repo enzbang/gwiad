@@ -78,6 +78,7 @@ package body Gwiad.Web is
    -----------------------
 
    task body Reload_Dispatcher is
+      Reload_Dispatcher_Delay : constant Duration := 1.0;
    begin
       Reload_Dispatcher_Loop :
       loop
@@ -85,7 +86,7 @@ package body Gwiad.Web is
             accept Stop;
             exit Reload_Dispatcher_Loop;
          else
-            delay 1.0;
+            delay Reload_Dispatcher_Delay;
             if Reload.Is_Required then
                Server.Set (Web_Server => HTTP,
                            Dispatcher => Virtual_Hosts_Dispatcher);

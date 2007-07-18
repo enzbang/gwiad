@@ -86,6 +86,7 @@ package body Hello_World is
                                 "<p>Service down</p>");
       end if;
 
+      Build_Response :
       declare
          Hello_World_Service_Access : constant HW_Service_Access
            := HW_Service_Access
@@ -94,7 +95,7 @@ package body Hello_World is
            := Hello_World_Service_Access.all;
       begin
          return Response.Build (MIME.Text_HTML, Hello_World_Service.Hello);
-      end;
+      end Build_Response;
    end Hello_World;
 
    ----------------
@@ -107,7 +108,7 @@ package body Hello_World is
       Gwiad.Web.Main_Host.Unregister (Web_Dir => Hello_Web_Dir);
    end Unregister;
 
-begin
+begin  --  Hello_World register website
 
    AWS.Services.Dispatchers.URI.Register
      (Dispatcher => Main_Dispatcher,

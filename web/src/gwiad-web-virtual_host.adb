@@ -85,6 +85,7 @@ package body Gwiad.Web.Virtual_Host is
    begin
 
       if Configs.Contains (Hostname) then
+         Virtual_Host_Callback :
          declare
             VH_Dir : constant Virtual_Host_Directory :=
                        Configs.Element (Hostname);
@@ -104,7 +105,7 @@ package body Gwiad.Web.Virtual_Host is
                Data := Response.Moved
                  (Location => "/" &  To_String (VH_Dir.Default_Page));
             end if;
-         end;
+         end Virtual_Host_Callback;
       else
          Data := Response.Build (Content_Type  => MIME.Text_HTML,
                                  Message_Body  => "<h1>Coming soon...</h1>");
