@@ -37,7 +37,6 @@ with Gwiad.Admin.Template_Defs.Websites_List;
 with Gwiad.Admin.Template_Defs.Websites_Stop;
 with Gwiad.Admin.Template_Defs.Websites_Unload;
 
-
 package body Gwiad.Admin.Websites is
 
    use Ada;
@@ -49,9 +48,9 @@ package body Gwiad.Admin.Websites is
    use Gwiad.Plugins.Websites;
    use Gwiad.Admin.Template_Defs;
 
-
    type Attribute is (Document_Root, Default_Page, Secure, Virtual_Host);
-   package Conf is new Morzhol.Iniparser (Attribute);
+
+   package Conf is new Morzhol.Iniparser (Parameter_Name => Attribute);
 
    Config_Root : constant String := "config";
 
@@ -81,7 +80,7 @@ package body Gwiad.Admin.Websites is
          declare
             Name : constant String := Simple_Name (D);
          begin
-            if Name /= "." and Name /= ".." then
+            if Name /= "." and then Name /= ".." then
                --  Now read the config file if any
 
                Conf.IO.Open (Full_Name (D));

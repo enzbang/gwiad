@@ -107,7 +107,8 @@ package body Gwiad.Dynamic_Libraries is
                     Lib_Name (Lib_Name'First + 3 .. Lib_Name'Last) & "init";
 
       type Library_Register is access procedure;
-      function Register_Call is new Call (Library_Register);
+      function Register_Call is new
+        Call (Call_Function_Access => Library_Register);
 
    begin
       Register_Call (Library, Init_Name).all;

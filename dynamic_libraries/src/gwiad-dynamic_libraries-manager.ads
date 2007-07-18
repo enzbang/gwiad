@@ -24,6 +24,8 @@ with Ada.Strings.Hash;
 
 package Gwiad.Dynamic_Libraries.Manager is
 
+   Dynamic_Library_Manager_Error : exception renames Dynamic_Library_Error;
+
    task type Discover is
 
       entry Stop;

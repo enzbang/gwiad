@@ -132,7 +132,7 @@ package body Gwiad.Admin.Init is
            Admin_URL & Admin.Websites.Websites_URL & "list"));
    end Menu;
 
-begin --  Gwiad.Admin : Register pages
+begin --  Gwiad.Admin.Init : Register pages
 
    AWS.Services.Dispatchers.URI.Register_Default_Callback
      (Main_Dispatcher,
@@ -146,7 +146,6 @@ begin --  Gwiad.Admin : Register pages
       Template     => Gwiad.Admin.Template_Defs.Admin.Template,
       Data_CB      => Menu'Access,
       Content_Type => MIME.Text_HTML);
-
 
    --  Register Web_Block pages (Services Admin)
 
@@ -187,7 +186,6 @@ begin --  Gwiad.Admin : Register pages
       Template     => Websites_List.Template,
       Data_CB      => Admin.Websites.Virtual_Host_Directories'Access,
       Content_Type => MIME.Text_HTML);
-
 
    Gwiad.Web.Main_Host.Register (Web_Dir => Admin_URL,
                                  Action  => Main_Dispatcher);

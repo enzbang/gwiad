@@ -55,16 +55,17 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
    task body Discover is
    begin
+      Discover_Libraries :
       loop
          Manager.Discover_Libraries;
          select
             accept Stop;
             Manager.Unload_All;
-            exit;
+            exit Discover_Libraries;
          or
             delay 5.0;
          end select;
-      end loop;
+      end loop Discover_Libraries;
    end Discover;
 
    -------------
@@ -124,7 +125,6 @@ package body Gwiad.Dynamic_Libraries.Manager is
                            exit Load_Libraries_Loop;
                      end Initialization;
 
-
                      if Lib_Type = Service_Library then
                         Services.Registry.Register (Library_Path => Path);
                      else
@@ -176,7 +176,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Library : Dynamic_Library_Access;
       begin
          if not Loaded_Libraries.Contains (Path) then
-            raise Dynamic_Library_Error with Path;
+            raise Dynamic_Library_Manager_Error with Path;
          end if;
 
          Library := Loaded_Libraries.Element (Path);
@@ -221,6 +221,5 @@ package body Gwiad.Dynamic_Libraries.Manager is
       end if;
       Rename (Path, Path_Disabled);
    end Rename_Library;
-
 
 end Gwiad.Dynamic_Libraries.Manager;

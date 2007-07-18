@@ -79,10 +79,11 @@ package body Gwiad.Web is
 
    task body Reload_Dispatcher is
    begin
+      Reload_Dispatcher_Loop :
       loop
          select
             accept Stop;
-            exit;
+            exit Reload_Dispatcher_Loop;
          else
             delay 1.0;
             if Reload.Is_Required then
@@ -91,7 +92,7 @@ package body Gwiad.Web is
                Reload.Done;
             end if;
          end select;
-      end loop;
+      end loop Reload_Dispatcher_Loop;
    end Reload_Dispatcher;
 
    -----------
