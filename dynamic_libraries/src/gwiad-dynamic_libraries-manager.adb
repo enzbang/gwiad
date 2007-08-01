@@ -35,8 +35,6 @@ package body Gwiad.Dynamic_Libraries.Manager is
    use Ada.Containers;
    use Ada.Exceptions;
 
-   type Library_Type is (Website_Library, Service_Library);
-
    Websites_Lib_Dir : constant String :=
                         Compose (Containing_Directory => "lib",
                                  Name                 => "websites");
@@ -163,10 +161,16 @@ package body Gwiad.Dynamic_Libraries.Manager is
       -- Load --
       ----------
 
-      procedure Load (Path : in String) is
+      procedure Load (Path : in String; Lib_Type : in Library_Type) is
          Library : Dynamic_Library_Access;
       begin
          Library := Load (Path);
+         if Lib_Type = Service_Library then
+            Gwiad.Plugins.Services.Registry.Register (Library_Path => Path);
+         else
+            Gwiad.Plugins.Websites.Registry.Register (Library_Path => Path);
+         end if;
+         Init (Library.all, Path);
          Loaded_Libraries.Insert (Path, Library);
       end Load;
 
@@ -182,6 +186,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
          end if;
 
          Library := Loaded_Libraries.Element (Path);
+         Ada.Text_IO.Put_Line ("Delete " & Path);
          Loaded_Libraries.Delete (Path);
          Dynamic_Libraries.Unload (Library);
 

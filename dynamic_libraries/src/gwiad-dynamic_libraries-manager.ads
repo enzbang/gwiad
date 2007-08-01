@@ -26,6 +26,8 @@ package Gwiad.Dynamic_Libraries.Manager is
 
    Dynamic_Library_Manager_Error : exception renames Dynamic_Library_Error;
 
+   type Library_Type is (Website_Library, Service_Library);
+
    task type Discover is
 
       entry Stop;
@@ -48,7 +50,7 @@ package Gwiad.Dynamic_Libraries.Manager is
       procedure Discover_Libraries;
       --  Discovers new libraries to load
 
-      procedure Load (Path : in String);
+      procedure Load (Path : in String; Lib_Type : in Library_Type);
       --  Load a library
 
       entry Unload (Path : in String);
