@@ -20,12 +20,16 @@
 ------------------------------------------------------------------------------
 
 with AWS.Server;
+with AWS.Config;
 private with AWS.Services.Dispatchers.Virtual_Host;
 
 package Gwiad.Web is
 
    procedure Start;
    --  Starts the logger, Gwiad main host and web server
+
+   procedure Start (Configuration : in AWS.Config.Object);
+   --  Same as start but using a full configuration objet
 
    procedure Wait
      (Mode : in AWS.Server.Termination := AWS.Server.Q_Key_Pressed);
@@ -37,24 +41,10 @@ package Gwiad.Web is
    Admin_URI        : constant String := "/admin/status";
    Upload_Directory : constant String := "./uploads/";
 
+   procedure Reload;
+   --  Reloads Gwiad dispatcher
+
 private
-
-   protected Reload is
-
-      procedure Require;
-      --  Requires a dispatcher reload
-
-      function Is_Required return Boolean;
-      --  Reload the virtual hosts dispatcher as it can't be done
-      --  on Web callbacks (blocking call)
-
-      procedure Done;
-      --  Set Is_Required to false
-
-   private
-      Reload_Required : Boolean := False;
-   end Reload;
-
    Virtual_Hosts_Dispatcher : AWS.Services.Dispatchers.Virtual_Host.Handler;
    --  The virtual hosts dispatcher control all virtual hosts
 

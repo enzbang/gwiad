@@ -31,70 +31,15 @@ package body Gwiad.Web is
    HTTP : AWS.Server.HTTP;
    --  Gwiad HTTP server
 
-   task Reload_Dispatcher is
-
-      entry Stop;
-      --  Exit reload dispatcher
-
-   end Reload_Dispatcher;
-
    ------------
    -- Reload --
    ------------
 
-   protected body Reload is
-
-      ------------
-      --  Done  --
-      ------------
-
-      procedure Done is
-      begin
-         Reload_Required := False;
-      end Done;
-
-      ---------------
-      -- Do_Reload --
-      ---------------
-
-      function Is_Required return Boolean is
-      begin
-         return Reload_Required;
-      end Is_Required;
-
-      --------------
-      -- Required --
-      --------------
-
-      procedure Require is
-      begin
-         Reload_Required := True;
-      end Require;
-
-   end Reload;
-
-   -----------------------
-   -- Reload_Dispatcher --
-   -----------------------
-
-   task body Reload_Dispatcher is
-      Reload_Dispatcher_Delay : constant Duration := 1.0;
+   procedure Reload is
    begin
-      Reload_Dispatcher_Loop :
-      loop
-         select
-            accept Stop;
-            exit Reload_Dispatcher_Loop;
-         else
-            delay Reload_Dispatcher_Delay;
-            if Reload.Is_Required then
-               Server.Set (Web_Server => HTTP,
-                           Dispatcher => Virtual_Hosts_Dispatcher);
-               Reload.Done;
-            end if;
-         end select;
-      end loop Reload_Dispatcher_Loop;
-   end Reload_Dispatcher;
+      Server.Set (Web_Server => HTTP,
+                  Dispatcher => Virtual_Hosts_Dispatcher);
+   end Reload;
 
    -----------
    -- Start --
@@ -123,6 +68,20 @@ package body Gwiad.Web is
       Server.Start (HTTP, Virtual_Hosts_Dispatcher, Configuration);
    end Start;
 
+   procedure Start (Configuration : in Config.Object) is
+   begin
+      --  Log control
+
+      Server.Log.Start (Web_Server => HTTP, Auto_Flush => True);
+      Server.Log.Start_Error (Web_Server => HTTP);
+
+      --  Main host start
+
+      Gwiad.Web.Main_Host.Start;
+
+      Server.Start (HTTP, Virtual_Hosts_Dispatcher, Configuration);
+   end Start;
+
    ----------
    -- Stop --
    ----------
@@ -130,7 +89,7 @@ package body Gwiad.Web is
    procedure Stop is
    begin
       Server.Shutdown (HTTP);
-      Reload_Dispatcher.Stop;
+      Server.Log.Stop (Web_Server => HTTP);
    end Stop;
 
    ----------

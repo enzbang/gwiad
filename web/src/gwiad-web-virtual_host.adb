@@ -125,7 +125,7 @@ package body Gwiad.Web.Virtual_Host is
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Hostname,
          Action           => Action);
-      Gwiad.Web.Reload.Require;
+      Gwiad.Web.Reload;
    end Register;
 
    --------------
@@ -140,7 +140,7 @@ package body Gwiad.Web.Virtual_Host is
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Host,
          Hostname         => Redirected_Hostname);
-      Gwiad.Web.Reload.Require;
+      Gwiad.Web.Reload;
    end Register;
 
    --------------
@@ -173,7 +173,7 @@ package body Gwiad.Web.Virtual_Host is
       Services.Dispatchers.Virtual_Host.Unregister
         (Dispatcher       => Virtual_Hosts_Dispatcher,
          Virtual_Hostname => Hostname);
-      Gwiad.Web.Reload.Require;
+      Gwiad.Web.Reload;
 
       if Configs.Contains (Hostname) then
          Configs.Delete (Hostname);

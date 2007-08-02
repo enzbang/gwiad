@@ -70,7 +70,7 @@ package body Gwiad.Web.Main_Host is
            (Content_Type  => MIME.Text_HTML,
             Message_Body  => "<h1>Welcome to gwiad</h1>");
       end if;
-      return Data;
+    return Data;
    end Default_Callback;
 
    --------------
@@ -86,7 +86,7 @@ package body Gwiad.Web.Main_Host is
          Action     => Action,
          Prefix     => True);
 
-      --  Call register default callback to update Main_Host_Dispatcher
+--        Call register default callback to update Main_Host_Dispatcher
 
       Services.Dispatchers.Virtual_Host.Register_Default_Callback
         (Virtual_Hosts_Dispatcher,
@@ -94,7 +94,7 @@ package body Gwiad.Web.Main_Host is
 
       --  Reload the dispatchers
 
-      Gwiad.Web.Reload.Require;
+      Gwiad.Web.Reload;
    end Register;
 
    -----------
@@ -120,6 +120,8 @@ package body Gwiad.Web.Main_Host is
 
    procedure Unregister (Web_Dir : in String) is
    begin
+      --  Call register default callback to update Main_Host_Dispatcher
+
       Services.Dispatchers.URI.Unregister (Main_Host_Dispatcher, Web_Dir);
 
       --  Call register default callback to update Main_Host_Dispatcher
@@ -130,7 +132,7 @@ package body Gwiad.Web.Main_Host is
 
       --  Reload the dispatchers
 
-      Gwiad.Web.Reload.Require;
+      Gwiad.Web.Reload;
    end Unregister;
 
 end Gwiad.Web.Main_Host;
