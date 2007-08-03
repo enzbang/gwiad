@@ -25,8 +25,6 @@ with AWS.Response;
 with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
-
-with Morzhol.Strings;
 with Gwiad.Plugins.Services.Cache;
 with Gwiad.Plugins.Services.Registry;
 with Gwiad.Plugins.Websites;
@@ -43,7 +41,6 @@ package body Hello_World is
 
    use Gwiad;
    use Gwiad.Plugins.Websites;
-   use type Morzhol.Strings.String_Access;
 
    use Hello_World_Interface;
 
@@ -85,10 +82,7 @@ package body Hello_World is
 
       Service_Name : constant Plugins.Services.Registry.Service_Name :=
                        "hello_world_service";
-
    begin
-
-
       if not Plugins.Services.Registry.Map.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
