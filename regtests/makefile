@@ -31,16 +31,14 @@ all: check_mem
 force:
 
 clean:
+	$(GNATCLEAN) -q -Pregtests
+	rm -f alldifs run1 run2 check_mem.run1 check_mem.run2
 	rm -f libgwiad_admin$(EXEEXT)
 	rm -f libhello_world_service$(EXEEXT)
 	rm -f libhello_world_website$(EXEEXT)
-	$(GNATCLEAN) -q -Pregtests
 
 
 check_mem: force
-	rm -f libgwiad_admin$(EXEEXT)
-	rm -f libhello_world_service$(EXEEXT)
-	rm -f libhello_world_website$(EXEEXT)
 	$(GNATMAKE) -Pregtests -XPRJ_BUILD="$(MODE)"
 	make -C ../admin/
 	make -C ../example/
@@ -54,6 +52,4 @@ check_mem: force
 	./check_mem 30 >> check_mem.res
 	gnatmem 3 -i gmem.out ./check_mem$(EXEEXT) > check_mem.run2
 	grep "   Final" check_mem.run2 > run2
-	$(GNATCLEAN) -q -Pregtests
-	rm -f alldifs
 	$(DIFF) run1 run2 1>> alldifs 2>> alldifs

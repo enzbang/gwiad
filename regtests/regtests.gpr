@@ -19,8 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "aws";
 with "../shared";
+with "aws";
 with "../gwiad/gwiad";
 with "../web/gwiad-web";
 with "../plugins/websites/gwiad-plugins-websites";

@@ -51,12 +51,17 @@ MODULES_SETUP = ${MODULES:%=%_setup}
 
 all: $(MODULES_BUILD)
 
+build: all
+
 clean: $(MODULES_CLEAN)
+	make -C regtests clean $(OPTIONS)
 
 setup: $(MODULES_SETUP)
 
 regtests: force
 	make -C regtests MODE="Profile" $(GENERAL_OPTIONS)
+	rm -f regtests/obj/*	# To avoid error in lcov_analyse ???
+	make lcov_analyse
 
 lcov_analyse: force
 	sh analyse.sh
