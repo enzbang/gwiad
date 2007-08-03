@@ -25,6 +25,8 @@ with AWS.Response;
 with AWS.Dispatchers.Callback;
 with AWS.MIME;
 
+
+with Morzhol.Strings;
 with Gwiad.Plugins.Services.Cache;
 with Gwiad.Plugins.Services.Registry;
 with Gwiad.Plugins.Websites;
@@ -33,6 +35,7 @@ with Gwiad.Plugins.Websites.Registry;
 with Gwiad.Web.Main_Host;
 
 with Hello_World_Interface;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body Hello_World is
 
@@ -40,14 +43,18 @@ package body Hello_World is
 
    use Gwiad;
    use Gwiad.Plugins.Websites;
+   use type Morzhol.Strings.String_Access;
 
    use Hello_World_Interface;
 
    Hello_Web_Dir : constant String := "/hello/";
 
-   Main_Dispatcher : AWS.Services.Dispatchers.URI.Handler;
+   Main_Dispatcher : AWS.Dispatchers.Handler_Class_Access
+     := new AWS.Services.Dispatchers.URI.Handler;
 
-   Path : constant String := Gwiad.Plugins.Websites.Registry.Library_Path;
+   Path : String_Access :=
+            new String'(Gwiad.Plugins.Websites.Registry.Library_Path);
+   --  Get Library Path (used for register process)
 
    function Default_Callback
      (Request : in Status.Data) return Response.Data;
@@ -81,6 +88,7 @@ package body Hello_World is
 
    begin
 
+
       if not Plugins.Services.Registry.Map.Exists (Name => Service_Name) then
          return Response.Build (MIME.Text_HTML,
                                 "<p>Service down</p>");
@@ -88,13 +96,17 @@ package body Hello_World is
 
       Build_Response :
       declare
-         Hello_World_Service_Access : constant HW_Service_Access
+         Hello_World_Service_Access : HW_Service_Access
            := HW_Service_Access
              (Gwiad.Plugins.Services.Cache.Get (Service_Name));
          Hello_World_Service        : HW_Service'Class
            := Hello_World_Service_Access.all;
+         Hello_Response : constant String := Hello_World_Service.Hello;
       begin
-         return Response.Build (MIME.Text_HTML, Hello_World_Service.Hello);
+         Gwiad.Plugins.Services.Free
+           (Gwiad.Plugins.Services.Service_Access
+              (Hello_World_Service_Access));
+         return Response.Build (MIME.Text_HTML, Hello_Response);
       end Build_Response;
    end Hello_World;
 
@@ -111,21 +123,25 @@ package body Hello_World is
 begin  --  Hello_World register website
 
    AWS.Services.Dispatchers.URI.Register
-     (Dispatcher => Main_Dispatcher,
+     (Dispatcher => AWS.Services.Dispatchers.URI.Handler (Main_Dispatcher.all),
       URI        => Hello_Web_Dir & "world",
       Action     => Dispatchers.Callback.Create (Hello_World'Access));
 
    AWS.Services.Dispatchers.URI.Register_Default_Callback
-     (Main_Dispatcher,
+     (AWS.Services.Dispatchers.URI.Handler (Main_Dispatcher.all),
       Dispatchers.Callback.Create (Default_Callback'Access));
 
-   Gwiad.Web.Main_Host.Register (Web_Dir => Hello_Web_Dir,
-                                 Action  => Main_Dispatcher);
+   Gwiad.Web.Main_Host.Register
+     (Web_Dir => Hello_Web_Dir,
+      Action  => AWS.Services.Dispatchers.URI.Handler (Main_Dispatcher.all));
+
+   AWS.Dispatchers.Free (Main_Dispatcher);
 
    Gwiad.Plugins.Websites.Registry.Register
      (Name        => "Hello web site",
       Description => "A test for gwiad using hello world service",
       Unregister  => Unregister'Access,
-     Library_Path => Path);
+     Library_Path => Path.all);
 
+   Free (Path);
 end Hello_World;
