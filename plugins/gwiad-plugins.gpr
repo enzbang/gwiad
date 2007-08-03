@@ -31,6 +31,13 @@ Project Gwiad.Plugins is
    for Library_Name use "gwiad_plugins";
    for Library_Kind use "dynamic";
 
+   case Shared.Build is
+      when "Profile" =>
+         for Library_Options use ("-fprofile-arcs");
+      when "Debug" | "Release" =>
+         null;
+   end case;
+
    -------------
    -- Builder --
    -------------

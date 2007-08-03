@@ -23,6 +23,7 @@ with "../shared";
 with "../gwiad/gwiad";
 with "../dynamic_libraries/gwiad-dynamic_libraries";
 with "../plugins/services/gwiad-plugins-services";
+with "../plugins/websites/gwiad-plugins-websites";
 with "../web/gwiad-web";
 
 Project Gwiad.Admin is
@@ -40,9 +41,15 @@ Project Gwiad.Admin is
 
    case Shared.OS is
       when "Windows_NT" =>
-         for Library_Options
-           use ("-laws", "-laws_include", "-laws_win32", "-lwsock32");
+         for Library_Options use ("-laws", "-laws_include", "-laws_win32", "-lwsock32");
       when others =>
+         null;
+   end case;
+
+   case Shared.Build is
+      when "Profile" =>
+         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
+      when "Debug" | "Release" =>
          null;
    end case;
 

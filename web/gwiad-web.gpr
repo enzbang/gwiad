@@ -39,6 +39,13 @@ project Gwiad.Web is
          null;
    end case;
 
+   case Shared.Build is
+      when "Profile" =>
+         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
+      when "Debug" | "Release" =>
+         null;
+   end case;
+
    -------------
    -- Builder --
    -------------

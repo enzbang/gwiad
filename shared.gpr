@@ -24,7 +24,7 @@ project Shared is
    for Source_Dirs use ();
    --  No sources for this project
 
-   type Build_Type is ("Debug", "Release");
+   type Build_Type is ("Debug", "Release", "Profile");
    Build : Build_Type := external ("PRJ_BUILD", "Debug");
 
    type OS_Type is ("UNIX", "Windows_NT");
@@ -37,7 +37,13 @@ project Shared is
    -------------
 
    package Builder is
-      for Default_Switches ("Ada") use ("-m");
+      case Build is
+         when "Debug" | "Release" =>
+            for Default_Switches ("Ada") use ("-m", "-s");
+         when "Profile" =>
+            for Default_Switches ("Ada") use
+              ("-m", "-s", "-fprofile-arcs", "-ftest-coverage");
+      end case;
    end Builder;
 
    --------------
@@ -56,7 +62,7 @@ project Shared is
 
    package Compiler is
       case Build is
-         when "Debug" =>
+         when "Debug" | "Profile" =>
             for Default_Switches ("Ada") use Common_Options & Debug_Options;
 
          when "Release" =>
@@ -70,7 +76,7 @@ project Shared is
 
    package Binder is
       case Build is
-         when "Debug" =>
+         when "Debug" | "Profile" =>
             for Default_Switches ("Ada") use ("-E", "-g");
 
          when "Release" =>
@@ -85,6 +91,9 @@ project Shared is
    package Linker is
       case Build is
          when "Debug" =>
+            for Default_Switches ("Ada") use ("-g");
+
+         when "Profile" =>
             for Default_Switches ("Ada") use ("-g", "-lgmem");
 
          when "Release" =>

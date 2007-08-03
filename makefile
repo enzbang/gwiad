@@ -21,8 +21,6 @@
 
 include mk.config
 
-OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
-
 ifeq ($(OS),Windows_NT)
 SOEXT=.dll
 EXEEXT=.exe
@@ -30,6 +28,12 @@ else
 SOEXT=.so
 EXEEXT=
 endif
+
+GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
+	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" EXEEXT="$(EXEEXT)" \
+	DIFF="$(DIFF)"
+
+OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 
 # Modules support
 
@@ -51,6 +55,12 @@ clean: $(MODULES_CLEAN)
 
 setup: $(MODULES_SETUP)
 
+regtests: force
+	make -C regtests MODE="Profile" $(GENERAL_OPTIONS)
+
+lcov_analyse: force
+	sh analyse.sh
+
 check :	check_message $(MODULES_CHECK)
 	@echo
 	@echo "#####################################"
@@ -66,6 +76,8 @@ check_message:
 	@echo "### Verifying Properties Using gnatcheck ###"
 	@echo "############################################"
 	@echo
+
+force:
 
 # Install directories
 
