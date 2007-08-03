@@ -39,6 +39,7 @@ clean:
 
 
 check_mem: force
+	mkdir -p obj/
 	$(GNATMAKE) -Pregtests -XPRJ_BUILD="$(MODE)"
 	make -C ../admin/
 	make -C ../example/
