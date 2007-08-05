@@ -25,8 +25,7 @@ with Ada.Exceptions;
 
 with GNAT.OS_Lib;
 
-with Gwiad.Plugins.Services.Registry;
-with Gwiad.Plugins.Websites.Registry;
+with Gwiad.Plugins;
 
 package body Gwiad.Dynamic_Libraries.Manager is
 
@@ -81,15 +80,13 @@ package body Gwiad.Dynamic_Libraries.Manager is
          S : Search_Type;
          D : Directory_Entry_Type;
 
-         procedure Discover_Libraries
-           (From : in String; Lib_Type : in Library_Type);
+         procedure Discover_Libraries (From : in String);
 
          ------------------------
          -- Discover_Libraries --
          ------------------------
 
-         procedure Discover_Libraries
-           (From : in String; Lib_Type : in Library_Type) is
+         procedure Discover_Libraries (From : in String) is
             use Gwiad.Plugins;
          begin
             Start_Search
@@ -105,8 +102,8 @@ package body Gwiad.Dynamic_Libraries.Manager is
                Get_Next_Entry (S, D);
                Load_Library :
                declare
-                  Path    : constant String := Full_Name (D);
-                  Library : Dynamic_Library_Access;
+                  Path       : constant String := Full_Name (D);
+                  Library    : Dynamic_Library_Access;
                begin
                   if not Loaded_Libraries.Contains (Path) then
                      Text_IO.Put_Line (Path);
@@ -125,11 +122,11 @@ package body Gwiad.Dynamic_Libraries.Manager is
                            exit Load_Libraries_Loop;
                      end Initialization;
 
-                     if Lib_Type = Service_Library then
-                        Services.Registry.Register (Library_Path => Path);
-                     else
-                        Websites.Registry.Register (Library_Path => Path);
-                     end if;
+                     Library.Unload_Callback := New_Unload_CB (Path);
+
+                     Plugins.Register
+                       (Path      => Path,
+                        Unload_CB => Library.Unload_Callback);
 
                      Init (Library.all, Path);
 
@@ -142,15 +139,11 @@ package body Gwiad.Dynamic_Libraries.Manager is
       begin
          --  Search for websites libraries
 
-         Discover_Libraries
-           (From     => Websites_Lib_Dir,
-            Lib_Type => Website_Library);
+         Discover_Libraries (From => Websites_Lib_Dir);
 
          --  Search for services libraries
 
-         Discover_Libraries
-           (From     => Services_Lib_Dir,
-            Lib_Type => Service_Library);
+         Discover_Libraries (From => Services_Lib_Dir);
 
       exception
          when E : others =>
@@ -161,15 +154,13 @@ package body Gwiad.Dynamic_Libraries.Manager is
       -- Load --
       ----------
 
-      procedure Load (Path : in String; Lib_Type : in Library_Type) is
+      procedure Load (Path : in String) is
          Library : Dynamic_Library_Access;
       begin
          Library := Load (Path);
-         if Lib_Type = Service_Library then
-            Gwiad.Plugins.Services.Registry.Register (Library_Path => Path);
-         else
-            Gwiad.Plugins.Websites.Registry.Register (Library_Path => Path);
-         end if;
+         Library.Unload_Callback := Plugins.New_Unload_CB (Path);
+         Gwiad.Plugins.Register (Path      => Path,
+                                 Unload_CB => Library.Unload_Callback);
          Init (Library.all, Path);
          Loaded_Libraries.Insert (Path, Library);
       end Load;
@@ -187,6 +178,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
 
          Library := Loaded_Libraries.Element (Path);
          Ada.Text_IO.Put_Line ("Delete " & Path);
+         Plugins.Call (Library.Unload_Callback);
          Loaded_Libraries.Delete (Path);
          Dynamic_Libraries.Unload (Library);
 

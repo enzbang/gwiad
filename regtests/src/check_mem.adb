@@ -81,11 +81,7 @@ procedure Check_Mem is
 
    procedure Load (Library : in String) is
    begin
-      if Library = Lib_Hello_World_Service then
-         Manager.Load (Library, Service_Library);
-      else
-         Manager.Load (Library, Website_Library);
-      end if;
+      Manager.Load (Library);
    end Load;
 
    ------------
@@ -194,15 +190,6 @@ begin
       if Response.Message_Body (Result) /= Hello_World_Message then
          Ada.Text_IO.Put_Line ("Error get " & Response.Message_Body (Result)
                                  & "waiting "& Hello_World_Message);
-      end if;
-
-      Unload_Websites;
-
-      Client.Get (Connection, Result, URI => "/hello/world");
-
-      if Response.Message_Body (Result) /= Welcome_Message then
-         Ada.Text_IO.Put_Line ("Error get " & Response.Message_Body (Result)
-                                 & " waiting " & Welcome_Message);
       end if;
 
       Unload (Lib_Hello_World_Website);

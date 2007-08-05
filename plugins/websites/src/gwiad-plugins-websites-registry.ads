@@ -27,15 +27,6 @@ package Gwiad.Plugins.Websites.Registry is
 
    use Ada;
 
-   procedure Register (Library_Path : in String);
-   --  Registers a new website
-   --  This must be called before registering the service to set the library
-   --  path before the service registration
-
-   function Library_Path return String;
-   --  Returns the current library path
-   --  This me be called on library init
-
    procedure Register
      (Name         : in Website_Name;
       Description  : in String;

@@ -25,7 +25,8 @@ with Gwiad.Plugins.Services.Cache;
 
 package body Gwiad.Plugins.Services.Registry is
 
-   Last_Library_Path : Unbounded_String;
+   procedure Unload (Library_Path : in String);
+   --  Unload service library
 
    ----------
    -- Hash --
@@ -50,47 +51,51 @@ package body Gwiad.Plugins.Services.Registry is
    -- Register --
    --------------
 
-   procedure Register (Library_Path : in String) is
-   begin
-      Last_Library_Path := To_Unbounded_String (Library_Path);
-   end Register;
-
-   --------------
-   -- Register --
-   --------------
-
    procedure Register
      (Name        : in Service_Name;
       Description : in String;
       Builder     : in Service_Builder) is
+
+      Last_Library_Path : constant String := Get_Last_Library_Path;
+      Last_Unload_CB    : constant Unload_CB_Access := Get_Last_Unload_CB;
+
    begin
-      if Last_Library_Path = Null_Unbounded_String then
+      if Last_Library_Path = ""
+        or else Last_Unload_CB.Callback = null
+      then
          raise Service_Error;
       end if;
 
       declare
          New_Service : Registered_Service :=
-                         (Builder     => Builder,
-                          Path        => Last_Library_Path,
-                          Description => To_Unbounded_String (Description));
+                         (Builder       => Builder,
+                          Path          =>
+                            To_Unbounded_String (Last_Library_Path),
+                          Description   => To_Unbounded_String (Description));
       begin
          Map.Insert (Name, New_Service);
       end;
-
-      Last_Library_Path := Null_Unbounded_String;
+      Last_Unload_CB.Internal_Callback := Unload'Access;
    end Register;
 
-   ----------------
-   -- Unregister --
-   ----------------
+   ------------
+   -- Unload --
+   ------------
 
-   procedure Unregister (Name : in Service_Name) is
-      use Gwiad.Plugins.Services;
+   procedure Unload (Library_Path : in String) is
+      use Map;
+      Position : Cursor := First;
    begin
-      Cache.Delete (Name);
-      Map.Delete (Name);
-   exception
-         when others => raise Service_Error;
-   end Unregister;
+      Search_In_Map :
+      while Has_Element (Position) loop
+         if Element (Position).Path = Library_Path then
+            exit Search_In_Map;
+         end if;
+         Next (Position);
+      end loop Search_In_Map;
 
+      Cache.Delete (Name (Position));
+      Delete (Position);
+
+   end Unload;
 end Gwiad.Plugins.Services.Registry;

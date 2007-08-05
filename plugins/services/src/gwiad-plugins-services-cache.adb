@@ -22,9 +22,7 @@
 with Ada.Text_IO;
 with Ada.Exceptions;
 
-with Ada.Strings.Hash;
 with Ada.Containers.Vectors;
-with Ada.Containers.Indefinite_Hashed_Maps;
 
 package body Gwiad.Plugins.Services.Cache is
 

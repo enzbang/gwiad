@@ -50,7 +50,7 @@ package Gwiad.Dynamic_Libraries.Manager is
       procedure Discover_Libraries;
       --  Discovers new libraries to load
 
-      procedure Load (Path : in String; Lib_Type : in Library_Type);
+      procedure Load (Path : in String);
       --  Load a library
 
       entry Unload (Path : in String);

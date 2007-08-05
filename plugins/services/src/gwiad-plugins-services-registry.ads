@@ -30,11 +30,6 @@ package Gwiad.Plugins.Services.Registry is
 
    type Service_Name is new String;
 
-   procedure Register (Library_Path : in String);
-   --  Registers a new dynamic library
-   --  This must be called before registering the service to set the library
-   --  path before the service registration
-
    procedure Register
      (Name        : in Service_Name;
       Description : in String;
@@ -45,9 +40,6 @@ package Gwiad.Plugins.Services.Registry is
    --  no knowlegde of its path)
    --  Raise service error if service with the same name is registered or
    --  if no dynamic library is registered
-
-   procedure Unregister (Name : in Service_Name);
-   --  Unregisters a service
 
    function New_Service
      (Name : in Service_Name) return not null Service_Access;

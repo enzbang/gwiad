@@ -101,10 +101,7 @@ package body Gwiad.Admin.Services is
          end if;
       end Get_Library_Path;
 
-      if Library_Path /= "" then
-         Unregister (Service_Name (Name));
-         Manager.Unload (To_String (Library_Path));
-      end if;
+      Manager.Unload (To_String (Library_Path));
 
       Templates.Insert
         (Translations,

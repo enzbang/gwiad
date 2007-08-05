@@ -19,6 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+private with Gwiad.Plugins;
+
 package Gwiad.Dynamic_Libraries is
 
    Dynamic_Library_Error : exception;
@@ -59,7 +61,8 @@ private
    type Reference is access Implementation;
 
    type Dynamic_Library is tagged limited record
-      Ref : Reference;
+      Ref             : Reference;
+      Unload_Callback : Gwiad.Plugins.Unload_CB_Access;
    end record;
 
    function Get_Library_Extension return String;

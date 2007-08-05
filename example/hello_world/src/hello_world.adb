@@ -50,7 +50,7 @@ package body Hello_World is
      := new AWS.Services.Dispatchers.URI.Handler;
 
    Path : String_Access :=
-            new String'(Gwiad.Plugins.Websites.Registry.Library_Path);
+            new String'(Gwiad.Plugins.Get_Last_Library_Path);
    --  Get Library Path (used for register process)
 
    function Default_Callback

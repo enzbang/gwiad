@@ -26,6 +26,9 @@ package body Hello_World_Service is
 
    use Gwiad.Plugins.Services;
 
+   procedure Unregister (Library_Path : in String) is null;
+   --  Unregister hello world
+
    function Builder return access Service'Class;
    --  Build a new test plugin
 
@@ -50,6 +53,9 @@ package body Hello_World_Service is
    end Hello;
 
 begin  --  Hello_World_Service : Register service
+
+   Gwiad.Plugins.Set_Unload_CB (Unregister'Access);
+
    Gwiad.Plugins.Services.Registry.Register
      (Name        => "hello_world_service",
       Description => "A simple hello world service for gwiad",

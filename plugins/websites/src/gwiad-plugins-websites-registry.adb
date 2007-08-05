@@ -27,7 +27,8 @@ package body Gwiad.Plugins.Websites.Registry is
 
    use Morzhol.Strings;
 
-   Last_Library_Path : Unbounded_String;
+   procedure Unload (Library_Path : in String);
+   --  Unload a website library
 
    ----------
    -- Hash --
@@ -37,24 +38,6 @@ package body Gwiad.Plugins.Websites.Registry is
    begin
       return Strings.Hash (String (Key));
    end Hash;
-
-   ------------------
-   -- Library_Path --
-   ------------------
-
-   function Library_Path return String is
-   begin
-      return To_String (Last_Library_Path);
-   end Library_Path;
-
-   --------------
-   -- Register --
-   --------------
-
-   procedure Register (Library_Path : in String) is
-   begin
-      Last_Library_Path := +Library_Path;
-   end Register;
 
    --------------
    -- Register --
@@ -67,6 +50,26 @@ package body Gwiad.Plugins.Websites.Registry is
       Library_Path : in String)
    is
    begin
+      Register_Unload_Callback :
+      declare
+         use Map;
+         Position  : Cursor  := First;
+         Is_In_Map : Boolean := False;
+      begin
+         Search_In_Map :
+         while Has_Element (Position) loop
+            if Path (Position) = Library_Path then
+               Is_In_Map := True;
+               exit Search_In_Map;
+            end if;
+            Map.Next (Position);
+         end loop Search_In_Map;
+
+         if not Is_In_Map then
+            Set_Internal_Unload_CB (Unload'Access);
+         end if;
+      end Register_Unload_Callback;
+
       Map.Insert
         (Name,
          (Unregister_CB => Unregister,
@@ -74,13 +77,39 @@ package body Gwiad.Plugins.Websites.Registry is
           Description   => +Description));
    end Register;
 
+   ------------
+   -- Unload --
+   ------------
+
+   procedure Unload (Library_Path : in String) is
+   begin
+      Map_Search :
+      declare
+         Position : Map.Cursor := Map.First;
+      begin
+         while Map.Has_Element (Position) loop
+            if Map.Path (Position) /= Library_Path then
+               Map.Next (Position);
+            else
+               Unregister_Website :
+               declare
+                  Last_Position : constant Map.Cursor := Position;
+               begin
+                  Map.Next (Position);
+                  Unregister (Map.Name (Last_Position));
+               end Unregister_Website;
+            end if;
+         end loop;
+      end Map_Search;
+
+   end Unload;
+
    ----------------
    -- Unregister --
    ----------------
 
    procedure Unregister (Name : in Website_Name) is
       use Map;
-
       Position : Cursor := Find (Name);
    begin
       if Position = No_Element then
@@ -92,7 +121,6 @@ package body Gwiad.Plugins.Websites.Registry is
       begin
          RW.Unregister_CB.all (Name);
       end;
-
       Map.Delete (Position);
    end Unregister;
 

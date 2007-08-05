@@ -70,7 +70,7 @@ package body Gwiad.Web.Main_Host is
            (Content_Type  => MIME.Text_HTML,
             Message_Body  => "<h1>Welcome to gwiad</h1>");
       end if;
-    return Data;
+      return Data;
    end Default_Callback;
 
    --------------

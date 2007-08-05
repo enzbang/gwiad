@@ -19,6 +19,9 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Strings.Hash;
+with Ada.Containers.Indefinite_Hashed_Maps;
+
 with AWS.Digest;
 
 with Gwiad.Plugins.Services.Registry;
@@ -49,5 +52,21 @@ package Gwiad.Plugins.Services.Cache is
 
    procedure Delete (Name : in Service_Name);
    --  Deletes all services in cache having the given name
+
+   ------------------
+   -- Service_Maps --
+   ------------------
+
+   package Service_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+     (Key_Type     => String,
+      Element_Type => Service_Id,
+      Hash         => Ada.Strings.Hash,
+      Equivalent_Keys => "=",
+      "="             => "=");
+
+   type Service_Map_Access is access all Service_Maps.Map;
+
+   procedure Free is new Ada.Unchecked_Deallocation
+     (Object => Service_Maps.Map, Name => Service_Map_Access);
 
 end Gwiad.Plugins.Services.Cache;
