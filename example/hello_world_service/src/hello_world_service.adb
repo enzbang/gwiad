@@ -26,7 +26,7 @@ package body Hello_World_Service is
 
    use Gwiad.Plugins.Services;
 
-   procedure Unregister (Library_Path : in String) is null;
+   procedure Unregister is null;
    --  Unregister hello world
 
    function Builder return access Service'Class;

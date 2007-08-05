@@ -52,7 +52,7 @@ package Gwiad.Plugins is
    --  The unload callback procedure is called by dynamic plugin manager on
    --  library unload
 
-   procedure Set_Unload_CB (Callback : access procedure (Path : in String));
+   procedure Set_Unload_CB (Callback : access procedure);
    --  Set plugin library unload CB (must be called by the plugin library)
 
    function Get_Last_Library_Path return String;
@@ -66,7 +66,7 @@ private
 
    type Unload_CB is record
       Path              : String_Access;
-      Callback          : access procedure (Path : in String);
+      Callback          : access procedure;
       Internal_Callback : access procedure (Path : in String);
    end record;
 
