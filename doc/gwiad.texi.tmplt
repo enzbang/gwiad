@@ -1,0 +1,337 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c %**start of header
+@setfilename gwiad.info
+@settitle Gwiad User's Guide
+@setchapternewpage odd
+@syncodeindex fn cp
+
+@iftex
+@afourpaper
+@end iftex
+
+@c ----------------------------------------- MACRO
+
+@c Macro used for all Gwiad examples
+@c No cartouche on HTML as this is part of the css
+@macro GWIADEXP{TXT}
+@ifhtml
+@smallexample
+@group
+\TXT\
+@end group
+@end smallexample
+@end ifhtml
+@ifnothtml
+@cartouche
+@smallexample
+@group
+\TXT\
+@end group
+@end smallexample
+@end cartouche
+@end ifnothtml
+@end macro
+
+@c ----------------------------------------- END MACRO
+
+@titlepage
+
+@title Gwiad User's Guide
+@subtitle Gwiad - version @_GWIAD_VERSION_@
+@subtitle Date: @today{}
+@author Olivier Ramonat
+
+@vskip 0pt plus 1filll
+
+@page
+
+Copyright @copyright{} 2007, Olivier Ramonat
+
+@*
+
+@end titlepage
+
+@ifhtml
+@c title page for the HTML documentation
+@html
+<font size="+2">
+<p>Gwiad - version @_GWIAD_VERSION_@
+<p>Date: @today{}
+<p>Olivier Ramonat
+</font>
+
+@page
+
+<p>Copyright @copyright{} 2007, Olivier Ramonat
+@end html
+@end ifhtml
+
+@finalout
+
+@contents
+
+@ifinfo
+@node Top
+@top Gwiad
+
+@menu
+* Introduction::
+* Building Gwiad::
+* Using Gwiad::
+* Index::
+@end menu
+@end ifinfo
+
+@c ======================================================================
+
+@node Introduction
+@chapter Introduction
+
+@noindent
+@code{Gwiad} is a framework for building a Web Server with dynamic
+plugin loading based on @i{Ada Web Server}.
+
+@noindent
+The goal of Gwiad is to provide a Web Server to control Ada
+application (Gwiad plugins) that can be dynamically reloaded without
+shutting down the Web Server. Gwiad plugins are divided in two
+categories :
+@itemize
+@item Website plugins
+
+Website plugins are Web applications that register dispatchers such as
+virtual host dispatchers or regexp dispatchers.
+@item Service plugins
+
+The service plugins provide services that can be used by all websites
+plugins.
+@end itemize
+@noindent
+
+@c ======================================================================
+
+@node Building Gwiad
+@chapter Building Gwiad
+
+@ifinfo
+@menu
+* Requirements::
+* Building::
+* Demos::
+* Installing::
+@end menu
+@end ifinfo
+@c ----------------------------------------------------------------------
+
+@node Requirements
+@section Requirements
+
+@noindent
+@code{Gwiad} is mainly developed with @code{GNAT} on GNU Linux and is
+built and tested regularly on @code{Microsoft Windows}. To build
+@code{Gwiad} you need:
+
+@itemize @bullet
+
+@item GNU/Ada (GNAT compiler) ;
+@cindex GNAT
+@cindex GNU/Ada
+
+To build this version you need at least @code{GNAT GPL 2007 Edition}.
+
+@item @code{AWS}
+
+@code{Gwiad} is developed with @code{AWS} @_AWS_VERSION_@
+
+@item @code{Morzhol}
+
+You should have got a version of @code{Morzhol} library with
+@code{Gwiad}. @code{Morzhol} is a simple library containing a few
+tools for Ada development
+@end itemize
+
+@c ----------------------------------------------------------------------
+
+@node Building
+@section Building
+@cindex Building
+
+@noindent
+The file @file{mk.config} contains settings for Gwiad build and
+installation.
+
+@noindent
+You can build @code{Gwiad} with :
+
+@GWIADEXP{$ make clean all}
+
+@c ----------------------------------------------------------------------
+
+@node Demos
+@section Demos
+
+@noindent
+During the built, the @code{Gwiad} libraries and the demo will be
+compiled.
+
+@noindent
+Here are a short description of the demo :
+
+@table @file
+
+@item Argwiad_Demo
+
+Argwiad_Demo is a 17 code lines example to show how to start a Gwiad
+server.
+
+@item Hello_World (service, interface and website)
+
+The Hello_World demo use the very basic feature of Gwiad dynamic
+plugin loading.
+
+@end table
+
+To install the demo, run :
+
+@GWIADEXP{$ make install_demo}
+
+By default, the demo are installed in @i{$(HOME)/opt/gwiad}
+
+To launch the demo, go under @i{$(HOME)/opt/gwiad} then run @code{argwiad}
+
+@itemize
+@item Hello World message
+
+Point your browser to @i{http://localhost:8080/hello/world} to see the
+hello world message.
+@item Services admin
+
+Point your browser to @i{http://localhost:8080/admin/services/list}
+and click to unregister @code{hello_world_service}
+Then go back to @i{http://localhost:8080/hello/world}
+You should see the hello_world_website service down message.
+@item Websites admin
+
+Go to @i{http://localhost:8080/admin/websites/list}
+and unregister @code{libhello_world_website}.
+Go back to @i{http://localhost:8080/hello/world} and you should see the
+@code{Gwiad} default message.
+@end itemize
+
+@c ----------------------------------------------------------------------
+
+@node Installing
+@section Installing
+@cindex Installing
+
+@noindent
+After the build process you should install @code{Gwiad} at a specific
+location. The best target directory is @code{GNAT} root
+directory. Edit the file @file{mk.config} to set the @code{INSTALL}
+variable. Then execute :
+
+@GWIADEXP{$ make install}
+
+@c ======================================================================
+
+@node Using Gwiad
+@chapter Using Gwiad
+
+@ifinfo
+@menu
+* Building a Gwiad server::
+* Building a service plugin::
+@end menu
+@end ifinfo
+
+@node Building a Gwiad server
+@section Building a Gwiad server
+
+@noindent
+Gwiad is a dynamic plugin loading library on top of AWS. Before
+reading this doc, you really should have a look to AWS documentation.
+
+@enumerate
+
+@item Start the server
+@cindex starting server
+
+@noindent
+All you have to do is to call
+@code{Gwiad.Web.Start}. To customize parameters of Server Start, add a
+configuration file aws.ini at Gwiad root directory
+
+@noindent
+To exit the main procedure only when the server terminate, you can use
+the @code{Gwiad.Web.Wait} service.
+
+@noindent
+To stop Gwiad web use @code{Gwiad.Web.Stop}.
+
+@item Discover plugins
+@cindex discover plugins
+
+@noindent
+As Gwiad is mainly used to load dynamic libraries (plugins) consider
+to create a discover task :
+@GWIADEXP{Discover_Library : Dynamic_Libraries.Manager.Discover;}
+
+@end enumerate
+
+@node Building a service plugin
+@section  Building a service plugin
+@cindex Building a service plugin
+
+@ifinfo
+@menu
+* Public interface::
+* Service implementation::
+@end menu
+@end ifinfo
+
+
+@node Public interface
+@subsection Public interface
+@noindent
+To allow Gwiad websites to use your service, you'll need to create an
+interface : the public API of your service. The interface is compiled
+in a separated package and deployed in your system library path.
+
+@noindent
+In the same interface library, you has to declare a new abstract type
+that inherit of your interface and Gwiad service interface
+@code{Gwiad.Plugins.Services}.
+
+Gwiad service interface is :
+@GWIADEXP{
+@_GWIAD_PLUGINS_SERVICES_CODE_@
+}
+
+@node Service implementation
+@subsection Service implementation
+
+@noindent
+You have to provide an implementation for you new type, so for :
+@itemize
+@item Your interface
+@item Gwiad service interface
+@end itemize
+@cindex Service_Builder
+
+Basically, you have to create a factory (the @code{Service_Builder}
+type).
+
+Moreover, you need to register the new plugin by calling
+@code{Giwad.Plugins.Services.Registry.Register}.
+
+This function takes 3 parameters : Name, Description and Builder (an
+access to the factory function).
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@bye

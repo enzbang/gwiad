@@ -1,0 +1,6 @@
+s,x_GWIAD_VERSION_x,@_GWIAD_VERSION_@,g
+s,x_AWS_VERSION_x,@_AWS_VERSION_@,g
+/@_GWIAD_PLUGINS_SERVICES_CODE_@/ {
+   r ../plugins/services/src/gwiad-plugins-services.ads
+   d
+}
