@@ -53,10 +53,10 @@ package Gwiad.Dynamic_Libraries.Manager is
       procedure Load (Path : in String);
       --  Load a library
 
-      procedure Unload (Path : in String);
+      procedure Unregister (Path : in String);
       --  Unregister a library
 
-      procedure Unload_All;
+      procedure Unregister_All;
       --  Unregister all libraries
 
    private

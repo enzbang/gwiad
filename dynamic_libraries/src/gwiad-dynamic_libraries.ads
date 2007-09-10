@@ -61,8 +61,8 @@ private
    type Reference is access Implementation;
 
    type Dynamic_Library is tagged limited record
-      Ref             : Reference;
-      Unload_Callback : Gwiad.Plugins.Unload_CB_Access;
+      Ref                 : Reference;
+      Unregister_Callback : Gwiad.Plugins.Unload_CB_Access;
    end record;
 
    function Get_Library_Extension return String;

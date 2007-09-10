@@ -21,7 +21,6 @@
 
 with Ada.Text_IO;
 with Ada.Command_Line;
-with Ada.Directories;
 with Ada.Exceptions;
 
 with Gwiad.Web;
@@ -71,9 +70,7 @@ procedure Check_Mem is
 
    procedure Load (Library : in String);
 
-   procedure Unload (Library : in String);
-
-   procedure Unload_Websites;
+   procedure Unregister (Library : in String);
 
    ----------
    -- Load --
@@ -84,37 +81,14 @@ procedure Check_Mem is
       Manager.Load (Library);
    end Load;
 
-   ------------
-   -- Unload --
-   ------------
+   ----------------
+   -- Unregister --
+   ----------------
 
-   procedure Unload (Library : in String) is
+   procedure Unregister (Library : in String) is
    begin
-      Manager.Unload (Library);
-
-      --  Rename the disabled library
-
-      Directories.Rename (Library & ".disabled", Library);
-   end Unload;
-
-   ---------------------
-   -- Unload_Websites --
-   ---------------------
-
-   procedure Unload_Websites is
-      use Gwiad.Plugins.Websites.Registry.Map;
-
-      Position : Cursor := First;
-   begin
-      while Has_Element (Position) loop
-         declare
-            Last_Position : constant Cursor := Position;
-         begin
-            Next (Position);
-            Gwiad.Plugins.Websites.Registry.Unregister (Name (Last_Position));
-         end;
-      end loop;
-   end Unload_Websites;
+      Manager.Unregister (Library);
+   end Unregister;
 
    Welcome_Message     : constant String := "<h1>Welcome to gwiad</h1>";
    Hello_World_Message : constant String :=
@@ -147,33 +121,13 @@ begin
 
    Load (Lib_Hello_World_Service);
    Load (Lib_Gwiad_Admin);
-
-   for K in 1 ..  Iteration loop
-      Load (Lib_Hello_World_Website);
-      Client.Get (Connection, Result, URI => "/hello/world");
-
-      Ada.Text_IO.Put_Line (Response.Message_Body (Result));
-
-      Client.Get (Connection, Result,
-                  URI => "/admin/websites/unload?lib="
-                  & Lib_Hello_World_Website);
-
-      Ada.Text_IO.Put_Line (Response.Message_Body (Result));
-
-      Client.Get (Connection, Result, URI => "/hello/world");
-
-      Ada.Text_IO.Put_Line (Response.Message_Body (Result));
-
-      Directories.Rename (Lib_Hello_World_Website & ".disabled",
-                          Lib_Hello_World_Website);
-   end loop;
+   Load (Lib_Hello_World_Website);
 
    --  This is the main loop. Be sure to run everything inside this
    --  loop. Check_Mem is checked between 2 runs with a different number of
    --  iterations.
 
    for K in 1 ..  Iteration loop
-      Load (Lib_Hello_World_Website);
 
       Client.Get (Connection, Result, URI => "/hello/world");
 
@@ -191,8 +145,11 @@ begin
          Ada.Text_IO.Put_Line ("Error get " & Response.Message_Body (Result)
                                  & "waiting "& Hello_World_Message);
       end if;
+   end loop;
 
-      Unload (Lib_Hello_World_Website);
+   Unregister (Lib_Hello_World_Website);
+
+   for K in 1 ..  Iteration loop
 
       Client.Get (Connection, Result, URI => "/hello/world");
 
@@ -203,8 +160,6 @@ begin
    end loop;
 
    Ada.Text_IO.Put_Line ("Exit : unload libraries and stop web server");
-
-   Unload (Lib_Hello_World_Service);
 
    Client.Close (Connection);
 

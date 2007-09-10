@@ -46,11 +46,11 @@ package Gwiad.Admin.Websites is
       Translations : in out Templates.Translate_Set);
    --  Stop a website
 
-   procedure Unload_Websites
+   procedure Unregister_Website_Library
      (Request      : in Status.Data;
       Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
-   --  Unload a library and all associated websites
+   --  Unregister a library and all associated websites
 
    ------------------------------
    -- Virtual_Host_Directories --

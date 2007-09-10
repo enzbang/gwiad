@@ -178,7 +178,7 @@ begin --  Gwiad.Admin.Init : Register pages
    AWS.Services.Web_Block.Registry.Register
      (Key          => Admin_URL & Admin.Websites.Websites_URL & "unload",
       Template     => Websites_Unload.Template,
-      Data_CB      => Admin.Websites.Unload_Websites'Access,
+      Data_CB      => Admin.Websites.Unregister_Website_Library'Access,
       Content_Type => MIME.Text_HTML);
 
    AWS.Services.Web_Block.Registry.Register

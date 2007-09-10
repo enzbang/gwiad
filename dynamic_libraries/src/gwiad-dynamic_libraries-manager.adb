@@ -57,7 +57,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Manager.Discover_Libraries;
          select
             accept Stop;
-            Manager.Unload_All;
+            Manager.Unregister_All;
             exit Discover_Libraries;
          or
             delay Discover_Delay;
@@ -135,11 +135,11 @@ package body Gwiad.Dynamic_Libraries.Manager is
                            exit Load_Libraries_Loop;
                      end Initialization;
 
-                     Library.Unload_Callback := New_Unload_CB (Path);
+                     Library.Unregister_Callback := New_Unload_CB (Path);
 
                      Plugins.Register
                        (Path      => Path,
-                        Unload_CB => Library.Unload_Callback);
+                        Unload_CB => Library.Unregister_Callback);
 
                      Init (Library.all, Path);
 
@@ -171,9 +171,9 @@ package body Gwiad.Dynamic_Libraries.Manager is
          Library : Dynamic_Library_Access;
       begin
          Library := Load (Path);
-         Library.Unload_Callback := Plugins.New_Unload_CB (Path);
+         Library.Unregister_Callback := Plugins.New_Unload_CB (Path);
          Gwiad.Plugins.Register (Path      => Path,
-                                 Unload_CB => Library.Unload_Callback);
+                                 Unload_CB => Library.Unregister_Callback);
          Init (Library.all, Path);
          Loaded_Libraries.Insert (Path, Library);
       end Load;
@@ -182,7 +182,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
       -- Unload --
       ------------
 
-      procedure Unload (Path : in String) is
+      procedure Unregister (Path : in String) is
          Library : Dynamic_Library_Access;
       begin
          if not Loaded_Libraries.Contains (Path) then
@@ -190,15 +190,15 @@ package body Gwiad.Dynamic_Libraries.Manager is
          end if;
 
          Library := Loaded_Libraries.Element (Path);
-         Plugins.Call (Library.Unload_Callback);
+         Plugins.Call (Library.Unregister_Callback);
          Loaded_Libraries.Delete (Path);
-      end Unload;
+      end Unregister;
 
       ----------------
       -- Unload_All --
       ----------------
 
-      procedure Unload_All is
+      procedure Unregister_All is
          Position : Cursor := Loaded_Libraries.First;
       begin
          while Has_Element (Position) loop
@@ -207,12 +207,12 @@ package body Gwiad.Dynamic_Libraries.Manager is
                Path    : constant String                 := Key (Position);
                Library : constant Dynamic_Library_Access := Element (Position);
             begin
-               Plugins.Call (Library.Unload_Callback);
+               Plugins.Call (Library.Unregister_Callback);
                Loaded_Libraries.Delete (Path);
             end Unload_Library;
             Position := Loaded_Libraries.First;
          end loop;
-      end Unload_All;
+      end Unregister_All;
 
    end Manager;
 

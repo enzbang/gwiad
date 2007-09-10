@@ -224,11 +224,11 @@ package body Gwiad.Admin.Websites is
       end if;
    end Stop_Website;
 
-   --------------------
-   -- Unload_Website --
-   --------------------
+   ------------------------
+   -- Unregister_Website --
+   ------------------------
 
-   procedure Unload_Websites
+   procedure Unregister_Website_Library
      (Request      : in Status.Data;
       Context      : access AWS.Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
@@ -291,10 +291,10 @@ package body Gwiad.Admin.Websites is
          Templates.Insert (Translations,
                            Templates.Assoc (Websites_Unload.NAME, Tag_Name));
       else
-         Manager.Unload (Library_Path);
+         Manager.Unregister (Library_Path);
       end if;
 
-   end Unload_Websites;
+   end Unregister_Website_Library;
 
    ------------------------------
    -- Virtual_Host_Directories --

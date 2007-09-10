@@ -101,7 +101,7 @@ package body Gwiad.Admin.Services is
          end if;
       end Get_Library_Path;
 
-      Manager.Unload (To_String (Library_Path));
+      Manager.Unregister (To_String (Library_Path));
 
       Templates.Insert
         (Translations,
