@@ -60,7 +60,9 @@ package Gwiad.Dynamic_Libraries.Manager is
       --  Unregister all libraries
 
    private
-      Loaded_Libraries : Hashed_Strings.Map := Hashed_Strings.Empty_Map;
+      Loaded_Libraries     : Hashed_Strings.Map := Hashed_Strings.Empty_Map;
+
+      Registered_Libraries : Hashed_Strings.Map := Hashed_Strings.Empty_Map;
    end Manager;
 
 end Gwiad.Dynamic_Libraries.Manager;
