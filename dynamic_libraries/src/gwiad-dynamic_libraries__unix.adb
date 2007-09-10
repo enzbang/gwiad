@@ -44,10 +44,6 @@ package body Gwiad.Dynamic_Libraries is
      new Unchecked_Deallocation
        (Object => Implementation, Name => Reference);
 
-   procedure Free is
-     new Unchecked_Deallocation
-       (Object => Dynamic_Library, Name => Dynamic_Library_Access);
-
    ----------
    -- Call --
    ----------
@@ -144,24 +140,25 @@ package body Gwiad.Dynamic_Libraries is
       return Result;
    end Load;
 
-   ------------
-   -- Unload --
-   ------------
-
-   procedure Unload (Library : in out Dynamic_Library_Access) is
-      function dlclose (Handle : in System.Address) return Interfaces.C.int;
-      pragma Import (C, dlclose, "dlclose");
-
-      Result : int := 1;
-   begin
-      Result := dlclose (System.Address (Library.all.Ref.all));
-
-      Free (Library.all.Ref);
-      Free (Library);
-
-      if Result /= 0 then
-         raise Dynamic_Library_Error with Value (dlerror);
-      end if;
-   end Unload;
+--     ------------
+--     -- Unload --
+--     ------------
+--
+--     procedure Unload (Library : in out Dynamic_Library_Access) is
+--        function dlclose (Handle : in System.Address) return
+--        Interfaces.C.int;
+--        pragma Import (C, dlclose, "dlclose");
+--
+--        Result : int := 1;
+--     begin
+--        Result := dlclose (System.Address (Library.all.Ref.all));
+--
+--        Free (Library.all.Ref);
+--        Free (Library);
+--
+--        if Result /= 0 then
+--           raise Dynamic_Library_Error with Value (dlerror);
+--        end if;
+--     end Unload;
 
 end Gwiad.Dynamic_Libraries;

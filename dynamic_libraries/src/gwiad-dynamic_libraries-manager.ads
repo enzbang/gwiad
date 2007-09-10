@@ -53,11 +53,11 @@ package Gwiad.Dynamic_Libraries.Manager is
       procedure Load (Path : in String);
       --  Load a library
 
-      entry Unload (Path : in String);
-      --  Unload a library
+      procedure Unload (Path : in String);
+      --  Unregister a library
 
-      procedure Unload_All (Rename : in Boolean := True);
-      --  Unload all libraries
+      procedure Unload_All;
+      --  Unregister all libraries
 
    private
       Loaded_Libraries : Hashed_Strings.Map := Hashed_Strings.Empty_Map;

@@ -42,8 +42,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                         Compose (Containing_Directory => "lib",
                                  Name                 => "services");
 
-   procedure Rename_Library
-     (Path : in String; Suffix : in String := ".disabled");
+   procedure Flag_As_Error (Path : in String);
    --  Renames a library by adding the given suffix (or .disabled)
 
    --------------
@@ -65,6 +64,20 @@ package body Gwiad.Dynamic_Libraries.Manager is
          end select;
       end loop Discover_Libraries;
    end Discover;
+
+   -------------------
+   -- Flag_As_Error --
+   -------------------
+
+   procedure Flag_As_Error
+     (Path : in String) is
+      Path_Disabled : constant String := Path & ".error";
+   begin
+      if Exists (Path_Disabled) then
+         Delete_File (Path_Disabled);
+      end if;
+      Rename (Path, Path_Disabled);
+   end Flag_As_Error;
 
    -------------
    -- Manager --
@@ -118,7 +131,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
                      exception
                         when Dynamic_Library_Error =>
                            Text_IO.Put_Line ("Error when loading " & Path);
-                           Rename_Library (Path => Path, Suffix => ".error");
+                           Flag_As_Error (Path => Path);
                            exit Load_Libraries_Loop;
                      end Initialization;
 
@@ -169,7 +182,7 @@ package body Gwiad.Dynamic_Libraries.Manager is
       -- Unload --
       ------------
 
-      entry Unload (Path : in String) when Loaded_Libraries.Length > 0 is
+      procedure Unload (Path : in String) is
          Library : Dynamic_Library_Access;
       begin
          if not Loaded_Libraries.Contains (Path) then
@@ -177,49 +190,30 @@ package body Gwiad.Dynamic_Libraries.Manager is
          end if;
 
          Library := Loaded_Libraries.Element (Path);
-         Ada.Text_IO.Put_Line ("Delete " & Path);
          Plugins.Call (Library.Unload_Callback);
          Loaded_Libraries.Delete (Path);
-         Dynamic_Libraries.Unload (Library);
-
-         Rename_Library (Path);
       end Unload;
 
-      procedure Unload_All (Rename : in Boolean := True) is
-         Position : Cursor := Loaded_Libraries.First;
+      ----------------
+      -- Unload_All --
+      ----------------
 
+      procedure Unload_All is
+         Position : Cursor := Loaded_Libraries.First;
       begin
          while Has_Element (Position) loop
             Unload_Library :
             declare
-               Path : constant String := Key (Position);
-               Library : Dynamic_Library_Access := Element (Position);
+               Path    : constant String                 := Key (Position);
+               Library : constant Dynamic_Library_Access := Element (Position);
             begin
-               Ada.Text_IO.Put_Line ("Delete " & Path);
+               Plugins.Call (Library.Unload_Callback);
                Loaded_Libraries.Delete (Path);
-               Dynamic_Libraries.Unload (Library);
-               if Rename then
-                  Rename_Library (Path);
-               end if;
             end Unload_Library;
             Position := Loaded_Libraries.First;
          end loop;
       end Unload_All;
 
    end Manager;
-
-   --------------------
-   -- Rename_Library --
-   --------------------
-
-   procedure Rename_Library
-     (Path : in String; Suffix : in String := ".disabled") is
-      Path_Disabled : constant String := Path & Suffix;
-   begin
-      if Exists (Path_Disabled) then
-         Delete_File (Path_Disabled);
-      end if;
-      Rename (Path, Path_Disabled);
-   end Rename_Library;
 
 end Gwiad.Dynamic_Libraries.Manager;
