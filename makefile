@@ -67,9 +67,9 @@ lcov_analyse: force
 	sh analyse.sh
 
 build_doc:
-       echo ""
-       echo "=== Build doc"
-       ${MAKE} -C docs build_doc $(GALL_OPTIONS)
+	echo ""
+	echo "=== Build doc"
+	${MAKE} -C docs build_doc $(GALL_OPTIONS)
 
 check :	check_message $(MODULES_CHECK)
 	@echo
