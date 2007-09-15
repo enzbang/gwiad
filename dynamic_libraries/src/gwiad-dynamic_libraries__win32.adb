@@ -35,7 +35,6 @@ package body Gwiad.Dynamic_Libraries is
 
    type HMODULE is new System.Address;
    type DWORD is new Integer;
-   type BOOL is new Boolean;
 
    function GetLastError return DWORD;
    pragma Import (Stdcall, GetLastError, "GetLastError");
@@ -135,27 +134,5 @@ package body Gwiad.Dynamic_Libraries is
       end if;
       return Result;
    end Load;
-
-   ------------
-   -- Unload --
-   ------------
-
-   procedure Unload (Library : in out Dynamic_Library_Access) is
-
-      function FreeLibrary (DLL : in HMODULE) return BOOL;
-      pragma Import (Stdcall, FreeLibrary, "FreeLibrary");
-
-      Result : BOOL;
-      Errno  : DWORD;
-   begin
-      Result := FreeLibrary (HMODULE (Library.Ref.all));
-      Errno := GetLastError;
-      Free (Library.Ref);
-
-      if Result /= True then
-         raise Dynamic_Library_Error
-           with "Unload returned code " & DWORD'Image (Errno);
-      end if;
-   end Unload;
 
 end Gwiad.Dynamic_Libraries;
