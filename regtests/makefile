@@ -31,12 +31,11 @@ all: check_mem
 force:
 
 clean:
-	$(GNATCLEAN) -q -Pregtests
+	-$(GNATCLEAN) -q -Pregtests
 	rm -f alldifs run1 run2 check_mem.run1 check_mem.run2
 	rm -f libgwiad_admin$(EXEEXT)
 	rm -f libhello_world_service$(EXEEXT)
 	rm -f libhello_world_website$(EXEEXT)
-
 
 check_mem: force
 	mkdir -p obj/

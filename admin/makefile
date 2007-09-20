@@ -19,12 +19,10 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-IS_SETUP = if [ `ls tsrc/ | wc -l` -eq 0 ];then \
-		echo -e "\n\nPlease run \"make setup\"\n";\
-		exit 1; fi;
-
 all:
-	$(IS_SETUP)
+ifeq ($(shell ls tsrc/ | wc -l), 0)
+	$(error "Please run 'make setup'")
+endif
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
 
