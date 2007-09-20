@@ -37,7 +37,7 @@ OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 
 # Modules support
 
-MODULES =  gwiad dynamic_libraries web admin example
+MODULES =  gwiad dynamic_libraries plugins web admin example
 
 MODULES_BUILD = ${MODULES:%=%_build}
 
@@ -57,6 +57,7 @@ clean: $(MODULES_CLEAN)
 	make -C regtests clean $(OPTIONS)
 
 setup: $(MODULES_SETUP)
+	$(MKDIR) lib/websites lib/services
 
 regtests: force
 	make -C regtests MODE="Profile" $(GENERAL_OPTIONS)

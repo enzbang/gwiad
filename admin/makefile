@@ -29,7 +29,7 @@ all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
 
 setup:
-	-$(MKDIR) gen
+	-$(MKDIR) gen tsrc obj lib
 	templates2ada -d templates/ -o gen/templates.cds \
 		-t templates/templates.tads
 	gnat chop -wpq gen/templates.cds tsrc/
@@ -38,6 +38,7 @@ setup:
 
 clean:
 	-gnat clean -r -Pgwiad-admin
+	$(RM) -r tsrc
 
 check:
 	gnat check -dd -Pgwiad-admin -rules -from=../gwiad.check

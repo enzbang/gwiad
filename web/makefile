@@ -30,3 +30,4 @@ check:
 	gnat check -dd -Pgwiad-web -rules -from=../gwiad.check
 
 setup:
+	$(MKDIR) obj lib

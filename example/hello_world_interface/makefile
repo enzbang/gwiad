@@ -28,3 +28,6 @@ clean:
 
 check:
 	gnat check -dd -Phello_world_interface -rules -from=../../gwiad.check
+
+setup:
+	$(MKDIR) obj lib

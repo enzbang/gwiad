@@ -28,3 +28,6 @@ clean:
 
 check:
 	gnat check -dd -Pargwiad_demo -rules -from=../../gwiad.check
+
+setup:
+	$(MKDIR) obj bin

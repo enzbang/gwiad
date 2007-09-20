@@ -31,6 +31,8 @@ MODULES_CLEAN = ${MODULES:%=%_clean}
 
 MODULES_CHECK = ${MODULES:%=%_check}
 
+MODULES_SETUP = ${MODULES:%=%_setup}
+
 # Targets
 
 all: $(MODULES_BUILD)
@@ -39,8 +41,14 @@ clean: $(MODULES_CLEAN)
 
 check :$(MODULES_CHECK)
 
+setup: $(MODULES_SETUP)
+	$(MKDIR) obj lib
+
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
+
+${MODULES_SETUP}:
+	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
 
 ${MODULES_CLEAN}:
 	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)

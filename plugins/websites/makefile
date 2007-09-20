@@ -28,3 +28,6 @@ clean:
 
 check:
 	gnat check -dd -Pgwiad-plugins-websites -rules -from=../../gwiad.check
+
+setup:
+	$(MKDIR) obj lib
