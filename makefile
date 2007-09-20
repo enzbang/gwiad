@@ -47,6 +47,14 @@ MODULES_CHECK = ${MODULES:%=%_check}
 
 MODULES_SETUP = ${MODULES:%=%_setup}
 
+ifeq ("$(INSTALL)", "..")
+$(error "Wrong install path : INSTALL='$(INSTALL)'")
+else
+ifeq ("$(INSTALL)", "")
+$(error "Wrong install path : empty INSTALL var")
+endif
+endif
+
 # Targets
 
 all: $(MODULES_BUILD)
