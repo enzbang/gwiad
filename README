@@ -12,7 +12,7 @@ There are several subdirectories:
 
 'dynamic_libraries' holds the dynamic library manager
 
-'example'           holds the demo server and the hello world plugin
+'example'           holds the hello world plugins
 
 'gwiad'             holds an AWS.Services.ECWF developpement branch
                     (until next AWS version) and gwiad kernel package
@@ -22,6 +22,8 @@ There are several subdirectories:
 
 'web'               holds the dispatchers (virtual hosts,
                     prefix urls, ...)
+
+'argwiad'	    holds a simple webserver
 
 Gwiad is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

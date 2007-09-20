@@ -23,7 +23,7 @@
 
 OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
-MODULES = demo hello_world hello_world_service hello_world_interface
+MODULES = hello_world hello_world_service hello_world_interface
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

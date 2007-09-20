@@ -180,10 +180,9 @@ Here are a short description of the demo :
 
 @table @file
 
-@item Argwiad_Demo
+@item Argwiad
 
-Argwiad_Demo is a 17 code lines example to show how to start a Gwiad
-server.
+Argwiad is a simple Gwiad server.
 
 @item Hello_World (service, interface and website)
 
@@ -249,6 +248,9 @@ variable. Then execute :
 @section Building a Gwiad server
 
 @noindent
+You can choose to use @code{argwiad} Web Server and to create plugin or
+to create you own Web Server.
+
 Gwiad is a dynamic plugin loading library on top of AWS. Before
 reading this doc, you really should have a look to AWS documentation.
 

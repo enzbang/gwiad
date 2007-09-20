@@ -37,7 +37,7 @@ OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 
 # Modules support
 
-MODULES =  gwiad dynamic_libraries plugins web admin example
+MODULES =  gwiad dynamic_libraries plugins web admin example argwiad
 
 MODULES_BUILD = ${MODULES:%=%_build}
 
@@ -167,24 +167,32 @@ ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB_MORZ)/*$(SOEXT) $(I_LIB)/..
 endif
 
-install_demo:
-	$(MKDIR) $(DEMO_INSTALL)/data
-	$(MKDIR) $(DEMO_INSTALL)/bin
-	$(RM) -r $(DEMO_INSTALL)/lib/
-	$(MKDIR) $(DEMO_INSTALL)/lib/websites
-	$(MKDIR) $(DEMO_INSTALL)/lib/services
-	$(MKDIR) $(DEMO_INSTALL)/templates
-	$(MKDIR) $(DEMO_INSTALL)/templates/admin
-	$(MKDIR) $(DEMO_INSTALL)/scripts
-	$(MKDIR) $(DEMO_INSTALL)/uploads
-	$(CP) -r lib/services/*$(SOEXT) $(DEMO_INSTALL)/lib/services/
-	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_INSTALL)/lib/websites/
-	$(CP) templates/*html $(DEMO_INSTALL)/templates/
-	$(CP) config/scripts/unregister $(DEMO_INSTALL)/scripts
+install_demo: install_server
+	$(CP) -r lib/services/libhello_world_service.$(SOEXT) \
+		$(SERVER_INSTALL)/lib/services/
+	$(CP) -r lib/websites/libhello_world_website.$(SOEXT) \
+		$(SERVER_INSTALL)/lib/websites/
+	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(SERVER_INSTALL)/bin
+
+install_admin_plugin:
 	$(CP) -r admin/templates/*.thtml \
-		$(DEMO_INSTALL)/templates/admin
-	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(DEMO_INSTALL)/bin
-	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_INSTALL)/bin
+		$(SERVER_INSTALL)/templates/admin
+	$(CP) -r lib/websites/libgwiad_admin.$(SOEXT) \
+		$(SERVER_INSTALL)/lib/websites/
+
+install_server:
+	$(MKDIR) $(SERVER_INSTALL)/data
+	$(MKDIR) $(SERVER_INSTALL)/bin
+	$(RM) -r $(SERVER_INSTALL)/lib/
+	$(MKDIR) $(SERVER_INSTALL)/lib/websites
+	$(MKDIR) $(SERVER_INSTALL)/lib/services
+	$(MKDIR) $(SERVER_INSTALL)/templates
+	$(MKDIR) $(SERVER_INSTALL)/templates/admin
+	$(MKDIR) $(SERVER_INSTALL)/scripts
+	$(MKDIR) $(SERVER_INSTALL)/uploads
+	$(MKDIR) $(SERVER_INSTALL)/www
+	$(CP) templates/default.html $(SERVER_INSTALL)/www/index.html
+	$(CP) argwiad/bin/argwiad$(EXEEXT) $(SERVER_INSTALL)/bin
 
 demo_distrib:
 	$(RM) -r $(DEMO_DISTRIB)

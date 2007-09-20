@@ -5,20 +5,23 @@ See the end of the file for license conditions.
 BASIC INSTALLATION
 
 If you want to install Gwiad with default options, it's simple as
-make all install_demo
+make all install_server
 
 INSTALL GWIAD AND PLUGINS
 
+You can install administration plugin (to unregister plugins) with
+make install_admin_plugin
+
 If you want to install others plugins, you'll need to install Gwiad with
-make install.
+"make install" before compiling and installing the plugins.
 
 TESTING GWIAD
 
 Point your browser to http://localhost:8080 (or whatever hostname/port you have
 choose in the installation process). You should see the Gwiad welcome page.
 
-If you have install the demo, then the hello world plugin will salute you on
-http://localhost:8080/hello/world
+If you have install the demo with "make install_demo", then the hello
+world plugin will salute you on http://localhost:8080/hello/world
 
 Gwiad is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
