@@ -6,6 +6,18 @@
 @setchapternewpage odd
 @syncodeindex fn cp
 
+
+@ignore
+@ifinfo
+@format
+START-INFO-DIR-ENTRY
+*  Gwiad: (gwiad.info).   Gwiad User's Guide.
+END-INFO-DIR-ENTRY
+@end format
+@end ifinfo
+@end ignore
+
+
 @iftex
 @afourpaper
 @end iftex
@@ -41,12 +53,19 @@
 @subtitle Gwiad - version @_GWIAD_VERSION_@
 @subtitle Date: @today{}
 @author Olivier Ramonat
+@email{olivier@@ramonat.fr}
 
 @vskip 0pt plus 1filll
 
 @page
 
 Copyright @copyright{} 2007, Olivier Ramonat
+
+This document is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
+You should have received a copy of the GNU General Public License
 
 @*
 
@@ -92,22 +111,30 @@ Copyright @copyright{} 2007, Olivier Ramonat
 @code{Gwiad} is a framework for building a Web Server with dynamic
 plugin loading based on @i{Ada Web Server}.
 
-@noindent
-The goal of Gwiad is to provide a Web Server to control Ada
-application (Gwiad plugins) that can be dynamically reloaded without
-shutting down the Web Server. Gwiad plugins are divided in two
-categories :
+@code{Gwiad} provide a simple interface to build plugins in Ada. When a
+plugin is placed in @code{Gwiad} plugin directory it is automatically
+loaded.  @code{Gwiad} plugins are divided into two categories :
+
 @itemize
 @item Website plugins
-
-Website plugins are Web applications that register dispatchers such as
-virtual host dispatchers or regexp dispatchers.
+Web applications that register dispatchers such as virtual host
+dispatchers or regexp dispatchers.
 @item Service plugins
-
-The service plugins provide services that can be used by all websites
-plugins.
+ Services provider
+that can be used by all websites plugins.
 @end itemize
+
 @noindent
+Plugins can be added at run time. They only need to be put in the plugins directory.
+If a plugin fails to load it is automatically disabled.
+
+@noindent
+Gwiad provide a simple web administration tool to disable a running
+plugin. A current limitation makes it impossible to completely remove the
+plugin. To update a plugin to a new version you'll need to restart Gwiad.
+
+@noindent
+Gwiad comes with a simple server named @code{argwiad}.
 
 @c ======================================================================
 
@@ -180,14 +207,23 @@ Here are a short description of the demo :
 
 @table @file
 
-@item Argwiad
+@item Hello_World_Interface
 
-Argwiad is a simple Gwiad server.
+This interface declare an abstract function Hello which return a String
+and a new Gwiad service (HW_Service) which inherit the Gwiad Service
+interface.
 
-@item Hello_World (service, interface and website)
+@item Hello_World_Service
 
-The Hello_World demo use the very basic feature of Gwiad dynamic
-plugin loading.
+This service implement the Hello_World_Interface and register itself in
+the Gwiad plugin registry.
+
+@item Hello_World (website)
+
+This website plugin register an URI callback on /hello and build a
+response for /hello/world URI using the previous service.
+
+The default callback return ``Hello World 404 Error''
 
 @end table
 
@@ -195,7 +231,8 @@ To install the demo, run :
 
 @GWIADEXP{$ make install_demo}
 
-By default, the demo are installed in @i{$(HOME)/opt/gwiad}
+By default, the demo are installed in @i{$(HOME)/opt/gwiad} and use the
+simple server provide with Gwiad.
 
 To launch the demo, go under @i{$(HOME)/opt/gwiad} then run @code{argwiad}
 
@@ -249,8 +286,9 @@ variable. Then execute :
 
 @noindent
 You can choose to use @code{argwiad} Web Server and to create plugin or
-to create you own Web Server.
+create you own Web Server.
 
+@noindent
 Gwiad is a dynamic plugin loading library on top of AWS. Before
 reading this doc, you really should have a look to AWS documentation.
 
@@ -329,7 +367,6 @@ Moreover, you need to register the new plugin by calling
 
 This function takes 3 parameters : Name, Description and Builder (an
 access to the factory function).
-
 
 @node Index
 @unnumbered Index
