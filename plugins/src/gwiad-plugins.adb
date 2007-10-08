@@ -24,6 +24,7 @@ with Ada.Unchecked_Deallocation;
 package body Gwiad.Plugins is
 
    Last_Unload_CB    : Unload_CB_Access := null;
+   Last_Reload_CB    : Reload_CB_Access := null;
    Last_Library_Path : Unbounded_String;
 
    ----------
@@ -48,6 +49,17 @@ package body Gwiad.Plugins is
       Free (Unload_CB);
    end Call;
 
+   ----------
+   -- Call --
+   ----------
+
+   procedure Call (Reload_CB : in out Reload_CB_Access) is
+   begin
+      if Reload_CB.Callback /= null then
+         Reload_CB.Callback.all;
+      end if;
+   end Call;
+
    ---------------------------
    -- Get_Last_Library_Path --
    ---------------------------
@@ -58,6 +70,15 @@ package body Gwiad.Plugins is
    end Get_Last_Library_Path;
 
    ------------------------
+   -- Get_Last_Reload_CB --
+   ------------------------
+
+   function Get_Last_Reload_CB return Reload_CB_Access is
+   begin
+      return Last_Reload_CB;
+   end Get_Last_Reload_CB;
+
+   ------------------------
    -- Get_Last_Unload_CB --
    ------------------------
 
@@ -65,6 +86,19 @@ package body Gwiad.Plugins is
    begin
       return Last_Unload_CB;
    end Get_Last_Unload_CB;
+
+   -------------------
+   -- New_Reload_CB --
+   -------------------
+
+   function New_Reload_CB return Reload_CB_Access is
+   begin
+      return new Reload_CB;
+   end New_Reload_CB;
+
+   -------------------
+   -- New_Unload_CB --
+   -------------------
 
    function New_Unload_CB (Path : in String) return Unload_CB_Access is
    begin
@@ -77,16 +111,18 @@ package body Gwiad.Plugins is
    --------------
 
    procedure Register
-     (Path : in String; Unload_CB : in Gwiad.Plugins.Unload_CB_Access)
+     (Path      : in String;
+      Unload_CB : in Gwiad.Plugins.Unload_CB_Access;
+      Reload_CB : in Gwiad.Plugins.Reload_CB_Access)
    is
    begin
       Last_Library_Path := To_Unbounded_String (Path);
       Last_Unload_CB    := Unload_CB;
+      Last_Reload_CB    := Reload_CB;
 
       if Last_Unload_CB.Path /= null then
          Free (Last_Unload_CB.Path);
       end if;
-      Last_Unload_CB.Path := new String'(Path);
    end Register;
 
    ----------------------------
@@ -99,6 +135,15 @@ package body Gwiad.Plugins is
    begin
       Last_Unload_CB.Internal_Callback := Callback;
    end Set_Internal_Unload_CB;
+
+   -------------------
+   -- Set_Reload_CB --
+   -------------------
+
+   procedure Set_Reload_CB (Callback : access procedure) is
+   begin
+      Last_Reload_CB.Callback := Callback;
+   end Set_Reload_CB;
 
    -------------------
    -- Set_Unload_CB --

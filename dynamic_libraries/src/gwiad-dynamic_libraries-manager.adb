@@ -34,6 +34,8 @@ package body Gwiad.Dynamic_Libraries.Manager is
    use Ada.Containers;
    use Ada.Exceptions;
 
+   Ask_Reload_File : constant String := ".gwiad_do_reload";
+
    Websites_Lib_Dir : constant String :=
                         Compose (Containing_Directory => "lib",
                                  Name                 => "websites");
@@ -55,6 +57,12 @@ package body Gwiad.Dynamic_Libraries.Manager is
       Discover_Libraries :
       loop
          Manager.Discover_Libraries;
+
+         --  Maybe reload
+         if Exists (Ask_Reload_File) then
+            Manager.Reload_All;
+            Delete_File (Ask_Reload_File);
+         end if;
          select
             accept Stop;
             Manager.Unregister_All;
@@ -135,12 +143,14 @@ package body Gwiad.Dynamic_Libraries.Manager is
                            exit Load_Libraries_Loop;
                      end Initialization;
 
-                     Library.Unregister_Callback := New_Unload_CB (Path);
+                     Library.Unregister_Callback :=
+                       Plugins.New_Unload_CB (Path);
+                     Library.Reload_Callback     := Plugins.New_Reload_CB;
 
-                     Plugins.Register
+                     Gwiad.Plugins.Register
                        (Path      => Path,
-                        Unload_CB => Library.Unregister_Callback);
-
+                        Unload_CB => Library.Unregister_Callback,
+                        Reload_CB => Library.Reload_Callback);
                      Init (Library.all, Path);
 
                      Loaded_Libraries.Insert (Path, Library);
@@ -173,12 +183,27 @@ package body Gwiad.Dynamic_Libraries.Manager is
       begin
          Library := Load (Path);
          Library.Unregister_Callback := Plugins.New_Unload_CB (Path);
+         Library.Reload_Callback     := Plugins.New_Reload_CB;
          Gwiad.Plugins.Register (Path      => Path,
-                                 Unload_CB => Library.Unregister_Callback);
+                                 Unload_CB => Library.Unregister_Callback,
+                                 Reload_CB => Library.Reload_Callback);
          Init (Library.all, Path);
          Loaded_Libraries.Insert (Path, Library);
          Registered_Libraries.Insert (Path, Library);
       end Load;
+
+      ----------------
+      -- Reload_All --
+      ----------------
+
+      procedure Reload_All is
+         Position : Cursor := Registered_Libraries.First;
+      begin
+         while Has_Element (Position) loop
+            Plugins.Call (Element (Position).Reload_Callback);
+            Position := Next (Position);
+         end loop;
+      end Reload_All;
 
       ------------
       -- Unload --

@@ -59,6 +59,8 @@ package Gwiad.Dynamic_Libraries.Manager is
       procedure Unregister_All;
       --  Unregister all libraries
 
+      procedure Reload_All;
+      --  Reload Gwiad
    private
       Loaded_Libraries     : Hashed_Strings.Map := Hashed_Strings.Empty_Map;
 

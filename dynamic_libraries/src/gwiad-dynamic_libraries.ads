@@ -63,6 +63,7 @@ private
    type Dynamic_Library is tagged limited record
       Ref                 : Reference;
       Unregister_Callback : Gwiad.Plugins.Unload_CB_Access;
+      Reload_Callback     : Gwiad.Plugins.Reload_CB_Access;
    end record;
 
    function Get_Library_Extension return String;
