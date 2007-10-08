@@ -58,26 +58,6 @@ package body Gwiad.Web.Virtual_Host is
    function Default_Callback (Request : in Status.Data) return Response.Data is
       use Ada.Directories;
 
-      function Get_Hostname (Hostname : in String) return String;
-      --  Get hostname
-
-      ------------------
-      -- Get_Hostname --
-      ------------------
-
-      function Get_Hostname (Hostname : in String) return String is
-         K : Natural;
-      begin
-         K := Strings.Fixed.Index (Hostname, ":");
-
-         if K = 0 then
-            K := Hostname'Last;
-         else
-            K := K - 1;
-         end if;
-         return Hostname (Hostname'First .. K);
-      end Get_Hostname;
-
       URI      : constant String := Status.URI (Request);
       Hostname : constant String := Get_Hostname (AWS.Status.Host (Request));
 
@@ -112,6 +92,23 @@ package body Gwiad.Web.Virtual_Host is
       end if;
       return Data;
    end Default_Callback;
+
+   ------------------
+   -- Get_Hostname --
+   ------------------
+
+   function Get_Hostname (Hostname : in String) return String is
+      K : Natural;
+   begin
+      K := Strings.Fixed.Index (Hostname, ":");
+
+      if K = 0 then
+         K := Hostname'Last;
+      else
+         K := K - 1;
+      end if;
+      return Hostname (Hostname'First .. K);
+   end Get_Hostname;
 
    --------------
    -- Register --

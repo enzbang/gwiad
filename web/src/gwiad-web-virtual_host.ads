@@ -48,4 +48,7 @@ package Gwiad.Web.Virtual_Host is
    procedure Unregister (Hostname : in String);
    --  Unregisters a virtual host
 
+   function Get_Hostname (Hostname : in String) return String;
+   --  Get hostname
+
 end Gwiad.Web.Virtual_Host;
