@@ -176,16 +176,16 @@ ifeq ($(OS), Windows_NT)
 endif
 
 install_demo: install_server
-	$(CP) -r lib/services/libhello_world_service.$(SOEXT) \
+	$(CP) -r lib/services/libhello_world_service$(SOEXT) \
 		$(SERVER_INSTALL)/lib/services/
-	$(CP) -r lib/websites/libhello_world_website.$(SOEXT) \
+	$(CP) -r lib/websites/libhello_world_website$(SOEXT) \
 		$(SERVER_INSTALL)/lib/websites/
 	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(SERVER_INSTALL)/bin
 
 install_admin_plugin:
 	$(CP) -r admin/templates/*.thtml \
 		$(SERVER_INSTALL)/templates/admin
-	$(CP) -r lib/websites/libgwiad_admin.$(SOEXT) \
+	$(CP) -r lib/websites/libgwiad_admin$(SOEXT) \
 		$(SERVER_INSTALL)/lib/websites/
 
 install_server:
