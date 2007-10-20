@@ -64,6 +64,11 @@ build: all
 clean: $(MODULES_CLEAN)
 	make -C regtests clean $(OPTIONS)
 
+clean-all:
+	find . -name "*.ali" -o -name "*.o" \
+		-o -name "*$(SOEXT)" -o -name "#*" \
+		-exec rm -f {} \;
+
 setup: $(MODULES_SETUP)
 	$(MKDIR) lib/websites lib/services
 
