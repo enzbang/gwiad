@@ -73,6 +73,7 @@ setup: $(MODULES_SETUP)
 	$(MKDIR) lib/websites lib/services
 
 regtests: force
+	make regtests -C external-libs/morzhol MODE="Profile" $(GENERAL_OPTIONS)
 	make -C regtests MODE="Profile" $(GENERAL_OPTIONS)
 	rm -f regtests/obj/*	# To avoid error in lcov_analyse ???
 	make lcov_analyse
