@@ -86,7 +86,7 @@ check :	check_message $(MODULES_CHECK)
 	@echo "### Check style with style_checker ##"
 	@echo "#####################################"
 	@echo
-	-find . -not -name "b~*" -a \( -name "*.adb" -o -name "*.ads" \) \
+	-find . -follow -not -name "b~*" -a \( -name "*.adb" -o -name "*.ads" \) \
 	-and -not -path "*tsrc*" | xargs style_checker -lang Ada -cp -cy -sp -gnat05
 
 check_message:
