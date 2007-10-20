@@ -24,7 +24,7 @@ with Ada.Command_Line;
 with Ada.Exceptions;
 
 with Gwiad.Web;
-with Gwiad.Plugins.Websites.Registry;
+
 with Gwiad.Dynamic_Libraries.Manager;
 
 with AWS.Client;
