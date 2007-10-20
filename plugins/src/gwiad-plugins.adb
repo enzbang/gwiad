@@ -102,8 +102,7 @@ package body Gwiad.Plugins is
 
    function New_Unload_CB (Path : in String) return Unload_CB_Access is
    begin
-      return new Unload_CB'(Path   => new String'(Path),
-                            others => <>);
+      return new Unload_CB'(Path   => new String'(Path), others => <>);
    end New_Unload_CB;
 
    --------------
@@ -122,8 +121,8 @@ package body Gwiad.Plugins is
          Free (Last_Unload_CB.Path);
       end if;
 
-      Last_Unload_CB    := Unload_CB;
-      Last_Reload_CB    := Reload_CB;
+      Last_Unload_CB := Unload_CB;
+      Last_Reload_CB := Reload_CB;
    end Register;
 
    ----------------------------
