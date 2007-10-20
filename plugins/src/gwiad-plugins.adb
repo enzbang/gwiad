@@ -117,12 +117,13 @@ package body Gwiad.Plugins is
    is
    begin
       Last_Library_Path := To_Unbounded_String (Path);
-      Last_Unload_CB    := Unload_CB;
-      Last_Reload_CB    := Reload_CB;
 
-      if Last_Unload_CB.Path /= null then
+      if Last_Unload_CB /= null and then Last_Unload_CB.Path /= null then
          Free (Last_Unload_CB.Path);
       end if;
+
+      Last_Unload_CB    := Unload_CB;
+      Last_Reload_CB    := Reload_CB;
    end Register;
 
    ----------------------------
