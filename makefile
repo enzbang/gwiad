@@ -37,7 +37,8 @@ OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 
 # Modules support
 
-MODULES =  external-libs gwiad dynamic_libraries plugins web admin example argwiad
+MODULES =  external-libs gwiad dynamic_libraries plugins web admin \
+		example argwiad
 
 MODULES_BUILD = ${MODULES:%=%_build}
 
@@ -73,7 +74,8 @@ setup: $(MODULES_SETUP)
 	$(MKDIR) lib/websites lib/services
 
 regtests: force
-	make regtests -C external-libs/morzhol MODE="Profile" $(GENERAL_OPTIONS)
+	make -C external-libs/morzhol regtests \
+		MODE="Profile" $(GENERAL_OPTIONS)
 	make -C regtests MODE="Profile" $(GENERAL_OPTIONS)
 	rm -f regtests/obj/*	# To avoid error in lcov_analyse ???
 	make lcov_analyse
@@ -92,8 +94,10 @@ check :	check_message $(MODULES_CHECK)
 	@echo "### Check style with style_checker ##"
 	@echo "#####################################"
 	@echo
-	-find . -follow -not -name "b~*" -a \( -name "*.adb" -o -name "*.ads" \) \
-	-and -not -path "*tsrc*" | xargs style_checker -lang Ada -cp -cy -sp -gnat05
+	-find . -follow -not -name "b~*" \
+		-a \( -name "*.adb" -o -name "*.ads" \) \
+		-and -not -path "*tsrc*" \
+		| xargs style_checker -lang Ada -cp -cy -sp -gnat05
 
 check_message:
 	@echo
@@ -131,7 +135,6 @@ ${MODULES_CHECK}:
 
 ${MODULES_SETUP}:
 	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
-
 
 install_clean:
 	$(RM) -fr $(I_INC)
