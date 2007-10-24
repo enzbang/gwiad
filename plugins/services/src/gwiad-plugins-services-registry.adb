@@ -66,15 +66,13 @@ package body Gwiad.Plugins.Services.Registry is
          raise Service_Error;
       end if;
 
-      declare
-         New_Service : Registered_Service :=
-                         (Builder       => Builder,
-                          Path          =>
-                            To_Unbounded_String (Last_Library_Path),
-                          Description   => To_Unbounded_String (Description));
-      begin
-         Map.Insert (Name, New_Service);
-      end;
+      Map.Insert (Name,
+                  Registered_Service'
+                    (Builder       => Builder,
+                     Path          =>
+                       To_Unbounded_String (Last_Library_Path),
+                     Description   => To_Unbounded_String (Description)));
+
       Last_Unload_CB.Internal_Callback := Unload'Access;
    end Register;
 

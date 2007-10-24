@@ -72,9 +72,9 @@ package body Gwiad.Plugins.Websites.Registry is
 
       Map.Insert
         (Name,
-         (Unregister_CB => Unregister,
-          Path          => +Library_Path,
-          Description   => +Description));
+         Registered_Website'(Unregister_CB => Unregister,
+                             Path          => +Library_Path,
+                             Description   => +Description));
    end Register;
 
    ------------
@@ -116,11 +116,11 @@ package body Gwiad.Plugins.Websites.Registry is
          raise Website_Error;
       end if;
 
-      declare
+      Unregister_Website : declare
          RW : Registered_Website := Element (Position);
       begin
          RW.Unregister_CB.all (Name);
-      end;
+      end Unregister_Website;
       Map.Delete (Position);
    end Unregister;
 
