@@ -38,7 +38,7 @@ OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 # Modules support
 
 MODULES =  external-libs gwiad dynamic_libraries plugins web admin \
-		example argwiad
+		example argwiad argwiadctl
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

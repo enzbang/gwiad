@@ -34,8 +34,6 @@ package body Gwiad.Dynamic_Libraries.Manager is
    use Ada.Containers;
    use Ada.Exceptions;
 
-   Ask_Reload_File : constant String := ".gwiad_do_reload";
-
    Websites_Lib_Dir : constant String :=
                         Compose (Containing_Directory => "lib",
                                  Name                 => "websites");
@@ -62,10 +60,10 @@ package body Gwiad.Dynamic_Libraries.Manager is
       Discover_Libraries :
       loop
          --  Maybe reload
-         if Exists (Ask_Reload_File) then
+         if Exists (Gwiad.Reload_File) then
             Manager.Discover_Libraries;
             Manager.Reload_All;
-            Delete_File (Ask_Reload_File);
+            Delete_File (Gwiad.Reload_File);
          end if;
          select
             accept Stop;
