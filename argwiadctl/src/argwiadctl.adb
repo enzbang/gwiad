@@ -37,7 +37,7 @@ procedure Argwiadctl is
    PID_Filename     : constant String := ".pid";
    Argwiad_Root_Env : constant String := "ARGWIAD_ROOT";
 
-   type Options is (Start, Reload, Stop);
+   type Options is (Start, Reload, Stop, Restart);
 
    procedure Reload;
    --  Ask gwiad to reload itself by creating a file named .gwiad_do_reload.
@@ -214,6 +214,9 @@ begin
                Stop;
             when Reload =>
                Reload;
+            when Restart =>
+               Stop;
+               Start;
          end case;
       exception
          when Constraint_Error =>
