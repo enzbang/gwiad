@@ -54,12 +54,16 @@ package body Gwiad.Dynamic_Libraries.Manager is
    task body Discover is
       Discover_Delay : constant Duration := 5.0;
    begin
+
+      --  Discover libraries on start up then only on user request
+
+      Manager.Discover_Libraries;
+
       Discover_Libraries :
       loop
-         Manager.Discover_Libraries;
-
          --  Maybe reload
          if Exists (Ask_Reload_File) then
+            Manager.Discover_Libraries;
             Manager.Reload_All;
             Delete_File (Ask_Reload_File);
          end if;
