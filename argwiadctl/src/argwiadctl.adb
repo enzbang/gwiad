@@ -22,7 +22,8 @@
 with Ada.Text_IO;
 with Ada.Command_Line;
 with Ada.Directories;
-with Ada.Real_Time.Timing_Events;
+with Ada.Environment_Variables;
+
 with GNAT.OS_Lib;
 
 with Gwiad;
@@ -33,7 +34,8 @@ procedure Argwiadctl is
 
    Argwiadctl_Reload_File : String renames Gwiad.Reload_File;
 
-   PID_Filename : constant String := ".pid";
+   PID_Filename     : constant String := ".pid";
+   Argwiad_Root_Env : constant String := "ARGWIAD_ROOT";
 
    type Options is (Start, Reload, Stop);
 
@@ -193,9 +195,16 @@ begin
    else
       if Argument_Count = 2 and then Directories.Exists (Argument (2)) then
 
-         --  If a directory is specified, use it for gwiad default directory
+         --  If a directory is specified, use it as gwiad default directory
 
          Directories.Set_Directory (Argument (2));
+      elsif Environment_Variables.Exists (Argwiad_Root_Env) then
+
+         --  If no directory specified but ARGWIAD_ROOT env var not null then
+         --  use it as gwiad default directory
+
+         Directories.Set_Directory
+           (Environment_Variables.Value (Argwiad_Root_Env));
       end if;
 
       Force_Valid_Option : begin
