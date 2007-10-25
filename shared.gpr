@@ -51,7 +51,7 @@ project Shared is
    --------------
 
    Common_Options  :=
-     ("-gnat05", "-gnatwcfijkmruv", "-gnaty3abcefhiklmnoprstx", "-Wall");
+     ("-gnat05", "-gnatwa", "-gnaty3Aabcdefhiklmnoprstux", "-Wall");
    --  Common options used for the Debug and Release modes
 
    Debug_Options   :=
