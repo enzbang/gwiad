@@ -39,7 +39,7 @@ procedure Argwiadctl is
 
    type Options is (Start, Reload, Stop);
 
-   procedure Ask_Reload;
+   procedure Reload;
    --  Ask gwiad to reload itself by creating a file named .gwiad_do_reload.
    --  Wait for the file deletion as it means that gwiad as properly
    --  been reloaded.
@@ -53,6 +53,33 @@ procedure Argwiadctl is
    procedure Usage;
    --  Show good command line usage
 
+   ------------
+   -- Reload --
+   ------------
+
+   procedure Reload is
+      use Ada.Text_IO;
+      Nb_Retry        : constant := 10;
+      Ask_Reload_File : File_Type;
+   begin
+      Create (File => Ask_Reload_File,
+              Mode => Out_File,
+              Name => Argwiadctl_Reload_File);
+      New_Line (Ask_Reload_File);
+      Close (Ask_Reload_File);
+
+      --  Wait for file deletion
+
+      for K in 1 .. Nb_Retry loop
+         if not Directories.Exists (Argwiadctl_Reload_File) then
+            return;
+         end if;
+         delay 1.0;
+         Text_IO.Put ("...");
+      end loop;
+      Text_IO.Put ("Timeout ! Abort");
+   end Reload;
+
    -----------
    -- Start --
    -----------
@@ -62,18 +89,17 @@ procedure Argwiadctl is
       use Ada.Text_IO;
       use type OS_Lib.String_Access;
 
-      Gwiad_PID : OS_Lib.Process_Id;
+      Argwiad_Command : aliased String       := "./bin/argwiad";
+      Gwiad_Arg       : constant OS_Lib.Argument_List :=
+                          (1 => Argwiad_Command'Unchecked_Access);
 
+      Gwiad_PID       : OS_Lib.Process_Id;
       Nohup_Command   : OS_Lib.String_Access :=
                           OS_Lib.Locate_Exec_On_Path ("nohup");
-      Argwiad_Command : aliased String       := "./bin/argwiad";
-      Gwiad_Arg       : OS_Lib.Argument_List :=
-                          (1 => Argwiad_Command'Unchecked_Access);
    begin
-
       --  Check if Gwiad PID file exists.
 
-      if Nohup_Command = Null then
+      if Nohup_Command = null then
          Put_Line ("No nohup command required by argwiadctl");
       else
          if Directories.Exists (Name => PID_Filename) then
@@ -158,33 +184,6 @@ procedure Argwiadctl is
       end loop;
    end Usage;
 
-   ----------------
-   -- Ask_Reload --
-   ----------------
-
-   procedure Ask_Reload is
-      use Ada.Text_IO;
-      Nb_Retry        : constant := 10;
-      Ask_Reload_File : File_Type;
-   begin
-      Create (File => Ask_Reload_File,
-              Mode => Out_File,
-              Name => Argwiadctl_Reload_File);
-      New_Line (Ask_Reload_File);
-      Close (Ask_Reload_File);
-
-      --  Wait for file deletion
-
-      for K in 1 .. Nb_Retry loop
-         if not Directories.Exists (Argwiadctl_Reload_File) then
-            return;
-         end if;
-         delay 1.0;
-         Text_IO.Put ("...");
-      end loop;
-      Text_IO.Put ("Timeout ! Abort");
-   end Ask_Reload;
-
    use Ada.Command_Line;
 
 begin
@@ -214,7 +213,7 @@ begin
             when Stop =>
                Stop;
             when Reload =>
-               Ask_Reload;
+               Reload;
          end case;
       exception
          when Constraint_Error =>
