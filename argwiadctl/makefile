@@ -23,6 +23,9 @@ all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pargwiadctl
 	gnat make -XPRJ_BUILD=$(MODE) -Pargwiadctl
 
+build_doc:
+	a2x -f manpage doc/argwiadctl.txt 2>/dev/null
+
 clean:
 	-gnat clean -r -Pargwiadctl
 

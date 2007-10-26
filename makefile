@@ -84,9 +84,12 @@ lcov_analyse: force
 	sh analyse.sh
 
 build_doc:
-	echo ""
-	echo "=== Build doc"
+	@echo ""
+	@echo "=== Build doc"
 	${MAKE} -C doc build_doc $(GALL_OPTIONS)
+	@echo ""
+	@echo "=== Build argwiadctl manpage"
+	${MAKE} -C argwiadctl build_doc
 
 check :	check_message $(MODULES_CHECK)
 	@echo
@@ -180,6 +183,9 @@ install: install_dirs
 	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
 	$(CP) argwiadctl/bin/argwiadctl $(I_BIN)
+ifneq ("$(MANPAGE_DIR)", "")
+	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
+endif
 ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
 	$(CP) $(I_LIB_MORZ)/*$(SOEXT) $(I_LIB)/..

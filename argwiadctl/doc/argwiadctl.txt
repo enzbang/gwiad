@@ -1,0 +1,48 @@
+argwiadctl(1)
+=============
+Olivier Ramonat <olivier@ramonat.fr>
+v1.0
+
+NAME
+----
+argwiadctl - Ar Gwiad Controller
+
+SYNOPSIS
+--------
+'argwiadctl' command [DIRECTORY]
+
+DESCRIPTION
+-----------
+argwiadctl is a controller for argwiad, the Gwiad web server located
+in DIRECTORY. Note that if DIRECTORY is not specified, argwiadctl will
+use, in order, the environment variable ARGWIAD_ROOT or the current
+directory.
+
+
+OPTIONS
+-------
+--version::
+	Prints the argwiadctl version
+
+start::
+        Starts argwiad
+
+stop::
+        Stops argwiad
+
+reload::
+        Reloads all running gwiad plugins and search for new plugins
+
+restart::
+        Restart gwiad
+
+Authors
+-------
+Written by Olivier Ramonat, <olivier@ramonat.fr>
+
+COPYING
+-------
+Copyright \(C) 2007 Olivier Ramonat. Free use of this software is
+granted under the terms of the GNU General Public License (GPL).
+
+
