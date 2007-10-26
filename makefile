@@ -179,6 +179,7 @@ install: install_dirs
 	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
+	$(CP) argwiadctl/bin/argwiadctl $(I_BIN)
 ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
 	$(CP) $(I_LIB_MORZ)/*$(SOEXT) $(I_LIB)/..
