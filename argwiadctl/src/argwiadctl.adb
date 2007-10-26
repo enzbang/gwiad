@@ -25,6 +25,7 @@ with Ada.Directories;
 with Ada.Environment_Variables;
 
 with GNAT.OS_Lib;
+with GNAT.Case_Util;
 
 with Gwiad;
 
@@ -34,10 +35,15 @@ procedure Argwiadctl is
 
    Argwiadctl_Reload_File : String renames Gwiad.Reload_File;
 
+   Argwiadctl_Version : constant String := "argwiadctl version 0.1";
+   --  argwiadctl version
+
    PID_Filename     : constant String := ".pid";
    Argwiad_Root_Env : constant String := "ARGWIAD_ROOT";
 
-   type Options is (Start, Reload, Stop, Restart);
+   type Options is (Start, Reload, Stop, Restart, Version);
+   subtype Cmd_Options is Options range Start .. Restart;
+   subtype Others_Options is Options range Version .. Version;
 
    procedure Reload;
    --  Ask gwiad to reload itself by creating a file named .gwiad_do_reload.
@@ -178,9 +184,18 @@ procedure Argwiadctl is
 
    procedure Usage is
    begin
-      Text_IO.Put ("argwiadctl ");
-      for Opt in Options'Range loop
-         Text_IO.Put (Options'Image (Opt) & " ");
+      Text_IO.Put ("usage: argwiadctl [--version] ");
+      for Opt in Cmd_Options'Range loop
+         declare
+            Option_Name : String := Cmd_Options'Image (Opt);
+         begin
+            GNAT.Case_Util.To_Lower (Option_Name);
+            if Opt /= Cmd_Options'Last then
+               Text_IO.Put (Option_Name & "|");
+            else
+               Text_IO.Put (Option_Name);
+            end if;
+         end;
       end loop;
    end Usage;
 
@@ -206,18 +221,32 @@ begin
            (Environment_Variables.Value (Argwiad_Root_Env));
       end if;
 
-      Force_Valid_Option : begin
-         case Options'Value (Argument (1)) is
-            when Start =>
-               Start;
-            when Stop =>
-               Stop;
-            when Reload =>
-               Reload;
-            when Restart =>
-               Stop;
-               Start;
-         end case;
+      Force_Valid_Option : declare
+      begin
+
+         if Argument (1)'Length > 2
+           and then Argument (1)
+           (Argument (1)'First .. Argument (1)'First + 1) = "--"
+         then
+            case Others_Options (Others_Options'Value
+              (Argument (1)
+               (Argument (1)'First + 2 .. Argument (1)'Last))) is
+               when Version => Text_IO.Put_Line (Argwiadctl_Version);
+            end case;
+         else
+            case Cmd_Options (Cmd_Options'Value (Argument (1))) is
+               when Start =>
+                  Start;
+               when Stop =>
+                  Stop;
+               when Reload =>
+                  Reload;
+               when Restart =>
+                  Stop;
+                  Start;
+            end case;
+         end if;
+
       exception
          when Constraint_Error =>
             Usage;
