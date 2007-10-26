@@ -216,20 +216,20 @@ begin
                exit;
          end case;
       else
-         if K + 1 < Argument_Count then
-            if Directories.Exists (Argument (K + 1)) then
-               --  If a directory is specified, use it as gwiad default
-               --  directory
+         if K + 1 < Argument_Count
+           and then Directories.Exists (Argument (K + 1))
+         then
+            --  If a directory is specified, use it as gwiad default
+            --  directory
 
-               Directories.Set_Directory (Argument (K + 1));
-            elsif Environment_Variables.Exists (Argwiad_Root_Env) then
+            Directories.Set_Directory (Argument (K + 1));
+         elsif Environment_Variables.Exists (Argwiad_Root_Env) then
 
-               --  If no directory specified but ARGWIAD_ROOT env var not null
-               --  then use it as gwiad default directory
+            --  If no directory specified but ARGWIAD_ROOT env var not null
+            --  then use it as gwiad default directory
 
-               Directories.Set_Directory
-                 (Environment_Variables.Value (Argwiad_Root_Env));
-            end if;
+            Directories.Set_Directory
+              (Environment_Variables.Value (Argwiad_Root_Env));
          end if;
 
          case Cmd_Options (Cmd_Options'Value (Argument (K))) is
