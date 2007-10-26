@@ -204,6 +204,10 @@ procedure Argwiadctl is
    use Ada.Command_Line;
 
 begin
+   if Argument_Count = 0 then
+      Usage;
+   end if;
+
    for K in 1 .. Argument_Count loop
       if Argument (K)'Length > 2
         and then Argument (K)
