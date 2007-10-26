@@ -193,64 +193,64 @@ procedure Argwiadctl is
             if Opt /= Cmd_Options'Last then
                Text_IO.Put (Option_Name & "|");
             else
-               Text_IO.Put (Option_Name);
+               Text_IO.Put (Option_Name & " ");
             end if;
          end;
       end loop;
+
+      Text_IO.Put ("[directory]");
    end Usage;
 
    use Ada.Command_Line;
 
 begin
-   --  Only one option for now
+   for K in 1 .. Argument_Count loop
+      if Argument (K)'Length > 2
+        and then Argument (K)
+        (Argument (K)'First .. Argument (K)'First + 1) = "--"
+      then
+         case Others_Options (Others_Options'Value
+                              (Argument (K)
+              (Argument (K)'First + 2 .. Argument (K)'Last))) is
+            when Version => Text_IO.Put_Line (Argwiadctl_Version);
+               exit;
+         end case;
+      else
+         if K + 1 < Argument_Count then
+            if Directories.Exists (Argument (K + 1)) then
+               --  If a directory is specified, use it as gwiad default
+               --  directory
 
-   if Argument_Count < 1 or else Argument_Count > 2 then
-      Usage;
-   else
-      if Argument_Count = 2 and then Directories.Exists (Argument (2)) then
+               Directories.Set_Directory (Argument (K + 1));
+            elsif Environment_Variables.Exists (Argwiad_Root_Env) then
 
-         --  If a directory is specified, use it as gwiad default directory
+               --  If no directory specified but ARGWIAD_ROOT env var not null
+               --  then use it as gwiad default directory
 
-         Directories.Set_Directory (Argument (2));
-      elsif Environment_Variables.Exists (Argwiad_Root_Env) then
-
-         --  If no directory specified but ARGWIAD_ROOT env var not null then
-         --  use it as gwiad default directory
-
-         Directories.Set_Directory
-           (Environment_Variables.Value (Argwiad_Root_Env));
-      end if;
-
-      Force_Valid_Option : declare
-      begin
-
-         if Argument (1)'Length > 2
-           and then Argument (1)
-           (Argument (1)'First .. Argument (1)'First + 1) = "--"
-         then
-            case Others_Options (Others_Options'Value
-              (Argument (1)
-               (Argument (1)'First + 2 .. Argument (1)'Last))) is
-               when Version => Text_IO.Put_Line (Argwiadctl_Version);
-            end case;
-         else
-            case Cmd_Options (Cmd_Options'Value (Argument (1))) is
-               when Start =>
-                  Start;
-               when Stop =>
-                  Stop;
-               when Reload =>
-                  Reload;
-               when Restart =>
-                  Stop;
-                  Start;
-            end case;
+               Directories.Set_Directory
+                 (Environment_Variables.Value (Argwiad_Root_Env));
+            end if;
          end if;
 
-      exception
-         when Constraint_Error =>
-            Usage;
-      end Force_Valid_Option;
-   end if;
+         case Cmd_Options (Cmd_Options'Value (Argument (K))) is
+            when Start =>
+               Start;
+            when Stop =>
+               Stop;
+            when Reload =>
+               Reload;
+            when Restart =>
+               Stop;
+               Start;
+         end case;
+      end if;
+   end loop;
 
+exception
+   when Constraint_Error =>
+      --  Wrong options. Display usage info.
+      Usage;
+   when others =>
+      Text_IO.Put_Line ("Unknown error");
+      Usage;
 end Argwiadctl;
