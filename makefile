@@ -125,7 +125,7 @@ I_LIB_MORZ = $(INSTALL)/lib/morzhol
 I_LIB	   = $(INSTALL)/lib/gwiad
 I_GPR	   = $(INSTALL)/lib/gnat
 
-DEMO_DISTRIB = demo_distrib
+DISTRIB = argwiad-0.5
 
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
@@ -218,33 +218,30 @@ install_server:
 	$(CP) templates/default.html $(SERVER_INSTALL)/www/index.html
 	$(CP) argwiad/bin/argwiad$(EXEEXT) $(SERVER_INSTALL)/bin
 
-demo_distrib:
-	$(RM) -r $(DEMO_DISTRIB)
-	$(MKDIR) $(DEMO_DISTRIB)/data
-	$(MKDIR) $(DEMO_DISTRIB)/bin
-	$(MKDIR) $(DEMO_DISTRIB)/lib/websites
-	$(MKDIR) $(DEMO_DISTRIB)/lib/services
-	$(MKDIR) $(DEMO_DISTRIB)/config
-	$(MKDIR) $(DEMO_DISTRIB)/templates
-	$(MKDIR) $(DEMO_DISTRIB)/templates/services_admin
-	$(MKDIR) $(DEMO_DISTRIB)/templates/websites_admin
-	$(MKDIR) $(DEMO_DISTRIB)/scripts
-	$(MKDIR) $(DEMO_DISTRIB)/librairies
-## Copy all shared libraries found in argwiad to $(DEMO_DISTRIB)/bin
-ifneq ($(OS),Windows_NT)
-	-sh config/scripts/ldd_copy example/demo/bin/argwiad \
-		$(DEMO_DISTRIB)/bin
-endif
-	$(CP) -r lib/services/*$(SOEXT) $(DEMO_DISTRIB)/lib/services
-	$(CP) -r lib/websites/*$(SOEXT) $(DEMO_DISTRIB)/lib/websites
-	$(CP) config/scripts/unregister $(DEMO_DISTRIB)/scripts
-	$(CP) templates/*html $(DEMO_DISTRIB)/templates/
-	$(CP) -r templates/websites_admin/*.thtml \
-		$(DEMO_DISTRIB)/templates/websites_admin
-	$(CP) -r templates/services_admin/*.thtml \
-		$(DEMO_DISTRIB)/templates/services_admin
-	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(DEMO_DISTRIB)/bin
-	$(CP) example/demo/bin/argwiad$(EXEEXT) $(DEMO_DISTRIB)/bin
-	$(CP) example/demo/start_demo.sh $(DEMO_DISTRIB)/
-	$(TAR_DIR) $(DEMO_DISTRIB).tgz $(DEMO_DISTRIB)
-	$(RM) -r $(DEMO_DISTRIB)
+dist:
+	$(RM) -r $(DISTRIB)
+	$(MKDIR) $(DISTRIB)/data
+	$(MKDIR) $(DISTRIB)/bin
+	$(MKDIR) $(DISTRIB)/lib/websites
+	$(MKDIR) $(DISTRIB)/lib/services
+	$(MKDIR) $(DISTRIB)/config
+	$(MKDIR) $(DISTRIB)/templates
+	$(MKDIR) $(DISTRIB)/templates/admin
+	$(MKDIR) $(DISTRIB)/scripts
+	$(MKDIR) $(DISTRIB)/uploads
+	$(MKDIR) $(DISTRIB)/librairies
+	$(CP) external-libs/morzhol/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) gwiad/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) web/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) plugins/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) dynamic_libraries/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(ADA_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) -r lib/services/*$(SOEXT) $(DISTRIB)/lib/services
+	$(CP) -r lib/websites/*$(SOEXT) $(DISTRIB)/lib/websites
+	$(CP) config/scripts/unregister $(DISTRIB)/scripts
+	$(CP) templates/*html $(DISTRIB)/templates/
+	$(CP) -r admin/templates/*.thtml \
+		$(DISTRIB)/templates/admin
+	$(TAR_DIR) $(DISTRIB).tgz $(DISTRIB)
+	$(RM) -r $(DISTRIB)
