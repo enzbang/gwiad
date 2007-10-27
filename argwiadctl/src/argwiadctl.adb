@@ -27,6 +27,7 @@ with Ada.Environment_Variables;
 with GNAT.OS_Lib;
 with GNAT.Case_Util;
 
+with Morzhol.OS;
 with Gwiad;
 
 procedure Argwiadctl is
@@ -34,6 +35,7 @@ procedure Argwiadctl is
    use Ada;
 
    Argwiadctl_Reload_File : String renames Gwiad.Reload_File;
+   DS : Character renames Morzhol.OS.Directory_Separator;
 
    Argwiadctl_Version : constant String := "argwiadctl version 0.1";
    --  argwiadctl version
@@ -116,6 +118,31 @@ procedure Argwiadctl is
          elsif not Directories.Exists (Argwiad_Command) then
             Put_Line ("Can not find Argwiad !");
          else
+
+            if Morzhol.OS.Is_Windows then
+               if Environment_Variables.Exists ("PATH") then
+                  Environment_Variables.Set
+                    (Name  => "PATH",
+                     Value => Directories.Current_Directory & DS & "bin:"
+                     & Environment_Variables.Value ("PATH"));
+               else
+                  Environment_Variables.Set
+                    (Name  => "PATH",
+                     Value => Directories.Current_Directory & DS & "bin");
+               end if;
+            else
+               if  Environment_Variables.Exists ("LD_LIBRARY_PATH") then
+                  Environment_Variables.Set
+                    (Name  => "LD_LIBRARY_PATH",
+                     Value => Directories.Current_Directory & DS & "bin:"
+                     & Environment_Variables.Value ("LD_LIBRARY_PATH"));
+               else
+                  Environment_Variables.Set
+                    (Name  => "LD_LIBRARY_PATH",
+                     Value => Directories.Current_Directory & DS & "bin");
+               end if;
+            end if;
+
             Gwiad_PID := OS_Lib.Non_Blocking_Spawn
               (Program_Name => Nohup_Command.all,
                Args         => Gwiad_Arg,
