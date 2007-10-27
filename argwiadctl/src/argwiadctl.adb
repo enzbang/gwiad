@@ -153,6 +153,15 @@ procedure Argwiadctl is
       PID_File : File_Type;
    begin
 
+      --  Check if PID File exist
+
+      if not Directories.Exists (Name => PID_Filename) then
+         Put_Line (Directories.Current_Directory & "/" & PID_Filename
+                   & " not found. "
+                   & "Is argwiad running ?");
+         return;
+      end if;
+
       Open (File => PID_File,
             Mode => In_File,
             Name => PID_Filename);
