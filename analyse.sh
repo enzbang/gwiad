@@ -4,7 +4,8 @@ RESULT_DIRECTORY=lcov_analyse
 
 rm -fr $RESULT_DIRECTORY
 mkdir $RESULT_DIRECTORY
-lcov -d . -o $RESULT_DIRECTORY/analyse.info -c -b .
+rm .build/profile/obj/*check_mem.* *check_mem.ad*.gcov
+lcov -d .build/profile/obj -o $RESULT_DIRECTORY/analyse.info -c -b .
 genhtml -q -o $RESULT_DIRECTORY/ -legend -highlight $RESULT_DIRECTORY/analyse.info
 html2text -width 300 -nobs -ascii -o $RESULT_DIRECTORY/index.txt_tmp $RESULT_DIRECTORY/index.html
 AWS_LINES_INSTRUMENTED=`cat $RESULT_DIRECTORY/index.txt_tmp | grep aws | awk '{print $7}'`
@@ -25,8 +26,6 @@ CODE_COVERED=`echo "(($EXECUTED_LINES*100)/$INSTRUMENTED_LINES)" | bc`
 html2text -style pretty -nobs -ascii $RESULT_DIRECTORY/index.html |
 while read line
 do
-#     echo $line | grep -v "Instrumented lines" | grep -v "Executed lines" |
-#     grep -v gcc | grep -v adainclude | grep -v aws | grep -v "code coverage report"
     echo $line | grep "lines$" | grep -v gcc | grep -v adainclude |
     grep -v morzhol | grep -v aws |
     awk '{printf "%-40s %-20s %s / %s %s\n", $1,  $2, $6, $8, $9}'
