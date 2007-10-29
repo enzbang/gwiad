@@ -20,17 +20,13 @@
 ##############################################################################
 
 all:
-# Workaround for GNAT bug with Ali_Directory
-	chmod -R a+w lib/
-##  When building without cleaning first. Build failed to delete old ALI files
-	gnat make -XPRJ_BUILD=$(MODE) -Phello_world
-	gnat make -XPRJ_BUILD=$(MODE) -Phello_world
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Phello_world
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Phello_world
 
 clean:
-	-gnat clean -r -Phello_world
+	-$(GNATCLEAN) -r -Phello_world
 
 check:
-	gnat check -dd -Phello_world -rules -from=../../gwiad.check
+	$(GNATCHECK) -dd -Phello_world -rules -from=../../gwiad.check
 
 setup:
-	$(MKDIR) lib obj

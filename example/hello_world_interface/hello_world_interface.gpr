@@ -35,6 +35,7 @@ Project Hello_World_Interface is
       when "Profile" =>
          for Object_Dir use "../../.build/profile/obj";
          for Library_Dir use "../../.build/profile/lib";
+         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
       when "Release" =>
          for Object_Dir use "../../.build/release/obj";
          for Library_Dir use "../../.build/release/lib";

@@ -19,16 +19,10 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
-	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" EXEEXT="$(EXEEXT)" \
-	DIFF="$(DIFF)"
-
-OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
-
-
 all: check_mem
 
 force:
+setup:
 
 clean:
 	-$(GNATCLEAN) -q -Pregtests
@@ -38,18 +32,17 @@ clean:
 	rm -f libhello_world_website$(EXEEXT)
 
 check_mem: force
-	mkdir -p obj/
 	$(GNATMAKE) -Pregtests -XPRJ_BUILD="$(MODE)"
 	make -C ../admin/
 	make -C ../example/
-	cp ../lib/websites/lib* .
-	cp ../lib/services/lib* .
-	echo -n "Running " check_mem$(EXEEXT)
-	./check_mem$(EXEEXT) 2 > check_mem.res
-	gnatmem 3 -i gmem.out ./check_mem$(EXEEXT) > check_mem.run1
+	cp ../$(BDIR)/slib/websites/lib* .
+	cp ../$(BDIR)/slib/services/lib* .
+	echo -n "Running " ../$(BDIR)/bin/check_mem$(EXEEXT)
+	../$(BDIR)/bin/check_mem$(EXEEXT) 2 > check_mem.res
+	gnatmem 3 -i gmem.out ../$(BDIR)/bin/check_mem$(EXEEXT) > check_mem.run1
 	grep "   Final" check_mem.run1 > run1
 	echo ",  run it again"
-	./check_mem$(EXEEXT) 30 >> check_mem.res
-	gnatmem 3 -i gmem.out ./check_mem$(EXEEXT) > check_mem.run2
+	../$(BDIR)/bin/check_mem$(EXEEXT) 30 >> check_mem.res
+	gnatmem 3 -i gmem.out ../$(BDIR)/bin/check_mem$(EXEEXT) > check_mem.run2
 	grep "   Final" check_mem.run2 > run2
 	$(DIFF) run1 run2 1>> alldifs 2>> alldifs

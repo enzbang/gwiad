@@ -42,8 +42,9 @@ endif
 BDIR_STATIC     = .build/static
 
 GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
-	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" EXEEXT="$(EXEEXT)" \
-	DIFF="$(DIFF)"
+	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" \
+	GNATCHECK="$(GNATCHECK)" GNATCHOP="$(GNATCHOP)" \
+	EXEEXT="$(EXEEXT)" DIFF="$(DIFF)"
 
 OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 
@@ -78,22 +79,14 @@ clean: $(MODULES_CLEAN)
 	make -C regtests clean $(OPTIONS)
 
 clean-all:
-	find . -name "*.ali" -o -name "*.o" \
-		-o -name "*$(SOEXT)" -o -name "#*" \
-		-exec rm -f {} \;
+	$(RM) -r .build
 
-setup: setup-dir $(MODULES_SETUP)
-	$(MKDIR) lib/websites lib/services
-
-setup-dir :
-	$(MKDIR) $(BDIR)/obj $(BDIR)/bin $(BDIR)/lib \
-	$(MKDIR) $(BDIR_STATIC)/obj $(BDIR_STATIC)/bin $(BDIR_STATIC)/lib \
-	$(BDIR)/slib/websites $(BDIR)/slib/services
+setup: $(MODULES_SETUP)
 
 regtests: force
 	make -C external-libs/morzhol regtests \
 		MODE="Profile" $(GENERAL_OPTIONS)
-	make -C regtests MODE="Profile" $(GENERAL_OPTIONS)
+	make -C regtests MODE="Profile" BDIR=".build/profile" $(GENERAL_OPTIONS)
 	rm -f regtests/obj/*	# To avoid error in lcov_analyse ???
 	make lcov_analyse
 

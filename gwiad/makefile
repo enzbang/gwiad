@@ -20,14 +20,13 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Pgwiad
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Pgwiad
 
 clean:
-	-gnat clean -r -Pgwiad
+	-$(GNATCLEAN) -r -Pgwiad
 
 check:
-	gnat check -dd -Pgwiad -rules -from=../gwiad.check
+	$(GNATCHECK) -dd -Pgwiad -rules -from=../gwiad.check
 
 setup:
-	$(MKDIR) obj lib

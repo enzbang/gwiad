@@ -20,14 +20,13 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-dynamic_libraries
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-dynamic_libraries
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Pgwiad-dynamic_libraries
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Pgwiad-dynamic_libraries
 
 clean:
-	-gnat clean -r -Pgwiad-dynamic_libraries
+	-$(GNATCLEAN) -r -Pgwiad-dynamic_libraries
 
 check:
-	gnat check -dd -Pgwiad-dynamic_libraries -rules -from=../gwiad.check
+	$(GNATCHECK) -dd -Pgwiad-dynamic_libraries -rules -from=../gwiad.check
 
 setup:
-	$(MKDIR) obj lib

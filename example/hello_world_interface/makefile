@@ -20,14 +20,13 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Phello_world_interface
-	gnat make -XPRJ_BUILD=$(MODE) -Phello_world_interface
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Phello_world_interface
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Phello_world_interface
 
 clean:
-	-gnat clean -r -Phello_world_interface
+	-$(GNATCLEAN) -r -Phello_world_interface
 
 check:
-	gnat check -dd -Phello_world_interface -rules -from=../../gwiad.check
+	$(GNATCHECK) -dd -Phello_world_interface -rules -from=../../gwiad.check
 
 setup:
-	$(MKDIR) obj lib

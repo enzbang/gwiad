@@ -20,17 +20,16 @@
 ##############################################################################
 
 all:
-	gnat make -p -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
-	gnat make -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
 
 build_doc:
 	a2x -f manpage doc/argwiadctl.txt 2>/dev/null
 
 clean:
-	-gnat clean -r -Pargwiadctl
+	-$(GNATCLEAN) -r -Pargwiadctl
 
 check:
-	gnat check -dd -Pargwiadctl -rules -from=../gwiad.check
+	$(GNATCHECK) -dd -Pargwiadctl -rules -from=../gwiad.check
 
 setup:
-	$(MKDIR) obj bin

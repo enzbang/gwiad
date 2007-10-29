@@ -40,6 +40,7 @@ Project Hello_World_Service is
          for Object_Dir use "../../.build/profile/obj";
          for Library_Ali_Dir use "../../.build/profile/lib";
          for Library_Dir use "../../.build/profile/slib/services/";
+         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
       when "Release" =>
          for Object_Dir use "../../.build/release/obj";
          for Library_Ali_Dir use "../../.build/release/lib";

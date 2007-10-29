@@ -23,20 +23,20 @@ all:
 ifeq ($(shell ls tsrc/ | wc -l), 0)
 	$(error "Please run 'make setup'")
 endif
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
-	gnat make -XPRJ_BUILD=$(MODE) -Pgwiad-admin
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Pgwiad-admin
+	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -Pgwiad-admin
 
 setup:
-	-$(MKDIR) gen tsrc obj lib
+	-$(MKDIR) gen tsrc
 	templates2ada -d templates/ -o gen/templates.cds \
 		-t templates/templates.tads
-	gnat chop -wpq gen/templates.cds tsrc/
+	$(GNATCHOP) -wpq gen/templates.cds tsrc/
 	$(RM) gen/templates.cds
 	$(RM) -r gen
 
 clean:
-	-gnat clean -r -Pgwiad-admin
+	-$(GNATCLEAN) -r -Pgwiad-admin
 	$(RM) -r tsrc
 
 check:
-	gnat check -dd -Pgwiad-admin -rules -from=../gwiad.check
+	$(GNATCHECK) -dd -Pgwiad-admin -rules -from=../gwiad.check
