@@ -180,14 +180,8 @@ install: install_dirs
 	$(CP) plugins/websites/src/*.ad[sb] $(I_INC_RWS)
 	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
 	$(CP) external-libs/morzhol/lib/* $(I_LIB_MORZ)
-	$(CP) plugins/obj/*.ali $(I_LIB)
-	$(CP) gwiad/lib/gwiad.ali $(I_INC)
-	$(CP) gwiad/lib/* $(I_LIB)
-	$(CP) dynamic_libraries/lib/* $(I_LIB)
-	$(CP) plugins/lib/* $(I_LIB)
-	$(CP) plugins/websites/lib/* $(I_LIB)
-	$(CP) plugins/services/lib/* $(I_LIB)
-	$(CP) web/lib/* $(I_LIB)
+	$(CP) $(BDIR)/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/lib/* $(I_LIB)
 	$(CP) config/projects/morzhol.gpr $(I_GPR)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-shared.gpr $(I_GPR)
@@ -196,7 +190,7 @@ install: install_dirs
 	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
-	$(CP) argwiadctl/bin/argwiadctl $(I_BIN)
+	$(CP) $(BDIR)/bin/argwiadctl $(I_BIN)
 ifneq ("$(MANPAGE_DIR)", "")
 	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
 endif
@@ -206,16 +200,16 @@ ifeq ($(OS), Windows_NT)
 endif
 
 install_demo: install_server
-	$(CP) -r lib/services/libhello_world_service$(SOEXT) \
+	$(CP) -r $(BDIR)/slib/services/libhello_world_service$(SOEXT) \
 		$(SERVER_INSTALL)/lib/services/
-	$(CP) -r lib/websites/libhello_world_website$(SOEXT) \
+	$(CP) -r $(BDIR)/slib/websites/libhello_world_website$(SOEXT) \
 		$(SERVER_INSTALL)/lib/websites/
-	$(CP) example/hello_world_interface/lib/*$(SOEXT) $(SERVER_INSTALL)/bin
+	$(CP) $(BDIR)/lib/*helloworld_interface*$(SOEXT) $(SERVER_INSTALL)/bin
 
 install_admin_plugin:
 	$(CP) -r admin/templates/*.thtml \
 		$(SERVER_INSTALL)/templates/admin
-	$(CP) -r lib/websites/libgwiad_admin$(SOEXT) \
+	$(CP) -r $(BDIR)/slib/websites/libgwiad_admin$(SOEXT) \
 		$(SERVER_INSTALL)/lib/websites/
 
 install_server:
@@ -230,7 +224,7 @@ install_server:
 	$(MKDIR) $(SERVER_INSTALL)/uploads
 	$(MKDIR) $(SERVER_INSTALL)/www
 	$(CP) templates/default.html $(SERVER_INSTALL)/www/index.html
-	$(CP) argwiad/bin/argwiad$(EXEEXT) $(SERVER_INSTALL)/bin
+	$(CP) $(BDIR)/bin/argwiad$(EXEEXT) $(SERVER_INSTALL)/bin
 
 dist:
 	$(RM) -r $(DISTRIB)
@@ -244,15 +238,11 @@ dist:
 	$(MKDIR) $(DISTRIB)/scripts
 	$(MKDIR) $(DISTRIB)/uploads
 	$(MKDIR) $(DISTRIB)/librairies
-	$(CP) external-libs/morzhol/lib/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) gwiad/lib/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) web/lib/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) plugins/lib/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) dynamic_libraries/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
 	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
 	$(CP) $(ADA_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) -r lib/services/*$(SOEXT) $(DISTRIB)/lib/services
-	$(CP) -r lib/websites/*$(SOEXT) $(DISTRIB)/lib/websites
+	$(CP) -r $(BDIR)/slib/services/*$(SOEXT) $(DISTRIB)/lib/services
+	$(CP) -r $(BDIR)/slib/websites/*$(SOEXT) $(DISTRIB)/lib/websites
 	$(CP) config/scripts/unregister $(DISTRIB)/scripts
 	$(CP) templates/*html $(DISTRIB)/templates/
 	$(CP) -r admin/templates/*.thtml \
