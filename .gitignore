@@ -13,7 +13,6 @@ obj
 \#*
 .\#*
 *.log
-external-libs/morzhol
 lcov_analyse
 semantic.cache
 argwiadctl/doc/argwiadctl.1
