@@ -29,6 +29,16 @@ SOEXT=.so
 EXEEXT=
 endif
 
+ifeq ("$(MODE)", "Debug")
+BDIR		= .build/debug
+else
+ifeq ("$(MODE)", "Release")
+BDIR		= .build/release
+else
+BDIR		= .build/profile
+endif
+endif
+
 GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
 	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" EXEEXT="$(EXEEXT)" \
 	DIFF="$(DIFF)"
@@ -70,8 +80,12 @@ clean-all:
 		-o -name "*$(SOEXT)" -o -name "#*" \
 		-exec rm -f {} \;
 
-setup: $(MODULES_SETUP)
+setup: setup-dir $(MODULES_SETUP)
 	$(MKDIR) lib/websites lib/services
+
+setup-dir :
+	$(MKDIR) $(BDIR)/obj $(BDIR)/bin $(BDIR)/lib \
+	$(BDIR)/slib/websites $(BDIR)/slib/services
 
 regtests: force
 	make -C external-libs/morzhol regtests \

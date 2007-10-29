@@ -32,9 +32,23 @@ Project Gwiad.Admin is
    for Source_Dirs use ("src", "tsrc", "templates");
    for Languages use
      ("Ada", "HTML Template", "Ada Template");
-   for Object_Dir use "obj";
-   for Library_Ali_Dir use "lib";
-   for Library_Dir use "../lib/websites/";
+
+   case Shared.Build is
+      when "Debug" =>
+         for Object_Dir use "../.build/debug/obj";
+         for Library_Ali_Dir use "../.build/debug/lib";
+         for Library_Dir use "../.build/debug/slib/websites/";
+      when "Profile" =>
+         for Object_Dir use "../.build/profile/obj";
+         for Library_Ali_Dir use "../.build/profile/lib";
+         for Library_Dir use "../.build/profile/slib/websites/";
+         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
+      when "Release" =>
+         for Object_Dir use "../.build/release/obj";
+         for Library_Ali_Dir use "../.build/release/lib";
+         for Library_Dir use "../.build/release/slib/websites/";
+   end case;
+
    for Library_Name use "gwiad_admin";
    for Library_Interface use ("Gwiad.Admin");
    for Library_Kind use "dynamic";
@@ -44,13 +58,6 @@ Project Gwiad.Admin is
       when "Windows_NT" =>
          for Library_Options use ("-laws", "-laws_include", "-laws_win32", "-lwsock32");
       when others =>
-         null;
-   end case;
-
-   case Shared.Build is
-      when "Profile" =>
-         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
-      when "Debug" | "Release" =>
          null;
    end case;
 

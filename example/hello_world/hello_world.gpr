@@ -29,13 +29,25 @@ with "../hello_world_interface/hello_world_interface";
 Project Hello_World is
 
    for Source_Dirs use ("src");
-   for Object_Dir use "obj";
-   for Library_Ali_Dir use "lib";
-   for Library_Dir use "../../lib/websites";
    for Library_Interface use ("hello_world");
    for Library_Name use "hello_world_website";
    for Library_Kind use "dynamic";
    for Library_Auto_Init use "false";
+
+   case Shared.Build is
+      when "Debug" =>
+         for Object_Dir use "../../.build/debug/obj";
+         for Library_Ali_Dir use "../../.build/debug/lib";
+         for Library_Dir use "../../.build/debug/slib/websites/";
+      when "Profile" =>
+         for Object_Dir use "../../.build/profile/obj";
+         for Library_Ali_Dir use "../../.build/profile/lib";
+         for Library_Dir use "../../.build/profile/slib/websites/";
+      when "Release" =>
+         for Object_Dir use "../../.build/release/obj";
+         for Library_Ali_Dir use "../../.build/release/lib";
+         for Library_Dir use "../../.build/release/slib/websites/";
+   end case;
 
    case Shared.OS is
       when "Windows_NT" =>
