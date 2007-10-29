@@ -30,6 +30,9 @@ project Shared is
    type OS_Type is ("UNIX", "Windows_NT");
    OS : OS_Type := external ("OS", "UNIX");
 
+   type Lib_Type is ("Dynamic", "Static");
+   LT : Lib_Type := external ("LIB_TYPE", "Dynamic");
+
    AdaCtrl_Rules_File := External ("PWD", "");
 
    -------------

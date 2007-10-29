@@ -20,8 +20,8 @@
 ##############################################################################
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pargwiadctl
-	gnat make -XPRJ_BUILD=$(MODE) -Pargwiadctl
+	gnat make -p -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
+	gnat make -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
 
 build_doc:
 	a2x -f manpage doc/argwiadctl.txt 2>/dev/null

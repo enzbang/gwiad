@@ -39,6 +39,8 @@ BDIR		= .build/profile
 endif
 endif
 
+BDIR_STATIC     = .build/static
+
 GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
 	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" EXEEXT="$(EXEEXT)" \
 	DIFF="$(DIFF)"
@@ -85,6 +87,7 @@ setup: setup-dir $(MODULES_SETUP)
 
 setup-dir :
 	$(MKDIR) $(BDIR)/obj $(BDIR)/bin $(BDIR)/lib \
+	$(MKDIR) $(BDIR_STATIC)/obj $(BDIR_STATIC)/bin $(BDIR_STATIC)/lib \
 	$(BDIR)/slib/websites $(BDIR)/slib/services
 
 regtests: force

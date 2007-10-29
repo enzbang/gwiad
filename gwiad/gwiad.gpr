@@ -26,32 +26,31 @@ project Gwiad is
 
    for Source_Dirs use ("src");
    for Library_Name use "gwiad_kernel";
-   for Library_Kind use "dynamic";
+   for Library_Kind use Shared.LT;
 
-   case Shared.Build is
-      when "Debug" =>
-         for Object_Dir use "../.build/debug/obj";
-         for Library_Dir use "../.build/debug/lib";
-      when "Profile" =>
-         for Object_Dir use "../.build/profile/obj";
-         for Library_Dir use "../.build/profile/lib";
-      when "Release" =>
-         for Object_Dir use "../.build/release/obj";
-         for Library_Dir use "../.build/release/lib";
+   case Shared.LT is
+      when "Dynamic" =>
+         case Shared.Build is
+            when "Debug" =>
+               for Object_Dir use "../.build/debug/obj";
+               for Library_Dir use "../.build/debug/lib";
+            when "Profile" =>
+               for Object_Dir use "../.build/profile/obj";
+               for Library_Dir use "../.build/profile/lib";
+               for Library_Options use Project'Library_Options & ("-fprofile-arcs");
+            when "Release" =>
+               for Object_Dir use "../.build/release/obj";
+               for Library_Dir use "../.build/release/lib";
+         end case;
+      when "Static" =>
+         for Object_Dir use "../.build/static/obj";
+         for Library_Dir use "../.build/static/lib";
    end case;
-
 
    case Shared.OS is
       when "Windows_NT" =>
          for Library_Options use ("-laws", "-laws_include", "-lwsock32");
       when others =>
-         null;
-   end case;
-
-   case Shared.Build is
-      when "Profile" =>
-         for Library_Options use Project'Library_Options & ("-fprofile-arcs");
-      when "Debug" | "Release" =>
          null;
    end case;
 
