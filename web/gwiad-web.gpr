@@ -32,15 +32,15 @@ project Gwiad.Web is
 
    case Shared.Build is
       when "Debug" =>
-         for Object_Dir use "../.build/debug/obj";
-         for Library_Dir use "../.build/debug/lib";
+         for Object_Dir use "../.build/debug/web/obj";
+         for Library_Dir use "../.build/debug/web/lib";
       when "Profile" =>
-         for Object_Dir use "../.build/profile/obj";
-         for Library_Dir use "../.build/profile/lib";
+         for Object_Dir use "../.build/profile/web/obj";
+         for Library_Dir use "../.build/profile/web/lib";
          for Library_Options use Project'Library_Options & ("-fprofile-arcs");
       when "Release" =>
-         for Object_Dir use "../.build/release/obj";
-         for Library_Dir use "../.build/release/lib";
+         for Object_Dir use "../.build/release/web/obj";
+         for Library_Dir use "../.build/release/web/lib";
    end case;
 
    case Shared.OS is

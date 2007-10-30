@@ -30,21 +30,15 @@ Project Gwiad.Plugins is
 
    case Shared.Build is
       when "Debug" =>
-         for Object_Dir use "../.build/debug/obj";
-         for Library_Dir use "../.build/debug/lib";
+         for Object_Dir use "../.build/debug/plugins/obj";
+         for Library_Dir use "../.build/debug/plugins/lib";
       when "Profile" =>
-         for Object_Dir use "../.build/profile/obj";
-         for Library_Dir use "../.build/profile/lib";
-      when "Release" =>
-         for Object_Dir use "../.build/release/obj";
-         for Library_Dir use "../.build/release/lib";
-   end case;
-
-   case Shared.Build is
-      when "Profile" =>
+         for Object_Dir use "../.build/profile/plugins/obj";
+         for Library_Dir use "../.build/profile/plugins/lib";
          for Library_Options use ("-fprofile-arcs");
-      when "Debug" | "Release" =>
-         null;
+      when "Release" =>
+         for Object_Dir use "../.build/release/plugins/obj";
+         for Library_Dir use "../.build/release/plugins/lib";
    end case;
 
    -------------

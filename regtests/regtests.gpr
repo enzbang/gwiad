@@ -34,13 +34,13 @@ project Regtests is
 
   case Shared.Build is
      when "Debug" =>
-        for Object_Dir use "../.build/debug/obj";
+        for Object_Dir use "../.build/debug/regtests/obj";
         for Exec_Dir use  "../.build/debug/bin";
      when "Profile" =>
-        for Object_Dir use "../.build/profile/obj";
+        for Object_Dir use "../.build/profile/regtests/obj";
         for Exec_Dir use "../.build/profile/bin";
      when "Release" =>
-        for Object_Dir use "../.build/release/obj";
+        for Object_Dir use "../.build/release/regtests/obj";
         for Exec_Dir use "../.build/release/bin";
   end case;
 

@@ -4,8 +4,9 @@ RESULT_DIRECTORY=lcov_analyse
 
 rm -fr $RESULT_DIRECTORY
 mkdir $RESULT_DIRECTORY
-rm .build/profile/obj/*check_mem.* *check_mem.ad*.gcov
-lcov -d .build/profile/obj -o $RESULT_DIRECTORY/analyse.info -c -b .
+rm -r .build/profile/regtests/
+rm *check_mem.ad*.gcov
+lcov -d .build/profile/ -o $RESULT_DIRECTORY/analyse.info -c -b .
 genhtml -q -o $RESULT_DIRECTORY/ -legend -highlight $RESULT_DIRECTORY/analyse.info
 html2text -width 300 -nobs -ascii -o $RESULT_DIRECTORY/index.txt_tmp $RESULT_DIRECTORY/index.html
 AWS_LINES_INSTRUMENTED=`cat $RESULT_DIRECTORY/index.txt_tmp | grep aws | awk '{print $7}'`

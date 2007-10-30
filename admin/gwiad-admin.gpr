@@ -35,16 +35,16 @@ Project Gwiad.Admin is
 
    case Shared.Build is
       when "Debug" =>
-         for Object_Dir use "../.build/debug/obj";
-         for Library_Ali_Dir use "../.build/debug/lib";
+         for Object_Dir use "../.build/debug/admin/obj";
+         for Library_Ali_Dir use "../.build/debug/admin/lib";
          for Library_Dir use "../.build/debug/slib/websites/";
       when "Profile" =>
-         for Object_Dir use "../.build/profile/obj";
-         for Library_Ali_Dir use "../.build/profile/lib";
+         for Object_Dir use "../.build/profile/admin/obj";
+         for Library_Ali_Dir use "../.build/profile/admin/lib";
          for Library_Dir use "../.build/profile/slib/websites/";
          for Library_Options use Project'Library_Options & ("-fprofile-arcs");
       when "Release" =>
-         for Object_Dir use "../.build/release/obj";
+         for Object_Dir use "../.build/release/admin/obj";
          for Library_Ali_Dir use "../.build/release/lib";
          for Library_Dir use "../.build/release/slib/websites/";
    end case;

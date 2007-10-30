@@ -32,19 +32,19 @@ project Gwiad is
       when "Dynamic" =>
          case Shared.Build is
             when "Debug" =>
-               for Object_Dir use "../.build/debug/obj";
-               for Library_Dir use "../.build/debug/lib";
+               for Object_Dir use "../.build/debug/gwiad/obj";
+               for Library_Dir use "../.build/debug/gwiad/lib";
             when "Profile" =>
-               for Object_Dir use "../.build/profile/obj";
-               for Library_Dir use "../.build/profile/lib";
+               for Object_Dir use "../.build/profile/gwiad/obj";
+               for Library_Dir use "../.build/profile/gwiad/lib";
                for Library_Options use Project'Library_Options & ("-fprofile-arcs");
             when "Release" =>
-               for Object_Dir use "../.build/release/obj";
-               for Library_Dir use "../.build/release/lib";
+               for Object_Dir use "../.build/release/gwiad/obj";
+               for Library_Dir use "../.build/release/gwiad/lib";
          end case;
       when "Static" =>
-         for Object_Dir use "../.build/static/obj";
-         for Library_Dir use "../.build/static/lib";
+         for Object_Dir use "../.build/static/gwiad/obj";
+         for Library_Dir use "../.build/static/gwiad/lib";
    end case;
 
    case Shared.OS is

@@ -31,15 +31,15 @@ Project Gwiad.Plugins.Websites is
 
    case Shared.Build is
       when "Debug" =>
-         for Object_Dir use "../../.build/debug/obj";
-         for Library_Dir use "../../.build/debug/lib";
+         for Object_Dir use "../../.build/debug/pw/obj";
+         for Library_Dir use "../../.build/debug/pw/lib";
       when "Profile" =>
-         for Object_Dir use "../../.build/profile/obj";
-         for Library_Dir use "../../.build/profile/lib";
+         for Object_Dir use "../../.build/profile/pw/obj";
+         for Library_Dir use "../../.build/profile/pw/lib";
          for Library_Options use Project'Library_Options & ("-fprofile-arcs");
       when "Release" =>
-         for Object_Dir use "../../.build/release/obj";
-         for Library_Dir use "../../.build/release/lib";
+         for Object_Dir use "../../.build/release/pw/obj";
+         for Library_Dir use "../../.build/release/pw/lib";
    end case;
 
    case Shared.OS is
