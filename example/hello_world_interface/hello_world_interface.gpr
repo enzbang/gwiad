@@ -21,8 +21,9 @@
 
 with "../../shared";
 with "../../plugins/services/gwiad-plugins-services";
+with "../../web/gwiad-web";
 
-Project Hello_World_Interface is
+project Hello_World_Interface is
 
    for Source_Dirs use ("src");
    for Library_Name use "helloworld_interface";
