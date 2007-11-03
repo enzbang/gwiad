@@ -33,7 +33,7 @@ project Shared is
    type Lib_Type is ("Dynamic", "Static");
    LT : Lib_Type := external ("LIB_TYPE", "Dynamic");
 
-   AdaCtrl_Rules_File := External ("PWD", "");
+   AdaCtrl_Rules_File := external ("PWD", "");
 
    -------------
    -- Builder --
