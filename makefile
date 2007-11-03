@@ -39,8 +39,6 @@ BDIR		= .build/profile
 endif
 endif
 
-BDIR_STATIC     = .build/static
-
 GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
 	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" \
 	GNATCHECK="$(GNATCHECK)" GNATCHOP="$(GNATCHOP)" \
@@ -175,9 +173,21 @@ install: install_dirs
 	$(CP) plugins/services/src/*.ad[sb] $(I_INC_RS)
 	$(CP) plugins/websites/src/*.ad[sb] $(I_INC_RWS)
 	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
-	$(CP) external-libs/morzhol/lib/* $(I_LIB_MORZ)
+	$(CP) external-libs/morzhol/$(BDIR)/lib/* $(I_LIB_MORZ)
 	$(CP) $(BDIR)/obj/*.ali $(I_LIB)
 	$(CP) $(BDIR)/lib/* $(I_LIB)
+	$(CP) $(BDIR)/dl/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/dl/lib/* $(I_LIB)
+	$(CP) $(BDIR)/gwiad/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/gwiad/lib/* $(I_LIB)
+	$(CP) $(BDIR)/plugins/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/plugins/lib/* $(I_LIB)
+	$(CP) $(BDIR)/ps/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/ps/lib/* $(I_LIB)
+	$(CP) $(BDIR)/pw/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/pw/lib/* $(I_LIB)
+	$(CP) $(BDIR)/web/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/web/lib/* $(I_LIB)
 	$(CP) config/projects/morzhol.gpr $(I_GPR)
 	$(CP) config/projects/gwiad.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-shared.gpr $(I_GPR)
@@ -186,7 +196,7 @@ install: install_dirs
 	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
-	$(CP) $(BDIR)/bin/argwiadctl $(I_BIN)
+	$(CP) .build/static/bin/argwiadctl $(I_BIN)
 ifneq ("$(MANPAGE_DIR)", "")
 	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
 endif
