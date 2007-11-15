@@ -165,6 +165,8 @@ begin
 
    Web.Stop;
 
+   Manager.Unregister_All;
+
    Command_Line.Set_Exit_Status (Command_Line.Success);
 exception
    when E : others =>
