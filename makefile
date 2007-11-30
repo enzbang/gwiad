@@ -168,7 +168,7 @@ install_dirs: install_clean
 	$(MKDIR) $(I_GPR)
 
 install: install_dirs
-	make -C external-libs/morzhol install
+	make -C external-libs install
 	$(CP) gwiad/src/*.ad[sb] $(I_INC)
 	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
 	$(CP) plugins/src/*.ad[sb] $(I_INC_R)

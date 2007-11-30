@@ -34,6 +34,8 @@ MODULES_CHECK = ${MODULES:%=%_check}
 
 MODULES_SETUP = ${MODULES:%=%_setup}
 
+MODULES_INSTALL = ${MODULES:%=%_install}
+
 # Targets
 
 all: $(MODULES_BUILD)
@@ -44,11 +46,16 @@ check :$(MODULES_CHECK)
 
 setup: $(MODULES_SETUP)
 
+install: $(MODULES_SETUP)
+
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
 
 ${MODULES_SETUP}:
 	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
+
+${MODULES_SETUP}:
+	${MAKE} -C ${@:%_setup=%} install $(OPTIONS)
 
 ${MODULES_CLEAN}:
 	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
