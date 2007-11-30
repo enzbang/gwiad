@@ -168,7 +168,7 @@ install_dirs: install_clean
 	$(MKDIR) $(I_GPR)
 
 install: install_dirs
-	make -C external-libs install
+	make -C external-libs install $(OPTIONS)
 	$(CP) gwiad/src/*.ad[sb] $(I_INC)
 	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
 	$(CP) plugins/src/*.ad[sb] $(I_INC_R)
@@ -202,7 +202,6 @@ ifneq ("$(MANPAGE_DIR)", "")
 endif
 ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
-	$(CP) $(I_LIB_MORZ)/*$(SOEXT) $(I_LIB)/..
 endif
 
 install_demo: install_server

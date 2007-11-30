@@ -46,7 +46,7 @@ check :$(MODULES_CHECK)
 
 setup: $(MODULES_SETUP)
 
-install: $(MODULES_SETUP)
+install: $(MODULES_INSTALL)
 
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
@@ -54,8 +54,8 @@ ${MODULES_BUILD}:
 ${MODULES_SETUP}:
 	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
 
-${MODULES_SETUP}:
-	${MAKE} -C ${@:%_setup=%} install $(OPTIONS)
+${MODULES_INSTALL}:
+	${MAKE} -C ${@:%_install=%} install $(OPTIONS)
 
 ${MODULES_CLEAN}:
 	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
