@@ -20,8 +20,8 @@
 ------------------------------------------------------------------------------
 
 with "../shared";
+with "morzhol";
 with "../gwiad/gwiad";
-with "../external-libs/morzhol/morzhol";
 
 project argwiadctl is
    for Source_Dirs use ("src");

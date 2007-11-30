@@ -19,11 +19,12 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-# Modules support
+#  Modules support
+#  Enable compilation of morzhol if git submodule has been fetched
 
 OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
-MODULES = morzhol
+MODULES = $(filter-out makefile,$(shell ls *))
 
 MODULES_BUILD = ${MODULES:%=%_build}
 

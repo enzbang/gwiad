@@ -39,6 +39,12 @@ BDIR		= .build/profile
 endif
 endif
 
+ifeq ($(OS),Windows_NT)
+export ADA_PROJECT_PATH=$PWD/external-libs/morzhol\;$ADA_PROJECT_PATH
+else
+export ADA_PROJECT_PATH=$PWD/external-libs/morzhol:$ADA_PROJECT_PATH
+endif
+
 GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
 	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" \
 	GNATCHECK="$(GNATCHECK)" GNATCHOP="$(GNATCHOP)" \
