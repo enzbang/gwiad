@@ -24,7 +24,7 @@
 
 OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
-MODULES = $(filter-out makefile,$(shell ls *))
+MODULES = $(filter-out makefile,$(shell ls -d *))
 
 MODULES_BUILD = ${MODULES:%=%_build}
 
