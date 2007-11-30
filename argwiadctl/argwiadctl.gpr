@@ -42,4 +42,5 @@ project argwiadctl is
    ---------
 
    package Ide renames Shared.Ide;
+
 end argwiadctl;
