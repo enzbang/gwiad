@@ -109,7 +109,7 @@ project Shared is
    ---------
 
    package Ide is
-      for Vcs_Kind use "Subversion";
+      for Vcs_Kind use "Git";
       case OS is
          when "UNIX" =>
             for Default_Switches ("adacontrol")
