@@ -65,19 +65,17 @@ MODULES_CHECK = ${MODULES:%=%_check}
 
 MODULES_SETUP = ${MODULES:%=%_setup}
 
-ifeq ("$(INSTALL)", "..")
-$(error "Wrong install path : INSTALL='$(INSTALL)'")
-else
-ifeq ("$(INSTALL)", "")
-$(error "Wrong install path : empty INSTALL var")
-endif
-endif
-
 # Targets
 
-all: $(MODULES_BUILD)
+all: build
 
-build: all
+mkinstall:
+ifneq ($(INSTALL), "")
+# Write INSTALL target into mk.install (see install target)
+	$(shell echo $(INSTALL) > mk.install)
+endif
+
+build: mkinstall $(MODULES_BUILD)
 
 clean: $(MODULES_CLEAN)
 	make -C regtests clean $(OPTIONS)
@@ -125,18 +123,6 @@ check_message:
 
 force:
 
-# Install directories
-
-I_BIN	   = $(INSTALL)/bin
-I_INC	   = $(INSTALL)/include/gwiad
-I_INC_WEB  = $(INSTALL)/include/gwiad/web
-I_INC_DL   = $(INSTALL)/include/gwiad/dl
-I_INC_R    = $(INSTALL)/include/gwiad/plugins
-I_INC_RS   = $(INSTALL)/include/gwiad/plugins/s
-I_INC_RWS  = $(INSTALL)/include/gwiad/plugins/ws
-I_LIB	   = $(INSTALL)/lib/gwiad
-I_GPR	   = $(INSTALL)/lib/gnat
-
 DISTRIB = argwiad-0.5
 
 ${MODULES_BUILD}:
@@ -150,59 +136,6 @@ ${MODULES_CHECK}:
 
 ${MODULES_SETUP}:
 	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
-
-install_clean:
-	$(RM) -fr $(I_INC)
-	$(RM) -fr $(I_LIB)
-	$(RM) -f $(I_GPR)/gwiad.gpr
-
-install_dirs: install_clean
-	$(MKDIR) $(I_BIN)
-	$(MKDIR) $(I_INC)
-	$(MKDIR) $(I_INC_WEB)
-	$(MKDIR) $(I_INC_DL)
-	$(MKDIR) $(I_INC_R)
-	$(MKDIR) $(I_INC_RS)
-	$(MKDIR) $(I_INC_RWS)
-	$(MKDIR) $(I_LIB)
-	$(MKDIR) $(I_GPR)
-
-install: install_dirs
-	make -C external-libs install $(OPTIONS)
-	$(CP) gwiad/src/*.ad[sb] $(I_INC)
-	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
-	$(CP) plugins/src/*.ad[sb] $(I_INC_R)
-	$(CP) plugins/services/src/*.ad[sb] $(I_INC_RS)
-	$(CP) plugins/websites/src/*.ad[sb] $(I_INC_RWS)
-	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
-	$(CP) $(BDIR)/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/lib/* $(I_LIB)
-	$(CP) $(BDIR)/dl/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/dl/lib/* $(I_LIB)
-	$(CP) $(BDIR)/gwiad/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/gwiad/lib/* $(I_LIB)
-	$(CP) $(BDIR)/plugins/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/plugins/lib/* $(I_LIB)
-	$(CP) $(BDIR)/ps/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/ps/lib/* $(I_LIB)
-	$(CP) $(BDIR)/pw/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/pw/lib/* $(I_LIB)
-	$(CP) $(BDIR)/web/obj/*.ali $(I_LIB)
-	$(CP) $(BDIR)/web/lib/* $(I_LIB)
-	$(CP) config/projects/gwiad.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-shared.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-web.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
-	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
-	$(CP) .build/static/bin/argwiadctl $(I_BIN)
-ifneq ("$(MANPAGE_DIR)", "")
-	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
-endif
-ifeq ($(OS), Windows_NT)
-	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
-endif
 
 install_demo: install_server
 	$(CP) -r $(BDIR)/slib/services/libhello_world_service$(SOEXT) \
@@ -254,3 +187,78 @@ dist:
 		$(DISTRIB)/templates/admin
 	$(TAR_DIR) $(DISTRIB).tgz $(DISTRIB)
 	$(RM) -r $(DISTRIB)
+
+# Set INSTALL directories
+ifeq ("$(INSTALL)", "..")
+-include mk.install
+endif
+
+I_INC      = $(INSTALL)/include/gwiad
+I_LIB      = $(INSTALL)/lib/gwiad
+I_GPR      = $(INSTALL)/lib/gnat
+I_INC_WEB  = $(INSTALL)/include/gwiad/web
+I_INC_DL   = $(INSTALL)/include/gwiad/dl
+I_INC_R    = $(INSTALL)/include/gwiad/plugins
+I_INC_RS   = $(INSTALL)/include/gwiad/plugins/s
+I_INC_RWS  = $(INSTALL)/include/gwiad/plugins/ws
+I_BIN      = $(INSTALL)/bin
+
+# Set BDIR to .build/#lowercase_mode#
+BDIR = .build/$(shell echo $(MODE) | tr [[:upper:]] [[:lower:]])
+
+install_clean: force
+ifeq ("$(INSTALL)", "")
+        $(error "Wrong install path : empty INSTALL var")
+endif
+	echo $(RM) -fr $(I_INC)
+	$(RM) -fr $(I_LIB)
+	$(RM) -f $(I_GPR)/gwiad.gpr
+
+install_dirs: install_clean
+	$(MKDIR) $(I_BIN)
+	$(MKDIR) $(I_INC)
+	$(MKDIR) $(I_INC_WEB)
+	$(MKDIR) $(I_INC_DL)
+	$(MKDIR) $(I_INC_R)
+	$(MKDIR) $(I_INC_RS)
+	$(MKDIR) $(I_INC_RWS)
+	$(MKDIR) $(I_LIB)
+	$(MKDIR) $(I_GPR)
+
+install: install_dirs
+	make -C external-libs install $(OPTIONS)
+	$(CP) gwiad/src/*.ad[sb] $(I_INC)
+	$(CP) dynamic_libraries/src/*.ad[sb] $(I_INC_DL)
+	$(CP) plugins/src/*.ad[sb] $(I_INC_R)
+	$(CP) plugins/services/src/*.ad[sb] $(I_INC_RS)
+	$(CP) plugins/websites/src/*.ad[sb] $(I_INC_RWS)
+	$(CP) web/src/*.ad[sb] $(I_INC_WEB)
+	$(CP) $(BDIR)/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/lib/* $(I_LIB)
+	$(CP) $(BDIR)/dl/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/dl/lib/* $(I_LIB)
+	$(CP) $(BDIR)/gwiad/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/gwiad/lib/* $(I_LIB)
+	$(CP) $(BDIR)/plugins/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/plugins/lib/* $(I_LIB)
+	$(CP) $(BDIR)/ps/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/ps/lib/* $(I_LIB)
+	$(CP) $(BDIR)/pw/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/pw/lib/* $(I_LIB)
+	$(CP) $(BDIR)/web/obj/*.ali $(I_LIB)
+	$(CP) $(BDIR)/web/lib/* $(I_LIB)
+	$(CP) config/projects/gwiad.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-shared.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-web.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-dynamic_libraries.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
+	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
+	$(CP) .build/static/bin/argwiadctl $(I_BIN)
+ifneq ("$(MANPAGE_DIR)", "")
+	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
+endif
+ifeq ($(OS), Windows_NT)
+	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
+endif
+
