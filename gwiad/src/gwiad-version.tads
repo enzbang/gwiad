@@ -19,12 +19,11 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-package Gwiad is
+package Gwiad.Version is
 
    pragma Pure;
 
-   Reload_File : constant String := ".gwiad_do_reload";
-   --  When this file is created, gwiad search for new plugins and reload all
-   --  the plugins
+   Simple   : constant String := "$VERSION$";
+   Complete : constant String := "$VERSION_ALL$";
 
-end Gwiad;
+end Gwiad.Version;

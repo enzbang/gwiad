@@ -65,6 +65,11 @@ MODULES_CHECK = ${MODULES:%=%_check}
 
 MODULES_SETUP = ${MODULES:%=%_setup}
 
+# Version
+
+VERSION     = $(shell git describe --abbrev=0 2>/dev/null)
+VERSION_ALL = $(shell git describe 2>/dev/null)
+
 # Targets
 
 all: build
@@ -83,7 +88,20 @@ clean: $(MODULES_CLEAN)
 clean-all:
 	$(RM) -r .build
 
-setup: $(MODULES_SETUP)
+setup: setup-version $(MODULES_SETUP)
+
+setup-version:
+# If git is not present then use the version.ads provided in distrib
+ifneq ("$(VERSION)", "")
+	sed -e 's,\$$VERSION\$$,$(VERSION),g' \
+	-e 's,\$$VERSION_ALL\$$,$(VERSION_ALL),g' \
+	gwiad/src/gwiad-version.tads > gwiad/src/gwiad-version.ads
+endif
+
+distrib:
+	git archive --prefix=gwiad/ HEAD > gwiad.tar
+	tar -C ../ -r --file=gwiad.tar gwiad/gwiad/src/gwiad-version.ads
+	gzip -f gwiad.tar
 
 regtests: force
 	make -C external-libs/morzhol regtests \
@@ -123,7 +141,7 @@ check_message:
 
 force:
 
-DISTRIB = argwiad-0.5
+DISTRIB = argwiad-$(VERSION_ALL)
 
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
