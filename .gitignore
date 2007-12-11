@@ -25,3 +25,8 @@ doc/gwiad.info
 doc/gwiad.pdf
 doc/gwiad.ps
 doc/gwiad.texi
+.build
+admin/tsrc
+argwiad-*.tgz
+gwiad/src/gwiad-version.ads
+mk.install
