@@ -134,7 +134,13 @@ check_message:
 
 force:
 
-DISTRIB = argwiad-$(VERSION_ALL)
+ifeq ($(OS),Windows_NT)
+DISTRIB_OS = Windows
+else
+DISTRIB_OS = $(shell uname -s | tr [[:upper:]] [[:lower:]])-$(shell uname -m)
+endif
+
+DISTRIB = argwiad-$(DISTRIB_OS)-$(VERSION_ALL)
 
 ${MODULES_BUILD}:
 	${MAKE} -C ${@:%_build=%} $(OPTIONS)
@@ -174,30 +180,6 @@ install_server:
 	$(MKDIR) $(SERVER_INSTALL)/www
 	$(CP) templates/default.html $(SERVER_INSTALL)/www/index.html
 	$(CP) $(BDIR)/bin/argwiad$(EXEEXT) $(SERVER_INSTALL)/bin
-
-dist:
-	$(RM) -r $(DISTRIB)
-	$(MKDIR) $(DISTRIB)/data
-	$(MKDIR) $(DISTRIB)/bin
-	$(MKDIR) $(DISTRIB)/lib/websites
-	$(MKDIR) $(DISTRIB)/lib/services
-	$(MKDIR) $(DISTRIB)/config
-	$(MKDIR) $(DISTRIB)/templates
-	$(MKDIR) $(DISTRIB)/templates/admin
-	$(MKDIR) $(DISTRIB)/scripts
-	$(MKDIR) $(DISTRIB)/uploads
-	$(MKDIR) $(DISTRIB)/librairies
-	$(CP) $(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) $(ADA_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
-	$(CP) -r $(BDIR)/slib/services/*$(SOEXT) $(DISTRIB)/lib/services
-	$(CP) -r $(BDIR)/slib/websites/*$(SOEXT) $(DISTRIB)/lib/websites
-	$(CP) config/scripts/unregister $(DISTRIB)/scripts
-	$(CP) templates/*html $(DISTRIB)/templates/
-	$(CP) -r admin/templates/*.thtml \
-		$(DISTRIB)/templates/admin
-	$(TAR_DIR) $(DISTRIB).tgz $(DISTRIB)
-	$(RM) -r $(DISTRIB)
 
 # Set INSTALL directories
 ifeq ("$(INSTALL)", "..")
@@ -269,4 +251,27 @@ endif
 ifeq ($(OS), Windows_NT)
 	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
 endif
+
+install-distrib:
+	$(RM) -r $(DISTRIB)
+	$(MKDIR) $(DISTRIB)/data
+	$(MKDIR) $(DISTRIB)/bin
+	$(MKDIR) $(DISTRIB)/lib/websites
+	$(MKDIR) $(DISTRIB)/lib/services
+	$(MKDIR) $(DISTRIB)/config
+	$(MKDIR) $(DISTRIB)/templates
+	$(MKDIR) $(DISTRIB)/templates/admin
+	$(MKDIR) $(DISTRIB)/scripts
+	$(MKDIR) $(DISTRIB)/uploads
+	$(MKDIR) $(DISTRIB)/www
+	$(CP) $(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/bin/argwiad$(EXEEXT) $(DISTRIB)/bin
+	$(CP) .build/static/bin/argwiadctl $(DISTRIB)/bin
+	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(ADA_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) config/scripts/unregister $(DISTRIB)/scripts
+	$(CP) templates/default.html $(DISTRIB)/www/index.html
+	$(TAR_DIR) $(DISTRIB).tgz $(DISTRIB)
+	$(RM) -r $(DISTRIB)
+
 
