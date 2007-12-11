@@ -29,21 +29,14 @@ SOEXT=.so
 EXEEXT=
 endif
 
-ifeq ("$(MODE)", "Debug")
-BDIR		= .build/debug
-else
-ifeq ("$(MODE)", "Release")
-BDIR		= .build/release
-else
-BDIR		= .build/profile
-endif
-endif
-
 ifeq ($(OS),Windows_NT)
 export ADA_PROJECT_PATH=$PWD/external-libs/morzhol\;$ADA_PROJECT_PATH
 else
 export ADA_PROJECT_PATH=$PWD/external-libs/morzhol:$ADA_PROJECT_PATH
 endif
+
+# Set BDIR to .build/#lowercase_mode#
+BDIR = .build/$(shell echo $(MODE) | tr [[:upper:]] [[:lower:]])
 
 GENERAL_OPTIONS = CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" \
 	GNATMAKE="$(GNATMAKE)" GNATCLEAN="$(GNATCLEAN)" \
@@ -220,9 +213,6 @@ I_INC_R    = $(INSTALL)/include/gwiad/plugins
 I_INC_RS   = $(INSTALL)/include/gwiad/plugins/s
 I_INC_RWS  = $(INSTALL)/include/gwiad/plugins/ws
 I_BIN      = $(INSTALL)/bin
-
-# Set BDIR to .build/#lowercase_mode#
-BDIR = .build/$(shell echo $(MODE) | tr [[:upper:]] [[:lower:]])
 
 install_clean: force
 ifeq ("$(INSTALL)", "")
