@@ -265,6 +265,7 @@ install-distrib:
 	$(MKDIR) $(DISTRIB)/uploads
 	$(MKDIR) $(DISTRIB)/www
 	$(CP) $(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) external-libs/morzhol/$(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
 	$(CP) $(BDIR)/bin/argwiad$(EXEEXT) $(DISTRIB)/bin
 	$(CP) .build/static/bin/argwiadctl $(DISTRIB)/bin
 	$(CP) $(AWS_LIB_DIR)/*$(SOEXT) $(DISTRIB)/bin
