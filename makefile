@@ -50,6 +50,8 @@ OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 MODULES =  external-libs gwiad dynamic_libraries plugins web admin \
 		example argwiad argwiadctl
 
+all: build
+
 include mk.modules
 
 # Version
@@ -59,12 +61,10 @@ VERSION_ALL = $(shell git describe 2>/dev/null)
 
 # Targets
 
-all: build
-
-mkinstall:
+mkinstall: force
 ifneq ($(INSTALL), "")
 # Write INSTALL target into mk.install (see install target)
-	$(shell echo $(INSTALL) > mk.install)
+	$(shell echo INSTALL = $(INSTALL) > mk.install)
 endif
 
 build: mkinstall build-default
@@ -164,9 +164,7 @@ install_server:
 	$(CP) $(BDIR)/bin/argwiad$(EXEEXT) $(SERVER_INSTALL)/bin
 
 # Set INSTALL directories
-ifeq ("$(INSTALL)", "..")
 -include mk.install
-endif
 
 I_INC      = $(INSTALL)/include/gwiad
 I_LIB      = $(INSTALL)/lib/gwiad
