@@ -245,6 +245,12 @@ install-distrib:
 	$(MKDIR) $(DISTRIB)/uploads
 	$(MKDIR) $(DISTRIB)/www
 	$(CP) $(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/dl/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/gwiad/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/plugins/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/pw/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/ps/lib/*$(SOEXT) $(DISTRIB)/bin
+	$(CP) $(BDIR)/web/lib/*$(SOEXT) $(DISTRIB)/bin
 	$(CP) external-libs/morzhol/$(BDIR)/lib/*$(SOEXT) $(DISTRIB)/bin
 	$(CP) $(BDIR)/bin/argwiad$(EXEEXT) $(DISTRIB)/bin
 	$(CP) .build/static/bin/argwiadctl $(DISTRIB)/bin
