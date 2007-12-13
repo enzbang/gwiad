@@ -19,7 +19,7 @@
 ##  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       ##
 ##############################################################################
 
-all:
+build:
 	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
 	$(GNATMAKE) -XPRJ_BUILD=$(MODE) -XLIB_TYPE=Static -Pargwiadctl
 

@@ -23,34 +23,18 @@
 
 OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
-MODULES = hello_world hello_world_service hello_world_interface
+MODULES = $(filter-out makefile,$(shell ls -d *))
 
-MODULES_BUILD = ${MODULES:%=%_build}
-
-MODULES_CLEAN = ${MODULES:%=%_clean}
-
-MODULES_CHECK = ${MODULES:%=%_check}
-
-MODULES_SETUP = ${MODULES:%=%_setup}
+include ../mk.modules
 
 # Targets
 
-all: $(MODULES_BUILD)
+build: build-default
 
-clean: $(MODULES_CLEAN)
+clean: clean-default
 
-check :$(MODULES_CHECK)
+check: check-default
 
-setup: $(MODULES_SETUP)
+setup: setup-default
 
-${MODULES_BUILD}:
-	${MAKE} -C ${@:%_build=%} $(OPTIONS)
-
-${MODULES_SETUP}:
-	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
-
-${MODULES_CLEAN}:
-	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
-
-${MODULES_CHECK}:
-	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
+install: install-default

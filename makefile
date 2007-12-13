@@ -50,13 +50,7 @@ OPTIONS = MODE="$(MODE)" $(GENERAL_OPTIONS)
 MODULES =  external-libs gwiad dynamic_libraries plugins web admin \
 		example argwiad argwiadctl
 
-MODULES_BUILD = ${MODULES:%=%_build}
-
-MODULES_CLEAN = ${MODULES:%=%_clean}
-
-MODULES_CHECK = ${MODULES:%=%_check}
-
-MODULES_SETUP = ${MODULES:%=%_setup}
+include mk.modules
 
 # Version
 
@@ -73,15 +67,15 @@ ifneq ($(INSTALL), "")
 	$(shell echo $(INSTALL) > mk.install)
 endif
 
-build: mkinstall $(MODULES_BUILD)
+build: mkinstall build-default
 
-clean: $(MODULES_CLEAN)
+clean: clean-default
 	make -C regtests clean $(OPTIONS)
 
 clean-all:
 	$(RM) -r .build
 
-setup: setup-version $(MODULES_SETUP)
+setup: setup-version setup-default
 
 setup-version:
 # If git is not present then use the version.ads provided in distrib
@@ -114,7 +108,7 @@ build_doc:
 	@echo "=== Build argwiadctl manpage"
 	${MAKE} -C argwiadctl build_doc
 
-check :	check_message $(MODULES_CHECK)
+check :	check_message check-default
 	@echo
 	@echo "#####################################"
 	@echo "### Check style with style_checker ##"
@@ -141,18 +135,6 @@ DISTRIB_OS = $(shell uname -s | tr [[:upper:]] [[:lower:]])-$(shell uname -m)
 endif
 
 DISTRIB = argwiad-$(DISTRIB_OS)-$(VERSION_ALL)
-
-${MODULES_BUILD}:
-	${MAKE} -C ${@:%_build=%} $(OPTIONS)
-
-${MODULES_CLEAN}:
-	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
-
-${MODULES_CHECK}:
-	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
-
-${MODULES_SETUP}:
-	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
 
 install_demo: install_server
 	$(CP) -r $(BDIR)/slib/services/libhello_world_service$(SOEXT) \

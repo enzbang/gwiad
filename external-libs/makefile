@@ -26,39 +26,18 @@ OPTIONS = MODE="$(MODE)" CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)"
 
 MODULES = $(filter-out makefile,$(shell ls -d *))
 
-MODULES_BUILD = ${MODULES:%=%_build}
-
-MODULES_CLEAN = ${MODULES:%=%_clean}
-
-MODULES_CHECK = ${MODULES:%=%_check}
-
-MODULES_SETUP = ${MODULES:%=%_setup}
-
-MODULES_INSTALL = ${MODULES:%=%_install}
+include ../mk.modules
 
 # Targets
 
-all: $(MODULES_BUILD)
+all: build
 
-clean: $(MODULES_CLEAN)
+build: build-default
 
-check :$(MODULES_CHECK)
+clean: clean-default
 
-setup: $(MODULES_SETUP)
+check: check-default
 
-install: $(MODULES_INSTALL)
+setup: setup-default
 
-${MODULES_BUILD}:
-	${MAKE} -C ${@:%_build=%} $(OPTIONS)
-
-${MODULES_SETUP}:
-	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
-
-${MODULES_INSTALL}:
-	${MAKE} -C ${@:%_install=%} install $(OPTIONS)
-
-${MODULES_CLEAN}:
-	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
-
-${MODULES_CHECK}:
-	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
+install: install-default
