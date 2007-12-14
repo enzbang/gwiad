@@ -116,7 +116,8 @@ procedure Argwiadctl is
                       & "please remove the pid file and "
                       & "try to restart argwiadctl");
          elsif not Directories.Exists (Argwiad_Command) then
-            Put_Line ("Can not find Argwiad !");
+            Put_Line ("Can not find Argwiad ! Have you set "
+                      & Argwiad_Root_Env & " ?");
          else
 
             if Morzhol.OS.Is_Windows then
