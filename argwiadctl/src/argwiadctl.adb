@@ -42,6 +42,7 @@ procedure Argwiadctl is
 
    PID_Filename     : constant String := ".pid";
    Argwiad_Root_Env : constant String := "ARGWIAD_ROOT";
+   Argwiad_Path_Env : constant String := "ARGWIAD_PATH";
 
    type Options is (Start, Reload, Stop, Restart, Version);
    subtype Cmd_Options is Options range Start .. Restart;
@@ -271,6 +272,12 @@ begin
 
             Directories.Set_Directory
               (Environment_Variables.Value (Argwiad_Root_Env));
+
+         elsif Environment_Variables.Exists (Argwiad_Path_Env) then
+            --  Otherwise test ARGWIAD_PATH env var for compatibility reasons.
+
+            Directories.Set_Directory
+              (Environment_Variables.Value (Argwiad_Path_Env));
          end if;
 
          case Cmd_Options (Cmd_Options'Value (Argument (K))) is
