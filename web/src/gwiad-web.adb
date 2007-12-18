@@ -37,8 +37,7 @@ package body Gwiad.Web is
 
    procedure Reload is
    begin
-      Server.Set (Web_Server => HTTP,
-                  Dispatcher => Virtual_Hosts_Dispatcher);
+      Server.Set (Web_Server => HTTP, Dispatcher => Virtual_Hosts_Dispatcher);
    end Reload;
 
    -----------

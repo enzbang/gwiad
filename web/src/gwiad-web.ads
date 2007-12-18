@@ -42,6 +42,7 @@ package Gwiad.Web is
    --  Reloads Gwiad dispatcher
 
 private
+
    Virtual_Hosts_Dispatcher : AWS.Services.Dispatchers.Virtual_Host.Handler;
    --  The virtual hosts dispatcher control all virtual hosts
 

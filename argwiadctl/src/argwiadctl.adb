@@ -98,7 +98,7 @@ procedure Argwiadctl is
       use Ada.Text_IO;
       use type OS_Lib.String_Access;
 
-      Argwiad_Command : aliased String       := "./bin/argwiad";
+      Argwiad_Command : aliased String := "./bin/argwiad";
       Gwiad_Arg       : constant OS_Lib.Argument_List :=
                           (1 => Argwiad_Command'Unchecked_Access);
 
@@ -116,11 +116,12 @@ procedure Argwiadctl is
                       & " exists ! Gwiad may be running. If it not the case, "
                       & "please remove the pid file and "
                       & "try to restart argwiadctl");
+
          elsif not Directories.Exists (Argwiad_Command) then
             Put_Line ("Can not find Argwiad ! Have you set "
                       & Argwiad_Root_Env & " ?");
-         else
 
+         else
             if Morzhol.OS.Is_Windows then
                if Environment_Variables.Exists ("PATH") then
                   Environment_Variables.Set
@@ -132,6 +133,7 @@ procedure Argwiadctl is
                     (Name  => "PATH",
                      Value => Directories.Current_Directory & DS & "bin");
                end if;
+
             else
                if  Environment_Variables.Exists ("LD_LIBRARY_PATH") then
                   Environment_Variables.Set
@@ -200,10 +202,10 @@ procedure Argwiadctl is
          Result : Boolean;
       begin
          Put_Line (PID);
-         GNAT.OS_Lib.Spawn (Program_Name => "/bin/kill",
-                            Args         => OS_Lib.Argument_List'
-                              (1 => PID'Unchecked_Access),
-                            Success      => Result);
+         GNAT.OS_Lib.Spawn
+           (Program_Name => "/bin/kill",
+            Args         => OS_Lib.Argument_List'(1 => PID'Unchecked_Access),
+            Success      => Result);
 
          if Result then
             Put_Line ("Kill succeed");
@@ -251,12 +253,15 @@ begin
         and then Argument (K)
         (Argument (K)'First .. Argument (K)'First + 1) = "--"
       then
-         case Others_Options (Others_Options'Value
-                              (Argument (K)
-              (Argument (K)'First + 2 .. Argument (K)'Last))) is
+         case Others_Options
+           (Others_Options'Value
+              (Argument (K)
+                 (Argument (K)'First + 2 .. Argument (K)'Last)))
+         is
             when Version => Text_IO.Put_Line (Argwiadctl_Version);
                exit;
          end case;
+
       else
          if K + 1 < Argument_Count
            and then Directories.Exists (Argument (K + 1))
@@ -265,10 +270,10 @@ begin
             --  directory
 
             Directories.Set_Directory (Argument (K + 1));
-         elsif Environment_Variables.Exists (Argwiad_Root_Env) then
 
+         elsif Environment_Variables.Exists (Argwiad_Root_Env) then
             --  If no directory specified but ARGWIAD_ROOT env var not null
-            --  then use it as gwiad default directory
+            --  then use it as gwiad default directory.
 
             Directories.Set_Directory
               (Environment_Variables.Value (Argwiad_Root_Env));
