@@ -62,8 +62,6 @@ package body Gwiad.Web is
       Configuration := Config.Get_Current;
 
       Config.Set.Session (O => Configuration, Value => True);
-      Config.Set.Upload_Directory (Configuration, Upload_Directory);
-      Config.Set.Admin_URI (Configuration, Admin_URI);
 
       Server.Start (HTTP, Virtual_Hosts_Dispatcher, Configuration);
    end Start;

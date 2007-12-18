@@ -38,9 +38,6 @@ package Gwiad.Web is
    procedure Stop;
    --  Stops Gwiad web server
 
-   Admin_URI        : constant String := "/admin/status";
-   Upload_Directory : constant String := "./uploads/";
-
    procedure Reload;
    --  Reloads Gwiad dispatcher
 
