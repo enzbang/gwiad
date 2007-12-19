@@ -40,9 +40,12 @@ procedure Argwiadctl is
    Argwiadctl_Version : constant String := "argwiadctl version 0.1";
    --  argwiadctl version
 
-   PID_Filename     : constant String := ".pid";
    Argwiad_Root_Env : constant String := "ARGWIAD_ROOT";
    Argwiad_Path_Env : constant String := "ARGWIAD_PATH";
+   Argwiad_PID_Env  : constant String := "ARGWIAD_PID";
+   Argwiad_Log_Env  : constant String := "ARGWIAD_LOG";
+
+   Default_Tmp_Dir  : constant String := "/tmp";
 
    type Options is (Start, Reload, Stop, Restart, Version);
    subtype Cmd_Options is Options range Start .. Restart;
@@ -61,6 +64,52 @@ procedure Argwiadctl is
 
    procedure Usage;
    --  Show good command line usage
+
+   function Log_Filename return String;
+   --  Returns the log filename
+
+   function PID_Filename return String;
+   --  Returns the PID Filename
+
+   ------------------
+   -- Log_Filename --
+   ------------------
+
+   function Log_Filename return String is
+   begin
+      if Environment_Variables.Exists (Argwiad_Log_Env) then
+         return Directories.Compose
+           (Containing_Directory =>
+              Environment_Variables.Value (Argwiad_Log_Env),
+            Name                 => "argwiad",
+            Extension            => "log");
+      else
+         return Directories.Compose
+           (Containing_Directory => Default_Tmp_Dir,
+            Name                 => "argwiad",
+            Extension            => "log");
+      end if;
+   end Log_Filename;
+
+   ------------------
+   -- PID_Filename --
+   ------------------
+
+   function PID_Filename return String is
+   begin
+      if Environment_Variables.Exists (Argwiad_PID_Env) then
+         return Directories.Compose
+           (Containing_Directory =>
+              Environment_Variables.Value (Argwiad_PID_Env),
+            Name                 => "argwiad",
+            Extension            => "pid");
+      else
+         return Directories.Compose
+           (Containing_Directory => Default_Tmp_Dir,
+            Name                 => "argwiad",
+            Extension            => "pid");
+      end if;
+   end PID_Filename;
 
    ------------
    -- Reload --
@@ -150,7 +199,7 @@ procedure Argwiadctl is
             Gwiad_PID := OS_Lib.Non_Blocking_Spawn
               (Program_Name => Nohup_Command.all,
                Args         => Gwiad_Arg,
-               Output_File  => "gwiad.out",
+               Output_File  => Log_Filename,
                Err_To_Out   => True);
 
             Put_Line ("Start argwiad with PID : "
@@ -283,6 +332,16 @@ begin
 
             Directories.Set_Directory
               (Environment_Variables.Value (Argwiad_Path_Env));
+         end if;
+
+         if Environment_Variables.Exists (Argwiad_PID_Env) then
+            Directories.Set_Directory
+              (Environment_Variables.Value (Argwiad_PID_Env));
+         end if;
+
+         if Environment_Variables.Exists (Argwiad_Log_Env) then
+            Directories.Set_Directory
+              (Environment_Variables.Value (Argwiad_Log_Env));
          end if;
 
          case Cmd_Options (Cmd_Options'Value (Argument (K))) is
