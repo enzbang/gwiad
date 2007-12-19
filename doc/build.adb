@@ -23,7 +23,7 @@ with Ada.Text_IO;
 with Ada.Strings.Fixed;
 
 with AWS;
-with Gwiad;
+with Gwiad.Version;
 with Templates_Parser;
 
 procedure Build is
@@ -50,7 +50,7 @@ procedure Build is
    --  If a tag is added into this table make sure to update gen_doc.sed.tmplt
 
    T : constant Translate_Table
-     := (Assoc ("GWIAD_VERSION", Gwiad.Version),
+     := (Assoc ("GWIAD_VERSION", Gwiad.Version.Complete),
          Assoc ("AWS_VERSION", AWS.Version)
          );
 
