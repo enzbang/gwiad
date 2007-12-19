@@ -86,7 +86,7 @@ package body Gwiad.Web.Main_Host is
          Action     => Action,
          Prefix     => True);
 
---        Call register default callback to update Main_Host_Dispatcher
+      --  Call register default callback to update Main_Host_Dispatcher
 
       Services.Dispatchers.Virtual_Host.Register_Default_Callback
         (Virtual_Hosts_Dispatcher,
