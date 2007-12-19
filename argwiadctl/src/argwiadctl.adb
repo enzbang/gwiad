@@ -27,8 +27,8 @@ with Ada.Environment_Variables;
 with GNAT.OS_Lib;
 with GNAT.Case_Util;
 
+with Gwiad.Version;
 with Morzhol.OS;
-with Gwiad;
 
 procedure Argwiadctl is
 
@@ -37,7 +37,8 @@ procedure Argwiadctl is
    Argwiadctl_Reload_File : String renames Gwiad.Reload_File;
    DS : Character renames Morzhol.OS.Directory_Separator;
 
-   Argwiadctl_Version : constant String := "argwiadctl version 0.1";
+   Argwiadctl_Version : constant String :=
+                          "argwiadctl " & Gwiad.Version.Simple;
    --  argwiadctl version
 
    Argwiad_Root_Env : constant String := "ARGWIAD_ROOT";
