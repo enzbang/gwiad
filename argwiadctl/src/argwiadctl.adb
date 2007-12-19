@@ -57,6 +57,9 @@ procedure Argwiadctl is
    --  Wait for the file deletion as it means that gwiad as properly
    --  been reloaded.
 
+   procedure Restart;
+   --  Restart argwiad web server
+
    procedure Start;
    --  Start argwiad web server
 
@@ -65,6 +68,8 @@ procedure Argwiadctl is
 
    procedure Usage;
    --  Show good command line usage
+
+   To_Run : access procedure := Usage'Access;
 
    function Log_Filename return String;
    --  Returns the log filename
@@ -138,6 +143,16 @@ procedure Argwiadctl is
       end loop;
       Text_IO.Put ("Timeout ! Abort");
    end Reload;
+
+   -------------
+   -- Restart --
+   -------------
+
+   procedure Restart is
+   begin
+      Stop;
+      Start;
+   end Restart;
 
    -----------
    -- Start --
@@ -310,16 +325,15 @@ begin
                exit;
          end case;
 
+      elsif Argument_Count > 1 and then Directories.Exists (Argument (K))
+      then
+         --  If a directory is specified, use it as gwiad default
+         --  directory
+
+         Directories.Set_Directory (Argument (K));
+
       else
-         if K + 1 <= Argument_Count
-           and then Directories.Exists (Argument (K + 1))
-         then
-            --  If a directory is specified, use it as gwiad default
-            --  directory
-
-            Directories.Set_Directory (Argument (K + 1));
-
-         elsif Environment_Variables.Exists (Argwiad_Root_Env) then
+         if Environment_Variables.Exists (Argwiad_Root_Env) then
             --  If no directory specified but ARGWIAD_ROOT env var not null
             --  then use it as gwiad default directory.
 
@@ -345,20 +359,22 @@ begin
 
          case Cmd_Options (Cmd_Options'Value (Argument (K))) is
             when Start =>
-               Start;
+               To_Run := Start'Access;
             when Stop =>
-               Stop;
+               To_Run := Stop'Access;
             when Reload =>
-               Reload;
+               To_Run := Reload'Access;
             when Restart =>
-               Stop;
-               Start;
+               To_Run := Restart'Access;
          end case;
       end if;
    end loop;
 
+   To_Run.all;
+
 exception
    when Constraint_Error =>
+      Text_IO.Put_Line ("Wrong options !");
       --  Wrong options. Display usage info.
       Usage;
    when others =>
