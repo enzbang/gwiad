@@ -313,7 +313,7 @@ begin
          end case;
 
       else
-         if K + 1 < Argument_Count
+         if K + 1 <= Argument_Count
            and then Directories.Exists (Argument (K + 1))
          then
             --  If a directory is specified, use it as gwiad default
