@@ -162,7 +162,7 @@ procedure Argwiadctl is
          Put_Line ("No nohup command required by argwiadctl");
       else
          if Directories.Exists (Name => PID_Filename) then
-            Put_Line (Directories.Current_Directory & "/" & PID_Filename
+            Put_Line (PID_Filename
                       & " exists ! Gwiad may be running. If it not the case, "
                       & "please remove the pid file and "
                       & "try to restart argwiadctl");
@@ -237,9 +237,7 @@ procedure Argwiadctl is
       --  Check if PID File exist
 
       if not Directories.Exists (Name => PID_Filename) then
-         Put_Line (Directories.Current_Directory & "/" & PID_Filename
-                   & " not found. "
-                   & "Is argwiad running ?");
+         Put_Line (PID_Filename & " not found. Is argwiad running ?");
          return;
       end if;
 
