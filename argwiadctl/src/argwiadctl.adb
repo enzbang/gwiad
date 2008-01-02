@@ -325,8 +325,7 @@ begin
                exit;
          end case;
 
-      elsif Argument_Count > 1 and then Directories.Exists (Argument (K))
-      then
+      elsif Argument_Count > 1 and then Directories.Exists (Argument (K)) then
          --  If a directory is specified, use it as gwiad default
          --  directory
 
