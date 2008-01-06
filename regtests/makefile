@@ -34,7 +34,7 @@ clean:
 check_mem: force
 	$(GNATMAKE) -Pregtests -XPRJ_BUILD="$(MODE)"
 	make -C ../admin/
-	make -C ../example/
+	make -C ../example/ build
 	cp ../$(BDIR)/slib/websites/lib* .
 	cp ../$(BDIR)/slib/services/lib* .
 	echo -n "Running " ../$(BDIR)/bin/check_mem$(EXEEXT)
