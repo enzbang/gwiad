@@ -261,4 +261,6 @@ install-distrib:
 	$(TAR_DIR) $(DISTRIB).tgz $(DISTRIB)
 	$(RM) -r $(DISTRIB)
 
+install-distrib-show-name:
+	@echo $(DISTRIB)
 
