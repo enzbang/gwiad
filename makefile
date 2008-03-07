@@ -1,7 +1,7 @@
 ##############################################################################
-##                                  Gwiad                                   ##
+##                                Gwiad                                     ##
 ##                                                                          ##
-##                           Copyright (C) 2007                             ##
+##                        Copyright (C) 2007-2008                           ##
 ##                            Olivier Ramonat                               ##
 ##                                                                          ##
 ##  This library is free software; you can redistribute it and/or modify    ##
@@ -29,10 +29,12 @@ SOEXT=.so
 EXEEXT=
 endif
 
+APP := $(ADA_PROJECT_PATH)
+
 ifeq ($(OS),Windows_NT)
-export ADA_PROJECT_PATH=$PWD/external-libs/morzhol\;$ADA_PROJECT_PATH
+export ADA_PROJECT_PATH=$PWD/external-libs/morzhol\;${APP}
 else
-export ADA_PROJECT_PATH=$PWD/external-libs/morzhol:$ADA_PROJECT_PATH
+export ADA_PROJECT_PATH=$PWD/external-libs/morzhol:${APP}
 endif
 
 # Set BDIR to .build/#lowercase_mode#
