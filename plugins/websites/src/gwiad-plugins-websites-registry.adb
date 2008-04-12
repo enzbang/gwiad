@@ -117,7 +117,7 @@ package body Gwiad.Plugins.Websites.Registry is
       end if;
 
       Unregister_Website : declare
-         RW : Registered_Website := Element (Position);
+         RW : constant Registered_Website := Element (Position);
       begin
          RW.Unregister_CB.all (Name);
       end Unregister_Website;
