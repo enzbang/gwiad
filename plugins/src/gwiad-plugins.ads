@@ -54,7 +54,7 @@ package Gwiad.Plugins is
    function New_Reload_CB return Reload_CB_Access;
    --  Create a new reload callback
 
-   procedure Call (Reload_CB : in out Reload_CB_Access);
+   procedure Call (Reload_CB : in Reload_CB_Access);
    --  Call reload callback
 
    --------------

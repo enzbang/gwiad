@@ -53,7 +53,7 @@ package body Gwiad.Plugins is
    -- Call --
    ----------
 
-   procedure Call (Reload_CB : in out Reload_CB_Access) is
+   procedure Call (Reload_CB : in Reload_CB_Access) is
    begin
       if Reload_CB.Callback /= null then
          Reload_CB.Callback.all;
