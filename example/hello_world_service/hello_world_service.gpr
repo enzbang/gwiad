@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                                  Gwiad                                   --
 --                                                                          --
---                           Copyright (C) 2007                             --
+--                        Copyright (C) 2007-2008                           --
 --                            Olivier Ramonat                               --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -27,7 +27,6 @@ Project Hello_World_Service is
 
    for Source_Dirs use ("src");
    for Library_Name use "hello_world_service";
-   for Library_Interface use ("hello_world_service");
    for Library_Kind use "dynamic";
    for Library_Auto_Init use "false";
 
