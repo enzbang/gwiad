@@ -37,6 +37,8 @@ else
 export ADA_PROJECT_PATH=$PWD/external-libs/morzhol:${APP}
 endif
 
+export LIBRARY_TYPE=relocatable
+
 # Set BDIR to .build/#lowercase_mode#
 BDIR = .build/$(shell echo $(MODE) | tr [[:upper:]] [[:lower:]])
 
