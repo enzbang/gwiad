@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                                  Gwiad                                   --
 --                                                                          --
---                           Copyright (C) 2007                             --
+--                        Copyright (C) 2007-2008                           --
 --                            Olivier Ramonat                               --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -125,7 +125,7 @@ package body Gwiad.Plugins is
    ----------------------------
 
    procedure Set_Internal_Unload_CB
-     (Callback : access procedure (Path : in String))
+     (Callback : in Internal_Unload_CB)
    is
    begin
       Last_Unload_CB.Internal_Callback := Callback;
@@ -135,7 +135,7 @@ package body Gwiad.Plugins is
    -- Set_Reload_CB --
    -------------------
 
-   procedure Set_Reload_CB (Callback : access procedure) is
+   procedure Set_Reload_CB (Callback : in Plugins.Callback) is
    begin
       Last_Reload_CB.Callback := Callback;
    end Set_Reload_CB;
@@ -144,7 +144,7 @@ package body Gwiad.Plugins is
    -- Set_Unload_CB --
    -------------------
 
-   procedure Set_Unload_CB (Callback : access procedure) is
+   procedure Set_Unload_CB (Callback : in Plugins.Callback) is
    begin
       Last_Unload_CB.Callback := Callback;
    end Set_Unload_CB;

@@ -26,6 +26,8 @@ package Gwiad.Plugins is
 
    use Ada.Strings.Unbounded;
 
+   type Callback is access procedure;
+
    type Plugin is tagged record
       Description   : Unbounded_String;
       Path          : Unbounded_String;
@@ -72,10 +74,10 @@ package Gwiad.Plugins is
    --  library unload
    --  The reload callback is called on "gwiad reload"
 
-   procedure Set_Unload_CB (Callback : access procedure);
+   procedure Set_Unload_CB (Callback : in Plugins.Callback);
    --  Set plugin library unload CB (must be called by the plugin library)
 
-   procedure Set_Reload_CB (Callback : access procedure);
+   procedure Set_Reload_CB (Callback : in Plugins.Callback);
    --  Set plugin library reload CB (must be called by the plugin library)
 
    function Get_Last_Library_Path return String;
@@ -91,18 +93,20 @@ private
    --  Returns the current library path
    --  This must be called on library init
 
+   type Internal_Unload_CB is access procedure (Path : in String);
+
    type Unload_CB is record
       Path              : String_Access;
-      Callback          : access procedure;
-      Internal_Callback : access procedure (Path : in String);
+      Callback          : Plugins.Callback;
+      Internal_Callback : Internal_Unload_CB;
    end record;
 
    type Reload_CB is record
-      Callback : access procedure;
+      Callback : Plugins.Callback;
    end record;
 
    procedure Set_Internal_Unload_CB
-     (Callback : access procedure (Path : in String));
+     (Callback : in Internal_Unload_CB);
    --  Set internal unload callback
 
 end Gwiad.Plugins;
