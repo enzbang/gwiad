@@ -20,7 +20,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Strings.Unbounded;
---  with Ada.Unchecked_Deallocation;
 
 package Gwiad.Plugins is
 
