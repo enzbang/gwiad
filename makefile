@@ -233,7 +233,7 @@ ifneq ("$(MANPAGE_DIR)", "")
 	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
 endif
 ifeq ($(OS), Windows_NT)
-	$(CP) $(I_LIB)/*$(SOEXT) $(I_LIB)/..
+	$(CP) $(I_LIB)/*$(SOEXT) $(I_BIN)
 endif
 
 install-distrib:
