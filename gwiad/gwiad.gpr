@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------------
 --                                 Gwiad                                    --
 --                                                                          --
---                           Copyright (C) 2007                             --
---                            Olivier Ramonat                               --
+--                        Copyright (C) 2007-2009                           --
+--                     Pascal Obry - Olivier Ramonat                        --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
 --  it under the terms of the GNU General Public License as published by    --
@@ -21,6 +21,7 @@
 
 with "../shared";
 with "morzhol";
+with "aws";
 
 project Gwiad is
 
@@ -45,13 +46,6 @@ project Gwiad is
       when "Static" =>
          for Object_Dir use "../.build/static/gwiad/obj";
          for Library_Dir use "../.build/static/gwiad/lib";
-   end case;
-
-   case Shared.OS is
-      when "Windows_NT" =>
-         for Library_Options use ("-laws", "-laws_include", "-lwsock32");
-      when others =>
-         null;
    end case;
 
    --------------
