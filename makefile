@@ -141,9 +141,9 @@ endif
 DISTRIB = argwiad-$(DISTRIB_OS)-$(VERSION_ALL)
 
 install_demo: install_server
-	$(CP) -r $(BDIR)/slib/services/libhello_world_service$(SOEXT) \
+	$(CP) -r $(BDIR)/slib/services/*hello_world_service$(SOEXT) \
 		$(SERVER_INSTALL)/lib/services/
-	$(CP) -r $(BDIR)/slib/websites/libhello_world_website$(SOEXT) \
+	$(CP) -r $(BDIR)/slib/websites/*hello_world_website$(SOEXT) \
 		$(SERVER_INSTALL)/lib/websites/
 	$(CP) $(BDIR)/lib/*helloworld_interface*$(SOEXT) $(SERVER_INSTALL)/bin
 
