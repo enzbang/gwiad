@@ -38,9 +38,9 @@ package body Gwiad.Admin.Services is
    -------------------
 
    procedure List_Services
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
       use Gwiad.Plugins.Services.Registry.Map;
@@ -75,9 +75,9 @@ package body Gwiad.Admin.Services is
    ------------------
 
    procedure Stop_Service
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
 

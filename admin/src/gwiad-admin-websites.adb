@@ -142,9 +142,9 @@ package body Gwiad.Admin.Websites is
    -------------------
 
    procedure List_Websites
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
       use AWS.Templates;
@@ -192,9 +192,9 @@ package body Gwiad.Admin.Websites is
    ------------------
 
    procedure Stop_Website
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
       pragma Unreferenced (Context, Translations);
       use Gwiad.Plugins.Websites.Registry;
@@ -229,9 +229,9 @@ package body Gwiad.Admin.Websites is
    ------------------------
 
    procedure Unregister_Website_Library
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
       use AWS.Templates;
@@ -301,9 +301,9 @@ package body Gwiad.Admin.Websites is
    ------------------------------
 
    procedure Virtual_Host_Directories
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
    begin
       Discover_Virtual_Host_Directories;

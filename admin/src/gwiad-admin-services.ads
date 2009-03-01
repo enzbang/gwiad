@@ -30,15 +30,15 @@ package Gwiad.Admin.Services is
    Services_URL : constant String := "services/";
 
    procedure List_Services
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Lists all services
 
    procedure Stop_Service
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Stop a gwiad service
 
 end Gwiad.Admin.Services;

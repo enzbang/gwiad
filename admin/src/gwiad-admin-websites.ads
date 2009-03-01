@@ -35,21 +35,21 @@ package Gwiad.Admin.Websites is
    --  Search wiki website on plugin root path
 
    procedure List_Websites
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Lists all websites
 
    procedure Stop_Website
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Stop a website
 
    procedure Unregister_Website_Library
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Unregister a library and all associated websites
 
    ------------------------------
@@ -57,9 +57,9 @@ package Gwiad.Admin.Websites is
    ------------------------------
 
    procedure Virtual_Host_Directories
-     (Request      : in Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Search for virtual host directories
 
    procedure Virtual_Host_Unregister

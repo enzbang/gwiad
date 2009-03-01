@@ -54,9 +54,9 @@ package body Gwiad.Admin.Init is
    --  Registers default callback
 
    procedure Menu
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set);
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set);
    --  Displays Gwiad admin menu
 
    ----------------------
@@ -112,9 +112,9 @@ package body Gwiad.Admin.Init is
    end Default_Callback;
 
    procedure Menu
-     (Request      : in     Status.Data;
-      Context      : access AWS.Services.Web_Block.Context.Object;
-      Translations : in out Templates.Translate_Set)
+     (Request      : in              Status.Data;
+      Context      : not null access AWS.Services.Web_Block.Context.Object;
+      Translations : in out          Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Context);
 
