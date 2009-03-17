@@ -77,6 +77,7 @@ clean: clean-default
 	make -C regtests clean $(OPTIONS)
 
 clean-all:
+	$(RM) -f mk.install
 	$(RM) -r .build
 
 setup: setup-version setup-default
