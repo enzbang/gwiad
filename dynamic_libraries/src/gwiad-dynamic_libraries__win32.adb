@@ -96,9 +96,12 @@ package body Gwiad.Dynamic_Libraries is
       use Interfaces;
       use Ada.Directories;
 
-      Lib_Name  : constant String := Base_Name (Path);
-      Init_Name : constant String :=
-                    Lib_Name (Lib_Name'First .. Lib_Name'Last) & "init";
+      Lib_Prefix_Length : constant := 3;
+      Lib_Name          : constant String := Base_Name (Path);
+      Init_Name         : constant String   :=
+                            Lib_Name (Lib_Name'First
+                                      + Lib_Prefix_Length .. Lib_Name'Last)
+                            & "init";
 
       type Library_Register is access procedure;
       function Register_Call is new Call (Library_Register);
