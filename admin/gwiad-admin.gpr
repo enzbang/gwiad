@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                                  Gwiad                                   --
 --                                                                          --
---                           Copyright (C) 2007                             --
+--                        Copyright (C) 2007-2009                           --
 --                            Olivier Ramonat                               --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -53,13 +53,6 @@ Project Gwiad.Admin is
    for Library_Interface use ("Gwiad.Admin");
    for Library_Kind use "dynamic";
    for Library_Auto_Init use "false";
-
-   case Shared.OS is
-      when "Windows_NT" =>
-         for Library_Options use ("-laws", "-laws_include", "-laws_win32", "-lwsock32");
-      when others =>
-         null;
-   end case;
 
    package Compiler renames Shared.Compiler;
    package Ide renames Shared.Ide;

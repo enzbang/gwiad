@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                                  Gwiad                                   --
 --                                                                          --
---                        Copyright (C) 2007-2008                           --
+--                        Copyright (C) 2007-2009                           --
 --                            Olivier Ramonat                               --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -44,15 +44,6 @@ Project Hello_World_Service is
          for Object_Dir use "../../.build/release/obj";
          for Library_Ali_Dir use "../../.build/release/lib";
          for Library_Dir use "../../.build/release/slib/services/";
-   end case;
-
-   case Shared.OS is
-      when "Windows_NT" =>
-         for Library_Options
-           use ("-laws", "-laws_include", "-laws_win32", "-lwsock32",
-                "-lgnarl");
-      when others =>
-         null;
    end case;
 
    package Compiler renames Shared.Compiler;
