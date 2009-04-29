@@ -30,14 +30,14 @@ include ../mk.modules
 
 # Targets
 
-all: build
+all: all
 
-build: build-default
+build: all
 
-clean: clean-default
+clean: clean
 
-check: check-default
+check: gnatcheck
 
-setup: setup-default
+setup:
 
-install: install-default
+install: install
