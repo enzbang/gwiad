@@ -1,8 +1,8 @@
 ##############################################################################
 ##                                  Gwiad                                   ##
 ##                                                                          ##
-##                           Copyright (C) 2007                             ##
-##                            Olivier Ramonat                               ##
+##                        Copyright (C) 2007-2009                           ##
+##                     Pascal Obry - Olivier Ramonat                        ##
 ##                                                                          ##
 ##  This library is free software; you can redistribute it and/or modify    ##
 ##  it under the terms of the GNU General Public License as published by    ##
@@ -30,14 +30,14 @@ include ../mk.modules
 
 # Targets
 
-all: all
+all: build
 
-build: all
+build: build-default
 
-clean: clean
+clean: clean-default
 
 check: gnatcheck
 
 setup:
 
-install: install
+install: install-default
