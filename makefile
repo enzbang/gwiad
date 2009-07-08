@@ -229,7 +229,7 @@ install: install_dirs
 	$(CP) config/projects/gwiad-plugins.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-services.gpr $(I_GPR)
 	$(CP) config/projects/gwiad-plugins-websites.gpr $(I_GPR)
-	$(CP) .build/static/bin/argwiadctl $(I_BIN)
+	$(CP) .build/static/bin/argwiadctl$(EXEEXT) $(I_BIN)
 ifneq ("$(MANPAGE_DIR)", "")
 	-$(CP) argwiadctl/doc/argwiadctl.1 $(MANPAGE_DIR)/man1/
 endif
