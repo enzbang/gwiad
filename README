@@ -1,5 +1,25 @@
-Copyright (C) 2007 Olivier Ramonat
+Copyright (C) 2007-2010 Olivier Ramonat
 See the end of the file for license conditions.
+
+Gwiad is a framework for building a Web Server with dynamic plugin loading
+based on AWS.
+
+It provides a simple interface to build plugins in Ada. When a
+plugin is placed in Gwiad plugin directory it is automatically
+loaded. Gwiad plugins are divided into two categories :
+
+ - Web applications that register dispatchers such as virtual host
+   dispatchers or regexp dispatchers.
+ - Services provider that can be used by all websites plugins.
+
+Plugins can be added at run time. They only need to be put in the plugins directory.
+If a plugin fails to load it is automatically disabled.
+
+Gwiad provides a simple web administration tool to disable a running
+plugin. A current limitation makes it impossible to completely remove the
+plugin. To update a plugin to a new version you'll need to restart Gwiad.
+
+Gwiad comes with a simple server named argwiad.
 
 The file INSTALL in this directory says how to build and install Gwiad.
 
@@ -7,23 +27,29 @@ There are several subdirectories:
 
 'admin'             holds the admin interface for services and websites
 
+'argwiad'           holds a simple webserver
+
+'argwiadctl'        controller for argwiad
+
 'config'            holds projects file for system wide installation and
                     some scripts
+
+'doc'               gwiad's user guide
 
 'dynamic_libraries' holds the dynamic library manager
 
 'example'           holds the hello world plugins
 
-'gwiad'             holds an AWS.Services.ECWF developpement branch
-                    (until next AWS version) and gwiad kernel package
+'gwiad'             gwiad kernel package
 
-'registry'          holds the services and websitse manager used by all
+'plugins'           holds the services and website managers used by all
                     gwiad plugins
+
+'templates'         holds Gwiad default page
 
 'web'               holds the dispatchers (virtual hosts,
                     prefix urls, ...)
 
-'argwiad'	    holds a simple webserver
 
 Gwiad is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

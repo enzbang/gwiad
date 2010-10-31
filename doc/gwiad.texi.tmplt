@@ -59,7 +59,7 @@ END-INFO-DIR-ENTRY
 
 @page
 
-Copyright @copyright{} 2007, Olivier Ramonat
+Copyright @copyright{} 2007-2010, Olivier Ramonat
 
 This document is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ You should have received a copy of the GNU General Public License
 
 @page
 
-<p>Copyright @copyright{} 2007, Olivier Ramonat
+<p>Copyright @copyright{} 2007-2010, Olivier Ramonat
 @end html
 @end ifhtml
 
@@ -111,17 +111,16 @@ You should have received a copy of the GNU General Public License
 @code{Gwiad} is a framework for building a Web Server with dynamic
 plugin loading based on @i{Ada Web Server}.
 
-@code{Gwiad} provide a simple interface to build plugins in Ada. When a
+@code{Gwiad} provides a simple interface to build plugins in Ada. When a
 plugin is placed in @code{Gwiad} plugin directory it is automatically
-loaded.  @code{Gwiad} plugins are divided into two categories :
+loaded. @code{Gwiad} plugins are divided into two categories :
 
 @itemize
 @item Website plugins
 Web applications that register dispatchers such as virtual host
 dispatchers or regexp dispatchers.
 @item Service plugins
- Services provider
-that can be used by all websites plugins.
+ Services provider that can be used by all websites plugins.
 @end itemize
 
 @noindent
@@ -129,7 +128,7 @@ Plugins can be added at run time. They only need to be put in the plugins direct
 If a plugin fails to load it is automatically disabled.
 
 @noindent
-Gwiad provide a simple web administration tool to disable a running
+Gwiad provides a simple web administration tool to disable a running
 plugin. A current limitation makes it impossible to completely remove the
 plugin. To update a plugin to a new version you'll need to restart Gwiad.
 
@@ -209,30 +208,30 @@ Here are a short description of the demo :
 
 @item Hello_World_Interface
 
-This interface declare an abstract function Hello which return a String
+This interface declares an abstract function Hello which return a String
 and a new Gwiad service (HW_Service) which inherit the Gwiad Service
 interface.
 
 @item Hello_World_Service
 
-This service implement the Hello_World_Interface and register itself in
+This service implements the Hello_World_Interface and registers itself in
 the Gwiad plugin registry.
 
 @item Hello_World (website)
 
-This website plugin register an URI callback on /hello and build a
+This website plugin registers an URI callback on /hello and builds a
 response for /hello/world URI using the previous service.
 
-The default callback return ``Hello World 404 Error''
+The default callback returns ``Hello World 404 Error''
 
 @end table
 
-To install the demo, run :
+To install the demo, run:
 
 @GWIADEXP{$ make install_demo}
 
 By default, the demo are installed in @i{$(HOME)/opt/gwiad} and use the
-simple server provide with Gwiad.
+simple server provided with Gwiad.
 
 To launch the demo, go under @i{$(HOME)/opt/gwiad} then run @code{argwiad}
 
@@ -339,7 +338,7 @@ interface : the public API of your service. The interface is compiled
 in a separated package and deployed in your system library path.
 
 @noindent
-In the same interface library, you has to declare a new abstract type
+In the same interface library, you have to declare a new abstract type
 that inherit of your interface and Gwiad service interface
 @code{Gwiad.Plugins.Services}.
 
@@ -352,7 +351,7 @@ Gwiad service interface is :
 @subsection Service implementation
 
 @noindent
-You have to provide an implementation for you new type, so for :
+You have to provide an implementation for your new type, so for:
 @itemize
 @item Your interface
 @item Gwiad service interface
@@ -365,7 +364,7 @@ type).
 Moreover, you need to register the new plugin by calling
 @code{Giwad.Plugins.Services.Registry.Register}.
 
-This function takes 3 parameters : Name, Description and Builder (an
+This function takes 3 parameters: Name, Description and Builder (an
 access to the factory function).
 
 @node Index
